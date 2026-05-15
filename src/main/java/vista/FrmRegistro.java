@@ -132,7 +132,7 @@ public class FrmRegistro extends javax.swing.JFrame {
         String ape = txtApellido.getText();
         String correo = txtCorreo.getText();
         String pass = new String(txtPass.getPassword());
-        if (!dni.isEmpty() && !pass.isEmpty() && nom.isEmpty() && dni.isEmpty() && ape.isEmpty()) {
+        if (!dni.isEmpty() && !pass.isEmpty() && !nom.isEmpty() && !dni.isEmpty() && !ape.isEmpty()) {
             Cliente nuevo = new Cliente(dni,nom,ape,correo,pass,false);
             ctrl.getSistema().agregarPersona(nuevo);
             javax.swing.JOptionPane.showMessageDialog(this, "Registro exitoso. Ya puedes iniciar sesión.");
