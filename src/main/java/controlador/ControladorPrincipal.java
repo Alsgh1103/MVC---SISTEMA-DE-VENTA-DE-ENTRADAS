@@ -7,6 +7,8 @@ package controlador;
 import modelo.Sistema;
 import modelo.Venta;
 import modelo.Cliente;
+import modelo.Persona;
+import modelo.Usuario;
 
 /**
  *
