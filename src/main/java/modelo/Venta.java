@@ -92,7 +92,6 @@ public class Venta {
             return false;
         }
         if (tarjeta.registrarCompra(cantidadEntradas, cvvIngresadoUsuario)) {
-            // zona.reducirCapacidad(cantidadEntradas); // Este método ya no existe tal cual o cambió
             monto = (int) calcularTotal();
             return true;
         }
