@@ -118,7 +118,7 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     private void btnAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministradorActionPerformed
         /*String dni = javax.swing.JOptionPane.showInputDialog("Ingrese su DNI");
         String pass = javax.swing.JOptionPane.showInputDialog("Ingrese su código de Administrador");
-        if(ctrl.getSistema().validarAccesoAdmin(dni,pass)!=null){
+        if(ctrl.getConcierto().validarAccesoAdmin(dni,pass)!=null){
             FrmAdmin vistaAdmin = new FrmAdmin(this.ctrl);
             vistaAdmin.setVisible(true);
             this.dispose();

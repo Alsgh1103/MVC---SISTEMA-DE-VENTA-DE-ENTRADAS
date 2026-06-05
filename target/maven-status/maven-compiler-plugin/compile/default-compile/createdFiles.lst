@@ -1,6 +1,7 @@
 vista\FrmAdmin$1.class
+vista\FrmCliente$2.class
 vista\FrmAdmin.class
-modelo\Sistema.class
+vista\FrmCliente$4.class
 vista\FrmMenuPrincipal.class
 vista\FrmInicio$1.class
 vista\FrmRegistro.class
@@ -11,6 +12,7 @@ modelo\Tarjeta.class
 controlador\ControladorPrincipal.class
 vista\FrmRegistro$1.class
 modelo\Venta.class
+vista\FrmCliente$3.class
 modelo\Zona.class
 vista\FrmInicio.class
 modelo\Cliente.class

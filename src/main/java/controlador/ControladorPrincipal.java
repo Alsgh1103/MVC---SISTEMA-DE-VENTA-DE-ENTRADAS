@@ -4,35 +4,33 @@
  */
 package controlador;
 
-import modelo.Sistema;
+import modelo.Concierto;
 import modelo.Venta;
 import modelo.Cliente;
-import modelo.Persona;
-import modelo.Usuario;
 
 /**
  *
  * @author alex_
  */
 public class ControladorPrincipal {
-    private Sistema sistema;
+    private Concierto concierto;
 
     public ControladorPrincipal() {
-        this.sistema = new Sistema();
+        this.concierto = new Concierto("Gran Concierto", java.time.LocalDate.now());
     }
 
     public void registrarNuevaVenta(Venta v) {
-        sistema.registrarVenta(v);
+        concierto.registrarVenta(v);
     }
 
-    public Sistema getSistema() {
-        return sistema;
+    public Concierto getConcierto() {
+        return concierto;
     }
 
     public void registrarNuevaPersona(String dni, String nombre, String apellido, String correo, String contrasena,
             boolean esSocio) {
         Cliente nuevo = new Cliente(dni, nombre, apellido, correo, contrasena, false);
-        this.getSistema().agregarPersona(nuevo);
+        this.getConcierto().agregarPersona(nuevo);
         javax.swing.JOptionPane.showInputDialog("Registrado con éxito");
     }
 }

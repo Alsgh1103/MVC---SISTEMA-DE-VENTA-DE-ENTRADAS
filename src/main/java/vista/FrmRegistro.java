@@ -77,23 +77,23 @@ public class FrmRegistro extends javax.swing.JFrame {
                     .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(79, 79, 79)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel1))
-                            .addGap(80, 80, 80)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtDni, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-                                .addComponent(txtNombre)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(146, 146, 146)
-                            .addComponent(btnGuardar))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(80, 80, 80)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtDni, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                            .addComponent(txtNombre))))
                 .addContainerGap(77, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(146, 146, 146)
+                .addComponent(btnGuardar)
+                .addGap(92, 184, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,10 +134,10 @@ public class FrmRegistro extends javax.swing.JFrame {
         String pass = new String(txtPass.getPassword());
         if (!dni.isEmpty() && !pass.isEmpty() && !nom.isEmpty() && !dni.isEmpty() && !ape.isEmpty()) {
             Cliente nuevo = new Cliente(dni,nom,ape,correo,pass,false);
-            ctrl.getSistema().agregarPersona(nuevo);
+            ctrl.getConcierto().agregarPersona(nuevo);
             javax.swing.JOptionPane.showMessageDialog(this, "Registro exitoso. Ya puedes iniciar sesión.");
-            FrmInicio inicio = new FrmInicio(this.ctrl);
-            inicio.setVisible(true);
+            FrmCliente cliente = new FrmCliente(this.ctrl);
+            cliente.setVisible(true);
             this.dispose();
         }else {
         javax.swing.JOptionPane.showMessageDialog(this, "Por favor, completa los campos obligatorios.");
