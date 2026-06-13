@@ -9,13 +9,13 @@ package modelo;
  * @author alex_
  */
 public class Tarjeta {
-    private int numero;
+    private String numero;
     private String nombre;
     private String fecha;
     private int CVV;
     private int cantidadComprada;
 
-    public Tarjeta(int numero, String nombre, String fecha, int CVV) {
+    public Tarjeta(String numero, String nombre, String fecha, int CVV) {
         this.numero = numero;
         this.nombre = nombre;
         this.fecha = fecha;
@@ -23,7 +23,7 @@ public class Tarjeta {
         this.cantidadComprada = 0;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 

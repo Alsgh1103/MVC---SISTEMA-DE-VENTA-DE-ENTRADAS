@@ -10,11 +10,52 @@ import controlador.ControladorPrincipal;
  */
 public class FrmMenuPrincipal extends javax.swing.JFrame {
     private ControladorPrincipal ctrl;
-    public FrmMenuPrincipal(ControladorPrincipal ctrl) {
-        this.ctrl = ctrl;
+    private boolean esAdmin;
+    public FrmMenuPrincipal(ControladorPrincipal ctrl, boolean esAdmin) {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.ctrl = ctrl;
+        this.esAdmin = esAdmin;
+        configurarMenuSegunRol();
+        cargarDatosCliente();
+        
     }
+    private void configurarMenuSegunRol(){
+        if(esAdmin){
+            btnComprar.setVisible(false);
+            btnMisCompras.setVisible(false);
+            btnPanelAdmin.setVisible(true);
+        }else{
+            btnPanelAdmin.setVisible(false);
+            btnComprar.setVisible(true);
+            btnMisCompras.setVisible(true);
+        }
+        
+    }
+    private void cargarDatosCliente() {
+        modelo.Persona usuario = ctrl.getUsuarioLogueado();
+        if (usuario != null) {
+            lblBienvenida.setText("Bienvenido: " + usuario.getNombres() + " " + usuario.getApellidos());
+            
+            if (usuario instanceof modelo.Cliente) {
+                modelo.Cliente c = (modelo.Cliente) usuario;
+                lblPuntos.setText("Puntos: " + c.getPuntos());
+            } else {
+                lblPuntos.setText("Puntos: N/A");
+                lblConcierto.setText("Administración");
+            }
+            
+            cbxConcierto.removeAllItems();
+            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
+                cbxConcierto.addItem(con.getNombre());
+            }
+            
+            if (ctrl.getConciertoSeleccionado() != null) {
+                cbxConcierto.setSelectedItem(ctrl.getConciertoSeleccionado().getNombre());
+            }
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -25,57 +66,66 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jDialog1 = new javax.swing.JDialog();
-        jDialog2 = new javax.swing.JDialog();
-        label1 = new java.awt.Label();
-        btnCliente = new javax.swing.JButton();
-        btnAdministrador = new javax.swing.JButton();
-        btnRegistrarCliente = new javax.swing.JButton();
-
-        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
-        jDialog1.getContentPane().setLayout(jDialog1Layout);
-        jDialog1Layout.setHorizontalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog1Layout.setVerticalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
-        jDialog2.getContentPane().setLayout(jDialog2Layout);
-        jDialog2Layout.setHorizontalGroup(
-            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog2Layout.setVerticalGroup(
-            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        label1.setText("label1");
+        panel1 = new java.awt.Panel();
+        lblBienvenida = new javax.swing.JLabel();
+        btnVerZonas = new javax.swing.JButton();
+        btnComprar = new javax.swing.JButton();
+        btnMisCompras = new javax.swing.JButton();
+        btnPanelAdmin = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
+        lblPuntos = new javax.swing.JLabel();
+        lblConcierto = new javax.swing.JLabel();
+        cbxConcierto = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnCliente.setText("Comprar Entradas");
-        btnCliente.addActionListener(new java.awt.event.ActionListener() {
+        panel1.setLayout(new java.awt.GridBagLayout());
+
+        lblBienvenida.setText("Bienvenido:");
+
+        btnVerZonas.setText("Ver zonas y precios");
+        btnVerZonas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClienteActionPerformed(evt);
+                btnVerZonasActionPerformed(evt);
             }
         });
 
-        btnAdministrador.setText("Gestión de Evento");
-        btnAdministrador.addActionListener(new java.awt.event.ActionListener() {
+        btnComprar.setText("Comprar Entradas");
+        btnComprar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdministradorActionPerformed(evt);
+                btnComprarActionPerformed(evt);
             }
         });
 
-        btnRegistrarCliente.setText("Regístrate");
-        btnRegistrarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btnMisCompras.setText("Mi Historial y Puntos");
+        btnMisCompras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarClienteActionPerformed(evt);
+                btnMisComprasActionPerformed(evt);
+            }
+        });
+
+        btnPanelAdmin.setText("Panel de Administración");
+        btnPanelAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPanelAdminActionPerformed(evt);
+            }
+        });
+
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
+
+        lblPuntos.setText("Puntos:");
+
+        lblConcierto.setText("Seleccione el concierto:");
+
+        cbxConcierto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxConcierto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxConciertoActionPerformed(evt);
             }
         });
 
@@ -84,62 +134,158 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addComponent(btnCliente)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                .addComponent(btnAdministrador)
-                .addGap(44, 44, 44))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(45, 45, 45)
+                                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                                .addComponent(lblConcierto)
+                                .addGap(86, 86, 86))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnComprar)
+                                .addGap(35, 35, 35)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbxConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(btnVerZonas))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(lblBienvenida)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblPuntos)
+                        .addGap(30, 30, 30)))
+                .addGap(61, 61, 61))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(198, 198, 198)
+                .addComponent(btnCerrarSesion)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRegistrarCliente)
-                .addGap(157, 157, 157))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnPanelAdmin)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnMisCompras)
+                        .addGap(11, 11, 11)))
+                .addGap(180, 180, 180))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(103, 103, 103)
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCliente)
-                    .addComponent(btnAdministrador))
-                .addGap(45, 45, 45)
-                .addComponent(btnRegistrarCliente)
-                .addContainerGap(106, Short.MAX_VALUE))
+                    .addComponent(lblBienvenida)
+                    .addComponent(lblPuntos))
+                .addGap(46, 46, 46)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblConcierto)
+                        .addComponent(cbxConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnVerZonas)
+                    .addComponent(btnComprar))
+                .addGap(18, 18, 18)
+                .addComponent(btnMisCompras)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(btnPanelAdmin)
+                .addGap(18, 18, 18)
+                .addComponent(btnCerrarSesion)
+                .addGap(41, 41, 41))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteActionPerformed
-        /*FrmCliente vistaCliente = new FrmCliente(this.ctrl);
-        vistaCliente.setVisible(true);
-        this.dispose();*/
-    }//GEN-LAST:event_btnClienteActionPerformed
-
-    private void btnAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministradorActionPerformed
-        /*String dni = javax.swing.JOptionPane.showInputDialog("Ingrese su DNI");
-        String pass = javax.swing.JOptionPane.showInputDialog("Ingrese su código de Administrador");
-        if(ctrl.getConcierto().validarAccesoAdmin(dni,pass)!=null){
-            FrmAdmin vistaAdmin = new FrmAdmin(this.ctrl);
-            vistaAdmin.setVisible(true);
-            this.dispose();
-        }else{
-            javax.swing.JOptionPane.showInputDialog("Acceso denegado, datos incorrectos");
-        }*/
-    }//GEN-LAST:event_btnAdministradorActionPerformed
-
-    private void btnRegistrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarClienteActionPerformed
-        FrmRegistro vistaRegistro = new FrmRegistro(this.ctrl);
-        vistaRegistro.setVisible(true);
+    private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
+        FrmCliente cliente = new FrmCliente(this.ctrl);
+        cliente.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnRegistrarClienteActionPerformed
+    }//GEN-LAST:event_btnComprarActionPerformed
 
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        ctrl.cerrarSesion();
+        FrmLogin login = new FrmLogin(this.ctrl);
+        login.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnPanelAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelAdminActionPerformed
+        FrmAdmin admin = new FrmAdmin(this.ctrl);
+        admin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnPanelAdminActionPerformed
+
+    private void btnVerZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerZonasActionPerformed
+        if (ctrl.getConcierto() != null) {
+            StringBuilder sb = new StringBuilder("Zonas del Concierto: " + ctrl.getConcierto().getNombre() + "\n\n");
+            for (modelo.Zona z : ctrl.getConcierto().getTodasLasZonas()) {
+                sb.append("- ").append(z.getNombre())
+                  .append(": S/ ").append(z.getPrecio())
+                  .append(" (Disponibles: ").append(z.getCapacidadDisponible()).append("/").append(z.getCapacidadTotal()).append(")\n");
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, sb.toString());
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay concierto seleccionado.");
+        }
+    }//GEN-LAST:event_btnVerZonasActionPerformed
+
+    private void btnMisComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMisComprasActionPerformed
+        modelo.Persona usuario = ctrl.getUsuarioLogueado();
+        if (usuario instanceof modelo.Cliente) {
+            modelo.Cliente c = (modelo.Cliente) usuario;
+            StringBuilder sb = new StringBuilder("Historial de Compras de " + c.getNombres() + "\n");
+            sb.append("Puntos acumulados: ").append(c.getPuntos()).append("\n\n");
+            sb.append("Compras realizadas:\n");
+            
+            boolean tieneVentas = false;
+            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
+                for (modelo.Venta v : con.getTodasLasVentas()) {
+                    if (v.getCliente().getDni().equals(c.getDni())) {
+                        sb.append("- ").append(con.getNombre())
+                          .append(" | ").append(v.getZona().getNombre())
+                          .append(" | Cantidad: ").append(v.getCantidadEntradas())
+                          .append(" | Total: S/ ").append(v.getMonto())
+                          .append(" | Transacción: ").append(v.getIdTransaccion()).append("\n");
+                        tieneVentas = true;
+                    }
+                }
+            }
+            if (!tieneVentas) {
+                sb.append("No has realizado ninguna compra todavía.");
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, sb.toString());
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Esta opción solo está disponible para Clientes.");
+        }
+    }//GEN-LAST:event_btnMisComprasActionPerformed
+
+    private void cbxConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxConciertoActionPerformed
+        String seleccion = (String) cbxConcierto.getSelectedItem();
+        if (seleccion != null) {
+            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
+                if (con.getNombre().equals(seleccion)) {
+                    ctrl.setConciertoSeleccionado(con);
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_cbxConciertoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdministrador;
-    private javax.swing.JButton btnCliente;
-    private javax.swing.JButton btnRegistrarCliente;
-    private javax.swing.JDialog jDialog1;
-    private javax.swing.JDialog jDialog2;
-    private java.awt.Label label1;
+    private javax.swing.JButton btnCerrarSesion;
+    private javax.swing.JButton btnComprar;
+    private javax.swing.JButton btnMisCompras;
+    private javax.swing.JButton btnPanelAdmin;
+    private javax.swing.JButton btnVerZonas;
+    private javax.swing.JComboBox<String> cbxConcierto;
+    private javax.swing.JLabel lblBienvenida;
+    private javax.swing.JLabel lblConcierto;
+    private javax.swing.JLabel lblPuntos;
+    private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
 }
