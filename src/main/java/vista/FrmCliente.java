@@ -352,7 +352,7 @@ public class FrmCliente extends javax.swing.JFrame {
                                                       "Asientos restantes: " + zonaEncontrada.getCapacidadDisponible());
             
       
-            FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl, false);
+            FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl);
             menu.setVisible(true);
             this.dispose();
         } else {
@@ -370,7 +370,7 @@ public class FrmCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxTarjetaActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl,false);
+        FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed

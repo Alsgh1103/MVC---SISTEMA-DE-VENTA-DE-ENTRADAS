@@ -19,7 +19,8 @@ public class ControladorPrincipal {
     public ControladorPrincipal() {
         this.coleccionPersonas = new ColeccionPersonas();
         this.coleccionConciertos = new ColeccionConciertos();
-        
+        Usuario admin = new Usuario("99999999", "Administrador", "Sistema", "admin@gmail.com", "admin123", "ADM001");
+        this.coleccionPersonas.guardarPersona(admin);
     }
 
     public Persona login(String correo, String contrasena) {

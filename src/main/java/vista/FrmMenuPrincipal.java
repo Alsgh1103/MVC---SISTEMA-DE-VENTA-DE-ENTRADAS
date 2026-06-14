@@ -10,26 +10,11 @@ import controlador.ControladorPrincipal;
  */
 public class FrmMenuPrincipal extends javax.swing.JFrame {
     private ControladorPrincipal ctrl;
-    private boolean esAdmin;
-    public FrmMenuPrincipal(ControladorPrincipal ctrl, boolean esAdmin) {
+    public FrmMenuPrincipal(ControladorPrincipal ctrl) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.ctrl = ctrl;
-        this.esAdmin = esAdmin;
-        configurarMenuSegunRol();
         cargarDatosCliente();
-        
-    }
-    private void configurarMenuSegunRol(){
-        if(esAdmin){
-            btnComprar.setVisible(false);
-            btnMisCompras.setVisible(false);
-            btnPanelAdmin.setVisible(true);
-        }else{
-            btnPanelAdmin.setVisible(false);
-            btnComprar.setVisible(true);
-            btnMisCompras.setVisible(true);
-        }
         
     }
     private void cargarDatosCliente() {
@@ -71,7 +56,6 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         btnVerZonas = new javax.swing.JButton();
         btnComprar = new javax.swing.JButton();
         btnMisCompras = new javax.swing.JButton();
-        btnPanelAdmin = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
         lblPuntos = new javax.swing.JLabel();
         lblConcierto = new javax.swing.JLabel();
@@ -104,13 +88,6 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnPanelAdmin.setText("Panel de Administración");
-        btnPanelAdmin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPanelAdminActionPerformed(evt);
-            }
-        });
-
         btnCerrarSesion.setText("Cerrar Sesión");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,13 +117,13 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(45, 45, 45)
                                 .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                                 .addComponent(lblConcierto)
                                 .addGap(86, 86, 86))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnComprar)
-                                .addGap(35, 35, 35)))
+                                .addGap(46, 46, 46)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbxConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
@@ -160,17 +137,13 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                         .addGap(30, 30, 30)))
                 .addGap(61, 61, 61))
             .addGroup(layout.createSequentialGroup()
-                .addGap(198, 198, 198)
-                .addComponent(btnCerrarSesion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(176, 176, 176)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnPanelAdmin)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnMisCompras)
-                        .addGap(11, 11, 11)))
-                .addGap(180, 180, 180))
+                    .addComponent(btnMisCompras)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(btnCerrarSesion)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,11 +164,9 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                     .addComponent(btnComprar))
                 .addGap(18, 18, 18)
                 .addComponent(btnMisCompras)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addComponent(btnPanelAdmin)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(btnCerrarSesion)
-                .addGap(41, 41, 41))
+                .addGap(19, 19, 19))
         );
 
         pack();
@@ -213,12 +184,6 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         login.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
-
-    private void btnPanelAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelAdminActionPerformed
-        FrmAdmin admin = new FrmAdmin(this.ctrl);
-        admin.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnPanelAdminActionPerformed
 
     private void btnVerZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerZonasActionPerformed
         if (ctrl.getConcierto() != null) {
@@ -280,7 +245,6 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnComprar;
     private javax.swing.JButton btnMisCompras;
-    private javax.swing.JButton btnPanelAdmin;
     private javax.swing.JButton btnVerZonas;
     private javax.swing.JComboBox<String> cbxConcierto;
     private javax.swing.JLabel lblBienvenida;

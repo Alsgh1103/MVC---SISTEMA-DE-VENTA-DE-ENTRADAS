@@ -16,6 +16,7 @@ public class FrmAdmin extends javax.swing.JFrame {
     public FrmAdmin(ControladorPrincipal ctrl) {
         this.ctrl = ctrl;
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -58,6 +59,11 @@ public class FrmAdmin extends javax.swing.JFrame {
         });
 
         btnRegistrar.setText("Registrar Zona");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
 
         btnCerrarTabla.setText("Cerrar");
 
@@ -102,8 +108,12 @@ public class FrmAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRefrescarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnRefrescarActionPerformed
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
