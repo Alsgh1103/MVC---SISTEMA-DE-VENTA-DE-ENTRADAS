@@ -12,7 +12,10 @@ public class FrmAdmin extends javax.swing.JFrame {
     private ControladorPrincipal ctrl;
     /**
      * Creates new form FrmAdmin
+     * 
      */
+   
+    
     public FrmAdmin(ControladorPrincipal ctrl) {
         this.ctrl = ctrl;
         initComponents();
@@ -58,8 +61,18 @@ public class FrmAdmin extends javax.swing.JFrame {
         });
 
         btnRegistrar.setText("Registrar Zona");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
 
         btnCerrarTabla.setText("Cerrar");
+        btnCerrarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarTablaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -102,9 +115,38 @@ public class FrmAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRefrescarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarActionPerformed
-        // TODO add your handling code here:
+       refrescarTabla();
     }//GEN-LAST:event_btnRefrescarActionPerformed
 
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        String nombre = javax.swing.JOptionPane.showInputDialog(this, "Nombre:");
+        String cap = javax.swing.JOptionPane.showInputDialog(this, "Capacidad:");
+        String prec = javax.swing.JOptionPane.showInputDialog(this, "Precio:");
+
+        if (nombre != null && cap != null && prec != null) {
+        // 2. Llamar al controlador para validar y guardar
+            String resultado = ctrl.agregarZonaAlConcierto(nombre, Integer.parseInt(cap), Integer.parseInt(prec));
+        
+        // 3. Evaluar respuesta
+            if (resultado.equals("OK")) {
+                refrescarTabla();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, resultado, "Error de Validación", 
+                                                      javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        } 
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnCerrarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarTablaActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCerrarTablaActionPerformed
+    
+    private void refrescarTabla() {
+    // Llama al controlador para obtener los datos formateados (Object[][])
+    Object[][] datos = ctrl.getDatosZonasParaTabla(); 
+    String[] columnas = {"Zona", "Capacidad Restante", "Entradas Vendidas"};
+    tblVentas.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarTabla;
