@@ -1,48 +1,42 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
-
-import java.util.ArrayList;
 
 public class Zona {
     private String nombre;
     private int capacidadTotal;
     private int capacidadDisponible;
     private int precio;
-    private ArrayList<Entrada> entradas;
+    // Fidelidad estructural: Arreglo nativo en lugar de ArrayList
+    private Entrada[] entradas;
 
     public Zona(int id, String name, int price, int capacity) {
         this.nombre = name;
         this.precio = price;
         this.capacidadTotal = capacity;
         this.capacidadDisponible = capacity;
-        this.entradas = new ArrayList<>();
+        this.entradas = new Entrada[capacity]; // Inicialización estricta
     }
 
     public boolean generarEntradas() {
-        entradas.clear();
-        for (int i = 1; i <= capacidadTotal; i++) {
-            entradas.add(new Entrada(i, "DISPONIBLE"));
+        for (int i = 0; i < capacidadTotal; i++) {
+            entradas[i] = new Entrada(i + 1, "DISPONIBLE");
         }
         return true;
     }
 
     public Entrada[] mostrarEntrada() {
-        return entradas.toArray(new Entrada[0]);
+        return entradas;
     }
 
     public Entrada[] venderEntrada(int numero) {
-        ArrayList<Entrada> vendidas = new ArrayList<>();
-        for (Entrada e : entradas) {
-            if (e.getNumero() == numero && e.vender()) {
-                vendidas.add(e);
+        Entrada[] vendidas = new Entrada[1]; // Limitado a la firma requerida
+        for (int i = 0; i < capacidadTotal; i++) {
+            if (entradas[i] != null && entradas[i].getNumero() == numero && entradas[i].vender()) {
+                vendidas[0] = entradas[i];
                 capacidadDisponible--;
                 break;
             }
         }
-        return vendidas.toArray(new Entrada[0]);
+        return vendidas;
     }
 
     public boolean verificarDisponibilidad(int cantidadEntradas) {
@@ -53,40 +47,28 @@ public class Zona {
         if (verificarDisponibilidad(cantidadComprada)) {
             capacidadDisponible -= cantidadComprada;
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public int getPrecio() {
-        return precio;
-    }
-
-    public int getCapacidadTotal() {
-        return capacidadTotal;
-    }
-
-    public int getCapacidadDisponible() {
+    // ==========================================
+    // Métodos de auditoría requeridos por el Controlador
+    // ==========================================
+    public int getCapacidadRestante() {
         return capacidadDisponible;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public int getEntradasVendidas() {
+        return capacidadTotal - capacidadDisponible;
     }
 
-    public void setPrecio(int precio) {
-        this.precio = precio;
-    }
-
-    public void setCapacidadTotal(int capacidadTotal) {
-        this.capacidadTotal = capacidadTotal;
-    }
-
-    public void setCapacidadDisponible(int capacidadDisponible) {
-        this.capacidadDisponible = capacidadDisponible;
-    }
+    // Getters y Setters originales
+    public String getNombre() { return nombre; }
+    public int getPrecio() { return precio; }
+    public int getCapacidadTotal() { return capacidadTotal; }
+    public int getCapacidadDisponible() { return capacidadDisponible; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setPrecio(int precio) { this.precio = precio; }
+    public void setCapacidadTotal(int capacidadTotal) { this.capacidadTotal = capacidadTotal; }
+    public void setCapacidadDisponible(int capacidadDisponible) { this.capacidadDisponible = capacidadDisponible; }
 }
