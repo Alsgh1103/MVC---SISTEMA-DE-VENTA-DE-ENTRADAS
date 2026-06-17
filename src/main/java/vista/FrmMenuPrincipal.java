@@ -11,10 +11,36 @@ import controlador.ControladorPrincipal;
 public class FrmMenuPrincipal extends javax.swing.JFrame {
     private ControladorPrincipal ctrl;
     public FrmMenuPrincipal(ControladorPrincipal ctrl) {
-        this.ctrl = ctrl;
         initComponents();
         this.setLocationRelativeTo(null);
+        this.ctrl = ctrl;
+        cargarDatosCliente();
+        
     }
+    private void cargarDatosCliente() {
+        modelo.Persona usuario = ctrl.getUsuarioLogueado();
+        if (usuario != null) {
+            lblBienvenida.setText("Bienvenido: " + usuario.getNombres() + " " + usuario.getApellidos());
+            
+            if (usuario instanceof modelo.Cliente) {
+                modelo.Cliente c = (modelo.Cliente) usuario;
+                lblPuntos.setText("Puntos: " + c.getPuntos());
+            } else {
+                lblPuntos.setText("Puntos: N/A");
+                lblConcierto.setText("Administración");
+            }
+            
+            cbxConcierto.removeAllItems();
+            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
+                cbxConcierto.addItem(con.getNombre());
+            }
+            
+            if (ctrl.getConciertoSeleccionado() != null) {
+                cbxConcierto.setSelectedItem(ctrl.getConciertoSeleccionado().getNombre());
+            }
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -25,57 +51,58 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jDialog1 = new javax.swing.JDialog();
-        jDialog2 = new javax.swing.JDialog();
-        label1 = new java.awt.Label();
-        btnCliente = new javax.swing.JButton();
-        btnAdministrador = new javax.swing.JButton();
-        btnRegistrarCliente = new javax.swing.JButton();
-
-        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
-        jDialog1.getContentPane().setLayout(jDialog1Layout);
-        jDialog1Layout.setHorizontalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog1Layout.setVerticalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
-        jDialog2.getContentPane().setLayout(jDialog2Layout);
-        jDialog2Layout.setHorizontalGroup(
-            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog2Layout.setVerticalGroup(
-            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        label1.setText("label1");
+        panel1 = new java.awt.Panel();
+        lblBienvenida = new javax.swing.JLabel();
+        btnVerZonas = new javax.swing.JButton();
+        btnComprar = new javax.swing.JButton();
+        btnMisCompras = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
+        lblPuntos = new javax.swing.JLabel();
+        lblConcierto = new javax.swing.JLabel();
+        cbxConcierto = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnCliente.setText("Comprar Entradas");
-        btnCliente.addActionListener(new java.awt.event.ActionListener() {
+        panel1.setLayout(new java.awt.GridBagLayout());
+
+        lblBienvenida.setText("Bienvenido:");
+
+        btnVerZonas.setText("Ver zonas y precios");
+        btnVerZonas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClienteActionPerformed(evt);
+                btnVerZonasActionPerformed(evt);
             }
         });
 
-        btnAdministrador.setText("Gestión de Evento");
-        btnAdministrador.addActionListener(new java.awt.event.ActionListener() {
+        btnComprar.setText("Comprar Entradas");
+        btnComprar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdministradorActionPerformed(evt);
+                btnComprarActionPerformed(evt);
             }
         });
 
-        btnRegistrarCliente.setText("Regístrate");
-        btnRegistrarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btnMisCompras.setText("Mi Historial y Puntos");
+        btnMisCompras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarClienteActionPerformed(evt);
+                btnMisComprasActionPerformed(evt);
+            }
+        });
+
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
+
+        lblPuntos.setText("Puntos:");
+
+        lblConcierto.setText("Seleccione el concierto:");
+
+        cbxConcierto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxConcierto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxConciertoActionPerformed(evt);
             }
         });
 
@@ -84,62 +111,103 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addComponent(btnCliente)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                .addComponent(btnAdministrador)
-                .addGap(44, 44, 44))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRegistrarCliente)
-                .addGap(157, 157, 157))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(45, 45, 45)
+                                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                                .addComponent(lblConcierto)
+                                .addGap(86, 86, 86))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnComprar)
+                                .addGap(46, 46, 46)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbxConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(btnVerZonas))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(lblBienvenida)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblPuntos)
+                        .addGap(30, 30, 30)))
+                .addGap(61, 61, 61))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(176, 176, 176)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnMisCompras)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(btnCerrarSesion)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(103, 103, 103)
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCliente)
-                    .addComponent(btnAdministrador))
-                .addGap(45, 45, 45)
-                .addComponent(btnRegistrarCliente)
-                .addContainerGap(106, Short.MAX_VALUE))
+                    .addComponent(lblBienvenida)
+                    .addComponent(lblPuntos))
+                .addGap(46, 46, 46)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblConcierto)
+                        .addComponent(cbxConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnVerZonas)
+                    .addComponent(btnComprar))
+                .addGap(18, 18, 18)
+                .addComponent(btnMisCompras)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion)
+                .addGap(19, 19, 19))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClienteActionPerformed
-        /*FrmCliente vistaCliente = new FrmCliente(this.ctrl);
-        vistaCliente.setVisible(true);
-        this.dispose();*/
-    }//GEN-LAST:event_btnClienteActionPerformed
+    private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
 
-    private void btnAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministradorActionPerformed
-        /*String dni = javax.swing.JOptionPane.showInputDialog("Ingrese su DNI");
-        String pass = javax.swing.JOptionPane.showInputDialog("Ingrese su código de Administrador");
-        if(ctrl.getSistema().validarAccesoAdmin(dni,pass)!=null){
-            FrmAdmin vistaAdmin = new FrmAdmin(this.ctrl);
-            vistaAdmin.setVisible(true);
-            this.dispose();
-        }else{
-            javax.swing.JOptionPane.showInputDialog("Acceso denegado, datos incorrectos");
-        }*/
-    }//GEN-LAST:event_btnAdministradorActionPerformed
+    }//GEN-LAST:event_btnComprarActionPerformed
 
-    private void btnRegistrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarClienteActionPerformed
-        FrmRegistro vistaRegistro = new FrmRegistro(this.ctrl);
-        vistaRegistro.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnRegistrarClienteActionPerformed
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
 
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnVerZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerZonasActionPerformed
+ 
+    }//GEN-LAST:event_btnVerZonasActionPerformed
+
+    private void btnMisComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMisComprasActionPerformed
+
+    }//GEN-LAST:event_btnMisComprasActionPerformed
+
+    private void cbxConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxConciertoActionPerformed
+ 
+    }//GEN-LAST:event_cbxConciertoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdministrador;
-    private javax.swing.JButton btnCliente;
-    private javax.swing.JButton btnRegistrarCliente;
-    private javax.swing.JDialog jDialog1;
-    private javax.swing.JDialog jDialog2;
-    private java.awt.Label label1;
+    private javax.swing.JButton btnCerrarSesion;
+    private javax.swing.JButton btnComprar;
+    private javax.swing.JButton btnMisCompras;
+    private javax.swing.JButton btnVerZonas;
+    private javax.swing.JComboBox<String> cbxConcierto;
+    private javax.swing.JLabel lblBienvenida;
+    private javax.swing.JLabel lblConcierto;
+    private javax.swing.JLabel lblPuntos;
+    private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
+    public javax.swing.JButton getBtnComprar() { return btnComprar; }
+    public javax.swing.JButton getBtnVerZonas() { return btnVerZonas; }
+    public javax.swing.JButton getBtnMisCompras() { return btnMisCompras; }
+    public javax.swing.JButton getBtnCerrarSesion() { return btnCerrarSesion; }
+    public javax.swing.JComboBox<String> getCbxConcierto() { return cbxConcierto; }
+
+
 }
