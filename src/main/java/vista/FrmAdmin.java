@@ -9,7 +9,12 @@ import controlador.ControladorPrincipal;
  * @author alex_
  */
 public class FrmAdmin extends javax.swing.JFrame {
-    public FrmAdmin() {
+    private ControladorPrincipal ctrl;
+    /**
+     * Creates new form FrmAdmin
+     */
+    public FrmAdmin(ControladorPrincipal ctrl) {
+        this.ctrl = ctrl;
         initComponents();
         this.setLocationRelativeTo(null);
     }
@@ -29,7 +34,6 @@ public class FrmAdmin extends javax.swing.JFrame {
         btnRefrescar = new javax.swing.JButton();
         btnRegistrar = new javax.swing.JButton();
         btnCerrarTabla = new javax.swing.JButton();
-        btnRegistrarConcierto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,7 +58,7 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
-        btnRegistrar.setText("Registrar Compra");
+        btnRegistrar.setText("Registrar Zona");
         btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegistrarActionPerformed(evt);
@@ -63,38 +67,27 @@ public class FrmAdmin extends javax.swing.JFrame {
 
         btnCerrarTabla.setText("Cerrar");
 
-        btnRegistrarConcierto.setText("Registrar Concierto");
-        btnRegistrarConcierto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarConciertoActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(99, 99, 99)
-                            .addComponent(lblAuditoria, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(102, 102, 102))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnRefrescar)
-                                    .addGap(34, 34, 34)
-                                    .addComponent(btnRegistrar)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnCerrarTabla))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(23, 23, 23)))
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addComponent(lblAuditoria, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(102, 102, 102))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnRegistrarConcierto)
-                        .addGap(124, 124, 124))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(btnRefrescar)
+                                .addGap(34, 34, 34)
+                                .addComponent(btnRegistrar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCerrarTabla)))
+                        .addGap(23, 23, 23))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -103,14 +96,12 @@ public class FrmAdmin extends javax.swing.JFrame {
                 .addComponent(lblAuditoria)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegistrar)
                     .addComponent(btnRefrescar)
+                    .addComponent(btnRegistrar)
                     .addComponent(btnCerrarTabla))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRegistrarConcierto)
-                .addGap(10, 10, 10))
+                .addGap(19, 19, 19))
         );
 
         pack();
@@ -124,41 +115,13 @@ public class FrmAdmin extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
-    private void btnRegistrarConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarConciertoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRegistrarConciertoActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarTabla;
     private javax.swing.JButton btnRefrescar;
     private javax.swing.JButton btnRegistrar;
-    private javax.swing.JButton btnRegistrarConcierto;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAuditoria;
     public javax.swing.JTable tblVentas;
     // End of variables declaration//GEN-END:variables
-public javax.swing.JButton getBtnRefrescar() {
-        return btnRefrescar;
-    }
-
-    public javax.swing.JButton getBtnRegistrarZona() {
-        return btnRegistrar;
-    }
-
-    public javax.swing.JButton getBtnCerrarTabla() {
-        return btnCerrarTabla;
-    }
-
-    public javax.swing.JButton getBtnRegistrarConcierto() {
-        return btnRegistrarConcierto;
-    }
-
-    public javax.swing.JTable getTblVentas() {
-        return tblVentas;
-    }
-
-
-
-
 }

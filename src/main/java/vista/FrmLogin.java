@@ -133,11 +133,38 @@ public class FrmLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnIniciarSesionActionPerformed
-       
+        String correo = txtCorreo.getText();
+        String contrasena = new String(txtContrasena.getPassword());
+
+        if (correo.isEmpty() || contrasena.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        modelo.Persona p = ctrl.login(correo, contrasena);
+
+        if (p != null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "¡Bienvenido, " + p.getNombres() + "!");
+            boolean esAdmin = p instanceof modelo.Usuario;
+            if (esAdmin) {
+                FrmAdmin ventanaAdmin = new FrmAdmin(this.ctrl);
+                ventanaAdmin.setVisible(true);
+            } else {
+                FrmMenuPrincipal ventanaPrincipal = new FrmMenuPrincipal(this.ctrl);
+                ventanaPrincipal.setVisible(true);
+            }
+            this.dispose();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Credenciales incorrectas.", "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }// GEN-LAST:event_btnIniciarSesionActionPerformed
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRegistrarseActionPerformed
-        
+        FrmRegistro registro = new FrmRegistro(this.ctrl);
+        registro.setVisible(true);
+        this.dispose();
     }// GEN-LAST:event_btnRegistrarseActionPerformed
 
     /**
@@ -155,15 +182,4 @@ public class FrmLogin extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JTextField txtCorreo;
     // End of variables declaration//GEN-END:variables
-// ==========================================
-// Getters públicos para el Controlador
-// ==========================================
-public javax.swing.JButton getBtnIniciarSesion() { return btnIniciarSesion; }
-public javax.swing.JButton getBtnRegistrarse() { return btnRegistrarse; }
-
-public String getCorreo() { return txtCorreo.getText().trim(); }
-public String getContrasena() { return new String(txtContrasena.getPassword()); }
-
-
-
 }

@@ -173,23 +173,72 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
-
+        FrmCliente cliente = new FrmCliente(this.ctrl);
+        cliente.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnComprarActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-
+        ctrl.cerrarSesion();
+        FrmLogin login = new FrmLogin(this.ctrl);
+        login.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnVerZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerZonasActionPerformed
- 
+        if (ctrl.getConcierto() != null) {
+            StringBuilder sb = new StringBuilder("Zonas del Concierto: " + ctrl.getConcierto().getNombre() + "\n\n");
+            for (modelo.Zona z : ctrl.getConcierto().getTodasLasZonas()) {
+                sb.append("- ").append(z.getNombre())
+                  .append(": S/ ").append(z.getPrecio())
+                  .append(" (Disponibles: ").append(z.getCapacidadDisponible()).append("/").append(z.getCapacidadTotal()).append(")\n");
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, sb.toString());
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay concierto seleccionado.");
+        }
     }//GEN-LAST:event_btnVerZonasActionPerformed
 
     private void btnMisComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMisComprasActionPerformed
-
+        modelo.Persona usuario = ctrl.getUsuarioLogueado();
+        if (usuario instanceof modelo.Cliente) {
+            modelo.Cliente c = (modelo.Cliente) usuario;
+            StringBuilder sb = new StringBuilder("Historial de Compras de " + c.getNombres() + "\n");
+            sb.append("Puntos acumulados: ").append(c.getPuntos()).append("\n\n");
+            sb.append("Compras realizadas:\n");
+            
+            boolean tieneVentas = false;
+            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
+                for (modelo.Venta v : con.getTodasLasVentas()) {
+                    if (v.getCliente().getDni().equals(c.getDni())) {
+                        sb.append("- ").append(con.getNombre())
+                          .append(" | ").append(v.getZona().getNombre())
+                          .append(" | Cantidad: ").append(v.getCantidadEntradas())
+                          .append(" | Total: S/ ").append(v.getMonto())
+                          .append(" | Transacción: ").append(v.getIdTransaccion()).append("\n");
+                        tieneVentas = true;
+                    }
+                }
+            }
+            if (!tieneVentas) {
+                sb.append("No has realizado ninguna compra todavía.");
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, sb.toString());
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Esta opción solo está disponible para Clientes.");
+        }
     }//GEN-LAST:event_btnMisComprasActionPerformed
 
     private void cbxConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxConciertoActionPerformed
- 
+        String seleccion = (String) cbxConcierto.getSelectedItem();
+        if (seleccion != null) {
+            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
+                if (con.getNombre().equals(seleccion)) {
+                    ctrl.setConciertoSeleccionado(con);
+                    break;
+                }
+            }
+        }
     }//GEN-LAST:event_cbxConciertoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -203,11 +252,4 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblPuntos;
     private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
-    public javax.swing.JButton getBtnComprar() { return btnComprar; }
-    public javax.swing.JButton getBtnVerZonas() { return btnVerZonas; }
-    public javax.swing.JButton getBtnMisCompras() { return btnMisCompras; }
-    public javax.swing.JButton getBtnCerrarSesion() { return btnCerrarSesion; }
-    public javax.swing.JComboBox<String> getCbxConcierto() { return cbxConcierto; }
-
-
 }

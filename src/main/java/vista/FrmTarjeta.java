@@ -11,7 +11,6 @@ import controlador.ControladorPrincipal;
 public class FrmTarjeta extends javax.swing.JFrame {
     private ControladorPrincipal ctrl;
     private FrmCliente vistaCliente;
-
     /**
      * Creates new form FrmTarjeta
      */
@@ -181,11 +180,56 @@ public class FrmTarjeta extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNumeroTarjetaActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-
+        if (this.vistaCliente != null) {
+            this.vistaCliente.setVisible(true);
+        }
+        this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    String nroTarjeta = txtNumeroTarjeta.getText().trim().replaceAll("\\s+", "");
+        String titular = txtNombreTarjeta.getText().trim();
+        String vencimiento = txtFechaVencimiento.getText().trim();
+        String cvvStr = txtCvv.getText().trim();
+        boolean guardarFuturas = CheckTarjeta.isSelected();
+        
+        if (nroTarjeta.isEmpty() || titular.isEmpty() || vencimiento.isEmpty() || cvvStr.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (!nroTarjeta.matches("\\d{13,19}")) { 
+            javax.swing.JOptionPane.showMessageDialog(this, "El número de tarjeta debe tener entre 13 y 19 dígitos numéricos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int cvv = 0;
+        try {
+            cvv = Integer.parseInt(cvvStr);
+        } catch(NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El CVV debe ser únicamente numérico.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
 
+        modelo.Tarjeta nuevaTarjeta = new modelo.Tarjeta(nroTarjeta, titular, vencimiento, cvv);
+        
+        if (guardarFuturas) {
+            modelo.Persona usuario = ctrl.getUsuarioLogueado();
+            if (usuario instanceof modelo.Cliente) {
+                modelo.Cliente cliente = (modelo.Cliente) usuario;
+                cliente.setTarjeta(nuevaTarjeta);
+            }
+        }
+        
+        if (this.vistaCliente != null) {
+            this.vistaCliente.setTarjetaActiva(nuevaTarjeta);
+            this.vistaCliente.setVisible(true);
+        }
+        
+        javax.swing.JOptionPane.showMessageDialog(this, "Tarjeta registrada correctamente.");
+        this.dispose();
+    
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void CheckTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckTarjetaActionPerformed
@@ -208,16 +252,4 @@ public class FrmTarjeta extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombreTarjeta;
     private javax.swing.JTextField txtNumeroTarjeta;
     // End of variables declaration//GEN-END:variables
-// Getters públicos para el Controlador
-public javax.swing.JButton getBtnGuardar() { return btnGuardar; }
-public javax.swing.JButton getBtnVolver() { return btnVolver; }
-
-// Getters para extraer los datos de la tarjeta
-public String getNumeroTarjeta() { return txtNumeroTarjeta.getText().trim().replaceAll("\\s+", ""); }
-public String getNombreTarjeta() { return txtNombreTarjeta.getText().trim(); }
-public String getVencimiento() { return txtFechaVencimiento.getText().trim(); }
-public String getCvv() { return txtCvv.getText().trim(); }
-public boolean getGuardarFuturas() { return CheckTarjeta.isSelected(); }
-
-
 }
