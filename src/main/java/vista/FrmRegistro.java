@@ -149,26 +149,11 @@ public class FrmRegistro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String dni = txtDni.getText().trim();
-        String nom = txtNombre.getText().trim();
-        String ape = txtApellido.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String pass = new String(txtPass.getPassword()).trim();
-        if (!dni.isEmpty() && !pass.isEmpty() && !nom.isEmpty() && !ape.isEmpty() && !correo.isEmpty()) {
-            ctrl.registrarNuevoCliente(dni, nom, ape, correo, pass, false);
-            javax.swing.JOptionPane.showMessageDialog(this, "Registro exitoso. Ya puedes iniciar sesión con tu correo.");
-            FrmLogin login = new FrmLogin(this.ctrl);
-            login.setVisible(true);
-            this.dispose();
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, completa todos los campos.");
-        }           
+          
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        FrmLogin login = new FrmLogin(this.ctrl);
-        login.setVisible(true);
-        this.dispose();
+
     }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
@@ -191,4 +176,17 @@ public class FrmRegistro extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JPasswordField txtPass;
     // End of variables declaration//GEN-END:variables
+// Getters públicos para el Controlador
+public javax.swing.JButton getBtnGuardar() { return btnGuardar; }
+public javax.swing.JButton getBtnVolver() { return btnVolver; }
+
+// Getters para extraer la información escrita
+public String getDni() { return txtDni.getText().trim(); }
+public String getNombre() { return txtNombre.getText().trim(); }
+public String getApellido() { return txtApellido.getText().trim(); }
+public String getCorreo() { return txtCorreo.getText().trim(); }
+public String getPass() { return new String(txtPass.getPassword()).trim(); }
+
+
+
 }
