@@ -61,6 +61,39 @@ public class ControladorPrincipal {
             conciertoSeleccionado.registrarVenta(v);
         }
     }
+    
+    public String agregarZonaAlConcierto(String nombre, int capacidad, int precio) {
+        try {
+        // REGLAS DE NEGOCIO:
+        if (capacidad <= 0) return "La capacidad debe ser mayor a 0.";
+        if (precio < 0) return "El precio no puede ser negativo.";
+        if (nombre == null || nombre.trim().isEmpty()) return "El nombre no puede estar vacío.";
+
+        // Si pasa las validaciones, agregamos
+        int nuevoId = conciertoSeleccionado.getTodasLasZonas().size() + 1;
+        conciertoSeleccionado.agregarZona(new Zona(nuevoId, nombre, precio, capacidad));
+        return "OK";
+        
+        } catch (NumberFormatException e) {
+            return "Error: Capacidad y Precio deben ser números enteros.";
+        }
+    }
+    
+    public Object[][] getDatosZonasParaTabla() {
+    if (conciertoSeleccionado == null) return new Object[0][0];
+
+    ArrayList<Zona> zonas = conciertoSeleccionado.getTodasLasZonas();
+    Object[][] datos = new Object[zonas.size()][3];
+
+    for (int i = 0; i < zonas.size(); i++) {
+        Zona z = zonas.get(i);
+        datos[i][0] = z.getNombre();
+        datos[i][1] = z.getCapacidadDisponible();
+        // Calculamos vendidas como diferencia entre total y disponible
+        datos[i][2] = z.getCapacidadTotal() - z.getCapacidadDisponible();
+    }
+    return datos;
+    }
 
     public Concierto getConcierto() {
         return conciertoSeleccionado;
