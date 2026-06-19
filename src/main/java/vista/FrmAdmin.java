@@ -37,6 +37,7 @@ public class FrmAdmin extends javax.swing.JFrame {
         btnRefrescar = new javax.swing.JButton();
         btnRegistrar = new javax.swing.JButton();
         btnCerrarTabla = new javax.swing.JButton();
+        btnCrearConcierto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -44,12 +45,12 @@ public class FrmAdmin extends javax.swing.JFrame {
 
         tblVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Zona", "Capacidad Restante", "Entradas Vendidas"
+                "Concierto", "Zona", "Capacidad Restante", "Entradas Vendidas"
             }
         ));
         jScrollPane1.setViewportView(tblVentas);
@@ -75,41 +76,50 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnCrearConcierto.setText("Registrar Concierto");
+        btnCrearConcierto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearConciertoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
-                        .addComponent(lblAuditoria, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(102, 102, 102))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(btnRefrescar)
-                                .addGap(34, 34, 34)
-                                .addComponent(btnRegistrar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnCerrarTabla)))
-                        .addGap(23, 23, 23))))
+                .addGap(165, 165, 165)
+                .addComponent(lblAuditoria, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(btnRefrescar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(btnCrearConcierto)
+                .addGap(18, 18, 18)
+                .addComponent(btnRegistrar)
+                .addGap(18, 18, 18)
+                .addComponent(btnCerrarTabla)
+                .addGap(23, 23, 23))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
+                .addContainerGap()
                 .addComponent(lblAuditoria)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRefrescar)
+                    .addComponent(btnCerrarTabla)
                     .addComponent(btnRegistrar)
-                    .addComponent(btnCerrarTabla))
-                .addGap(19, 19, 19))
+                    .addComponent(btnCrearConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17))
         );
 
         pack();
@@ -120,37 +130,64 @@ public class FrmAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRefrescarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        String nombre = javax.swing.JOptionPane.showInputDialog(this, "Nombre:");
-        String cap = javax.swing.JOptionPane.showInputDialog(this, "Capacidad:");
-        String prec = javax.swing.JOptionPane.showInputDialog(this, "Precio:");
+        if (ctrl.getConciertoSeleccionado() == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Debe crear un concierto primero antes de agregar zonas.", "Atención", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        if (nombre != null && cap != null && prec != null) {
-        // 2. Llamar al controlador para validar y guardar
-            String resultado = ctrl.agregarZonaAlConcierto(nombre, Integer.parseInt(cap), Integer.parseInt(prec));
+        // 2. Pedimos los datos (aquí se declaran las variables una sola vez)
+        String nombre = javax.swing.JOptionPane.showInputDialog(this, "Nombre de la zona (Ej: VIP):");
+        if (nombre == null) return; // Si el usuario presiona "Cancelar", cortamos la ejecución
+
+        String cap = javax.swing.JOptionPane.showInputDialog(this, "Capacidad total:");
+        if (cap == null) return;
+
+        String prec = javax.swing.JOptionPane.showInputDialog(this, "Precio (S/):");
+        if (prec == null) return;
+
+        // 3. Procesamos con prevención de errores
+        try {
+            int capacidadParseada = Integer.parseInt(cap);
+            int precioParseado = Integer.parseInt(prec);
+            
+            String resultado = ctrl.agregarZonaAlConcierto(nombre, capacidadParseada, precioParseado);
         
-        // 3. Evaluar respuesta
             if (resultado.equals("OK")) {
                 refrescarTabla();
+                javax.swing.JOptionPane.showMessageDialog(this, "Zona agregada con éxito.");
             } else {
-                javax.swing.JOptionPane.showMessageDialog(this, resultado, "Error de Validación", 
-                                                      javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this, resultado, "Error de Validación", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-        } 
+            
+        } catch (NumberFormatException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La capacidad y el precio deben ser números válidos.", "Error de Tipado", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnCerrarTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarTablaActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnCerrarTablaActionPerformed
+
+    private void btnCrearConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearConciertoActionPerformed
+        FrmConcierto ventanaConcierto = new FrmConcierto(this.ctrl, this);
+        ventanaConcierto.setVisible(true);
+        this.setVisible(false); // Ocultamos el admin temporalmente
+  
+    }//GEN-LAST:event_btnCrearConciertoActionPerformed
     
     private void refrescarTabla() {
-    // Llama al controlador para obtener los datos formateados (Object[][])
-    Object[][] datos = ctrl.getDatosZonasParaTabla(); 
-    String[] columnas = {"Zona", "Capacidad Restante", "Entradas Vendidas"};
-    tblVentas.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
-    }
-
+        // Llama al controlador para obtener los datos formateados (Object[][])
+        Object[][] datos = ctrl.getDatosZonasParaTabla(); 
+        
+        // Agregamos "Concierto" al inicio del arreglo de columnas
+        String[] columnas = {"Concierto", "Zona", "Capacidad Restante", "Entradas Vendidas"};
+        
+        // Al setear el modelo, la tabla se dibuja automáticamente con la nueva columna
+        tblVentas.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
+        }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarTabla;
+    private javax.swing.JButton btnCrearConcierto;
     private javax.swing.JButton btnRefrescar;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JScrollPane jScrollPane1;

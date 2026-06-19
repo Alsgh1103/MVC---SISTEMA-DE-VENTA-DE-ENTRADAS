@@ -1,5 +1,6 @@
 vista\FrmCliente$2.class
 vista\FrmAdmin.class
+vista\FrmAdmin$4.class
 vista\FrmRegistro.class
 vista\FrmCliente$1.class
 modelo\Entrada.class
@@ -8,6 +9,7 @@ controlador\ControladorPrincipal.class
 vista\FrmRegistro$1.class
 modelo\Venta.class
 modelo\Zona.class
+vista\FrmConcierto.class
 modelo\Cliente.class
 modelo\Usuario.class
 vista\FrmCliente.class

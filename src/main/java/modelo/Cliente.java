@@ -36,4 +36,17 @@ public class Cliente extends Persona {
     public void setEsSocio(boolean esSocio) {
         this.esSocio = esSocio;
     }
+    
+    // Regla de negocio: Los socios tienen 30% de descuento
+    public double aplicarDescuento(double subtotal) {
+        if (this.isSocio()) {
+            return subtotal * 0.70; 
+        }
+        return subtotal;
+    }
+
+    public void acumularPuntosPorCompra(int cantidadEntradas) {
+        // Regla de negocio: 10 puntos por entrada
+        this.puntos += (cantidadEntradas * 10);
+    }
 }

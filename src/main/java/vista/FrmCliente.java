@@ -292,71 +292,41 @@ public class FrmCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxZonasActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        if (conciertoSeleccionado == null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un concierto primero.");
-            return;
-        }
         String nombreZona = (String) cbxZonas.getSelectedItem();
-        if (nombreZona == null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una zona.");
-            return;
-        }
-        Zona zonaEncontrada = conciertoSeleccionado.buscarZonaPorNombre(nombreZona);
-        if (zonaEncontrada == null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Zona no encontrada.");
-            return;
-        }
-        
         int cantidad = (int) spnCantidad.getValue();
-        if (cantidad <= 0) {
-            javax.swing.JOptionPane.showMessageDialog(this, "La cantidad de entradas debe ser mayor a 0.");
-            return;
-        }
-        if (cantidad > zonaEncontrada.getCapacidadDisponible()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "No hay suficientes asientos disponibles en esta zona.");
-            return;
-        }
         
-        modelo.Persona usuario = ctrl.getUsuarioLogueado();
-        if (!(usuario instanceof Cliente)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El administrador no puede realizar compras.");
-            return;
-        }
-        Cliente cliente = (Cliente) usuario;
-        
+        // 1. Recolección de datos de la Vista
         modelo.Tarjeta tarjetaUsar = this.tarjetaActiva;
         if (tarjetaUsar == null) {
-            tarjetaUsar = cliente.getTarjeta(); 
+            modelo.Persona usuario = ctrl.getUsuarioLogueado();
+            if (usuario instanceof Cliente) {
+                tarjetaUsar = ((Cliente) usuario).getTarjeta(); 
+            }
         }
         
         if (tarjetaUsar == null) {
             javax.swing.JOptionPane.showMessageDialog(this, "Por favor, registre o seleccione una tarjeta de pago.");
             return;
         }
-        
-        double totalPagar = zonaEncontrada.getPrecio() * cantidad;
-        if (cliente.isSocio()) {
-            totalPagar *= 0.7; 
-        }
-        
-        modelo.Venta venta = new modelo.Venta(cantidad, totalPagar, cliente, zonaEncontrada, tarjetaUsar);
-        
-        if (venta.procesarCompra(tarjetaUsar.getCVV())) {
-            ctrl.registrarNuevaVenta(venta);
-            cliente.setPuntos(cliente.getPuntos() + (cantidad * 10));
+
+        // 2. Delegación total al Controlador
+        try {
+            // El controlador y el modelo se encargan del descuento, stock, puntos y creación de la Venta
+            modelo.Venta ventaRealizada = ctrl.procesarCompraConcierto(nombreZona, cantidad, tarjetaUsar);
             
+            // 3. Respuesta visual de éxito
             javax.swing.JOptionPane.showMessageDialog(this, "¡Compra Exitosa!\n" +
-                                                      "Código Transacción: " + venta.getIdTransaccion() + "\n" +
-                                                      "Monto Total: S/ " + venta.getMonto() + "\n" +
-                                                      "Puntos Ganados: " + (cantidad * 10) + "\n" +
-                                                      "Asientos restantes: " + zonaEncontrada.getCapacidadDisponible());
+                                                      "Código Transacción: " + ventaRealizada.getIdTransaccion() + "\n" +
+                                                      "Monto Total: S/ " + ventaRealizada.getMonto() + "\n" +
+                                                      "Asientos restantes: " + ventaRealizada.getZona().getCapacidadDisponible());
             
-      
             FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl);
             menu.setVisible(true);
             this.dispose();
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "La compra no pudo ser procesada. Verifique límite de entradas.");
+            
+        } catch (Exception ex) {
+            // 4. Captura de errores de lógica de negocio (ej. falta de stock, tarjeta rechazada)
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en la compra", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
