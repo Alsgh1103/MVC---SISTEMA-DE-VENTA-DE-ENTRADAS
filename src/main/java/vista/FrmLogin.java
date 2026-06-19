@@ -136,11 +136,11 @@ public class FrmLogin extends javax.swing.JFrame {
         String correo = txtCorreo.getText();
         String contrasena = new String(txtContrasena.getPassword());
         controladorLogin.iniciarSesion(correo, contrasena);
-    }
+    }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRegistrarseActionPerformed
         controladorLogin.abrirRegistro();
-    }
+    }//GEN-LAST:event_btnRegistrarseActionPerformed
 
     /**
      * @param args the command line arguments
