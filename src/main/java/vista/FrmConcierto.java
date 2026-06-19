@@ -137,9 +137,47 @@ String nombre = txtNombre.getText().trim();
             ctrl.registrarNuevoConcierto(nombre, fechaConcierto);
             
             javax.swing.JOptionPane.showMessageDialog(this, "¡Concierto '" + nombre + "' registrado exitosamente!");
-            
-            // Retorno al panel de administración
+            String numZonasStr = javax.swing.JOptionPane.showInputDialog(this, "¿Cuántas zonas tendrá este concierto?");
+            if (numZonasStr != null && !numZonasStr.trim().isEmpty()) {
+                try {
+                    int numZonas = Integer.parseInt(numZonasStr.trim());
+                    for (int i = 0; i < numZonas; i++) {
+                        String nombreZona = javax.swing.JOptionPane.showInputDialog(this, "Nombre de la zona " + (i + 1) + " (Ej: VIP):");
+                        if (nombreZona == null) break;
+
+                        String cap = javax.swing.JOptionPane.showInputDialog(this, "Capacidad total para " + nombreZona + ":");
+                        if (cap == null) break;
+
+                        String prec = javax.swing.JOptionPane.showInputDialog(this, "Precio (S/) para " + nombreZona + ":");
+                        if (prec == null) break;
+
+                        try {
+                            int capacidadParseada = Integer.parseInt(cap);
+                            int precioParseado = Integer.parseInt(prec);
+
+                            String resultado = ctrl.agregarZonaAlConcierto(nombreZona, capacidadParseada, precioParseado);
+
+                            if (resultado.equals("OK")) {
+                                javax.swing.JOptionPane.showMessageDialog(this, "Zona agregada con éxito.");
+                            } else {
+                                javax.swing.JOptionPane.showMessageDialog(this, resultado, "Error de Validación", javax.swing.JOptionPane.ERROR_MESSAGE);
+                                i--; 
+                            }
+                        } catch (NumberFormatException ex) {
+                            javax.swing.JOptionPane.showMessageDialog(this, "La capacidad y el precio deben ser números válidos.", "Error de Tipado", javax.swing.JOptionPane.ERROR_MESSAGE);
+                            i--; 
+                        }
+                    }
+                } catch (NumberFormatException ex) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Número de zonas inválido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+           
             if (this.vistaAnterior != null) {
+                if (this.vistaAnterior instanceof FrmAdmin) {
+                    ((FrmAdmin) this.vistaAnterior).refrescarTabla();
+                }
                 this.vistaAnterior.setVisible(true);
             }
             this.dispose();

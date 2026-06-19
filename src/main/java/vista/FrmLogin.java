@@ -5,21 +5,21 @@
 package vista;
 
 import controlador.ControladorPrincipal;
-
+import controlador.ControladorLogin;
 /**
  *
  * @author alex_
  */
 public class FrmLogin extends javax.swing.JFrame {
-    private ControladorPrincipal ctrl;
+    private ControladorLogin controladorLogin;
 
     /**
      * Creates new form VistaLogin
      */
     public FrmLogin(ControladorPrincipal ctrl) {
-        this.ctrl = ctrl;
         initComponents();
         this.setLocationRelativeTo(null);
+        this.controladorLogin = new ControladorLogin(this,ctrl);
     }
 
     /**
@@ -135,37 +135,12 @@ public class FrmLogin extends javax.swing.JFrame {
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnIniciarSesionActionPerformed
         String correo = txtCorreo.getText();
         String contrasena = new String(txtContrasena.getPassword());
-
-        if (correo.isEmpty() || contrasena.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        modelo.Persona p = ctrl.login(correo, contrasena);
-
-        if (p != null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "¡Bienvenido, " + p.getNombres() + "!");
-            boolean esAdmin = p instanceof modelo.Usuario;
-            if (esAdmin) {
-                FrmAdmin ventanaAdmin = new FrmAdmin(this.ctrl);
-                ventanaAdmin.setVisible(true);
-            } else {
-                FrmMenuPrincipal ventanaPrincipal = new FrmMenuPrincipal(this.ctrl);
-                ventanaPrincipal.setVisible(true);
-            }
-            this.dispose();
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Credenciales incorrectas.", "Error",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-    }// GEN-LAST:event_btnIniciarSesionActionPerformed
+        controladorLogin.iniciarSesion(correo, contrasena);
+    }
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnRegistrarseActionPerformed
-        FrmRegistro registro = new FrmRegistro(this.ctrl);
-        registro.setVisible(true);
-        this.dispose();
-    }// GEN-LAST:event_btnRegistrarseActionPerformed
+        controladorLogin.abrirRegistro();
+    }
 
     /**
      * @param args the command line arguments

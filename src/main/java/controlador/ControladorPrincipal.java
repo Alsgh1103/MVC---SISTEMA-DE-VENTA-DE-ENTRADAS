@@ -52,9 +52,7 @@ public class ControladorPrincipal {
     public void registrarNuevoConcierto(String nombre, java.time.LocalDate fecha) {
         Concierto nuevo = new Concierto(nombre, fecha);
         coleccionConciertos.guardarConcierto(nuevo);
-        if (this.conciertoSeleccionado == null) {
-            this.conciertoSeleccionado = nuevo;
-        }
+        this.conciertoSeleccionado = nuevo;
     }
 
     public void registrarNuevaVenta(Venta v) {
@@ -65,12 +63,11 @@ public class ControladorPrincipal {
     
     public String agregarZonaAlConcierto(String nombre, int capacidad, int precio) {
         try {
-        // REGLAS DE NEGOCIO:
         if (capacidad <= 0) return "La capacidad debe ser mayor a 0.";
         if (precio < 0) return "El precio no puede ser negativo.";
         if (nombre == null || nombre.trim().isEmpty()) return "El nombre no puede estar vacío.";
 
-        // Si pasa las validaciones, agregamos
+        
         int nuevoId = conciertoSeleccionado.getTodasLasZonas().size() + 1;
         conciertoSeleccionado.agregarZona(new Zona(nuevoId, nombre, precio, capacidad));
         return "OK";
@@ -81,24 +78,36 @@ public class ControladorPrincipal {
     }
     
     public Object[][] getDatosZonasParaTabla() {
-        if (conciertoSeleccionado == null) return new Object[0][0];
-
-        ArrayList<Zona> zonas = conciertoSeleccionado.getTodasLasZonas();
+        ArrayList<Concierto> todos = coleccionConciertos.getTodosLosConciertos();
         
-        // Cambiamos el tamaño del arreglo de 3 a 4 columnas
-        Object[][] datos = new Object[zonas.size()][4]; 
+        int totalRows = 0;
+        for (Concierto c : todos) {
+            int zonasSize = c.getTodasLasZonas().size();
+            totalRows += (zonasSize == 0) ? 1 : zonasSize;
+        }
 
-        for (int i = 0; i < zonas.size(); i++) {
-            Zona z = zonas.get(i);
-            
-            // Columna 0: Nombre del concierto (Nuevo)
-            datos[i][0] = conciertoSeleccionado.getNombre(); 
-            // Columna 1: Nombre de la Zona
-            datos[i][1] = z.getNombre();
-            // Columna 2: Capacidad Disponible
-            datos[i][2] = z.getCapacidadDisponible();
-            // Columna 3: Entradas Vendidas (Total - Disponible)
-            datos[i][3] = z.getCapacidadTotal() - z.getCapacidadDisponible();
+        if (totalRows == 0) return new Object[0][0];
+
+        Object[][] datos = new Object[totalRows][4]; 
+        int index = 0;
+
+        for (Concierto c : todos) {
+            ArrayList<Zona> zonas = c.getTodasLasZonas();
+            if (zonas.isEmpty()) {
+                datos[index][0] = c.getNombre(); 
+                datos[index][1] = "Sin zonas";
+                datos[index][2] = "-";
+                datos[index][3] = "-";
+                index++;
+            } else {
+                for (Zona z : zonas) {
+                    datos[index][0] = c.getNombre(); 
+                    datos[index][1] = z.getNombre();
+                    datos[index][2] = z.getCapacidadDisponible();
+                    datos[index][3] = z.getCapacidadTotal() - z.getCapacidadDisponible();
+                    index++;
+                }
+            }
         }
         return datos;
     }
@@ -132,7 +141,6 @@ public class ControladorPrincipal {
     }
     
     public Venta procesarCompraConcierto(String nombreZona, int cantidad, Tarjeta tarjetaUsar) throws Exception {
-        // 1. Validaciones de flujo básico (El controlador orquesta)
         if (conciertoSeleccionado == null) throw new Exception("Seleccione un concierto primero.");
         
         Zona zonaEncontrada = conciertoSeleccionado.buscarZonaPorNombre(nombreZona);
@@ -145,17 +153,12 @@ public class ControladorPrincipal {
         
         Cliente cliente = (Cliente) usuario;
 
-        // 2. Delegamos la lógica pesada al Modelo
-        // Usamos el nuevo constructor que ya no pide el monto total
         Venta nuevaVenta = new Venta(cantidad, cliente, zonaEncontrada, tarjetaUsar);
         
-        // 3. Le pedimos al modelo que procese. Él se encarga del stock y los puntos.
         if (nuevaVenta.procesarCompra(tarjetaUsar.getCVV())) {
-            // Si la compra fue exitosa, la guardamos en el historial del concierto
             registrarNuevaVenta(nuevaVenta);
             return nuevaVenta; 
         } else {
-            // Si procesarCompra retorna false, falló el stock, límite o tarjeta
             throw new Exception("La transacción fue rechazada. Verifique la disponibilidad, su límite de entradas o la tarjeta.");
         }
     }
