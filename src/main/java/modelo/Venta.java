@@ -1,13 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
-
-/**
- *
- * @author alex_
- */
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,12 +14,14 @@ public class Venta {
     private Zona zona;
     private Tarjeta tarjeta;
 
-    public Venta(int cantidad, double montoT, Cliente c, Zona z, Tarjeta t) {
+    // Eliminamos el parámetro double montoT, el modelo lo calcula por sí mismo
+    public Venta(int cantidad, Cliente c, Zona z, Tarjeta t) {
         this.cantidadEntradas = cantidad;
         this.cliente = c;
         this.zona = z;
         this.tarjeta = t;
-        this.monto = (int) calcularTotal();
+        this.monto = (int) calcularTotal(); 
+        
         LocalDate hoy = LocalDate.now();
         this.fecha = hoy.toString();
         DateTimeFormatter formatoId = DateTimeFormatter.ofPattern("ddMMyy");
@@ -36,11 +29,55 @@ public class Venta {
         contadorVentas++;
     }
 
-    public boolean anular() {
-        return true;
+    public double calcularTotal() {
+        double total = zona.getPrecio() * cantidadEntradas;
+        if (cliente.isSocio()) {
+            total *= 0.7; // Regla de negocio: 30% descuento
+        }
+        return total;
     }
 
-    public static int getContadorVentas() {
+    public boolean procesarCompra(int cvvIngresadoUsuario) {
+        // Validaciones de negocio
+        // Nota: Asegúrate de que Zona tenga un método verificarDisponibilidad
+        if (!zona.verificarDisponibilidad(cantidadEntradas)) {
+            return false;
+        }
+        if (!validarLimiteEntradas()) {
+            return false;
+        }
+        
+        // Si el pago pasa, aplicamos las consecuencias de la regla de negocio
+        if (tarjeta.registrarCompra(cantidadEntradas, cvvIngresadoUsuario)) {
+            this.monto = (int) calcularTotal();
+            
+            // 1. Reducimos el stock (Asumiendo que creaste o crearás este método en Zona)
+            zona.reducirCapacidad(this.cantidadEntradas); 
+            
+            // 2. Acumulamos puntos (10 puntos por entrada)
+            int puntosGanados = this.cantidadEntradas * 10;
+            cliente.setPuntos(cliente.getPuntos() + puntosGanados); 
+            
+            return true;
+        }
+        return false;
+    }
+
+    public boolean validarLimiteEntradas() {
+        return tarjeta.puedeComprar(this.cantidadEntradas);
+    }
+    
+    // ... (El resto de tus getters y el método generarEntradas() se mantienen igual) ...
+    public ArrayList<Entrada> generarEntradas() {
+        ArrayList<Entrada> entradasGeneradas = new ArrayList<>();
+        for (int i = 1; i <= this.cantidadEntradas; i++) {
+            Entrada nueva = new Entrada(i, "VENDIDA");
+            entradasGeneradas.add(nueva);
+        }
+        return entradasGeneradas;
+    }
+    
+        public static int getContadorVentas() {
         return contadorVentas;
     }
 
@@ -70,41 +107,5 @@ public class Venta {
 
     public Tarjeta getTarjeta() {
         return tarjeta;
-    }
-
-    public boolean validarLimiteEntradas() {
-        return tarjeta.puedeComprar(this.cantidadEntradas);
-    }
-
-    public double calcularTotal() {
-        double total = zona.getPrecio() * cantidadEntradas;
-        if (cliente.isSocio()) {
-            total *= 0.7;
-        }
-        return total;
-    }
-
-    public boolean procesarCompra(int cvvIngresadoUsuario) {
-        if (!zona.verificarDisponibilidad(cantidadEntradas)) {
-            return false;
-        }
-        if (!validarLimiteEntradas()) {
-            return false;
-        }
-        if (tarjeta.registrarCompra(cantidadEntradas, cvvIngresadoUsuario)) {
-            monto = (int) calcularTotal();
-            return true;
-        }
-        return false;
-    }
-
-    public ArrayList<Entrada> generarEntradas() {
-        ArrayList<Entrada> entradasGeneradas = new ArrayList<>();
-
-        for (int i = 1; i <= this.cantidadEntradas; i++) {
-            Entrada nueva = new Entrada(i, "VENDIDA");
-            entradasGeneradas.add(nueva);
-        }
-        return entradasGeneradas;
     }
 }
