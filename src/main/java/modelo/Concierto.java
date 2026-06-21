@@ -18,12 +18,45 @@ public class Concierto {
         this.todosLasPersonas = new ArrayList<>();
     }
 
-    public boolean agregarZona(String nombre) {
-        return true;
+    public void registrarZona(String nombreZona, int capacidad, int precio) throws IllegalArgumentException {
+        if (capacidad <= 0) {
+            throw new IllegalArgumentException("La capacidad debe ser mayor a 0.");
+        }
+        if (precio < 0) {
+            throw new IllegalArgumentException("El precio no puede ser negativo.");
+        }
+        if (nombreZona == null || nombreZona.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de la zona no puede estar vacío.");
+        }
+        if (buscarZonaPorNombre(nombreZona) != null) {
+            throw new IllegalArgumentException("Ya existe una zona registrada con el nombre '" + nombreZona + "' en este concierto.");
+        }
+        
+        int nuevoId = this.zonas.size() + 1;
+        this.zonas.add(new Zona(nuevoId, nombreZona, precio, capacidad));
     }
 
-    public boolean eliminarZona(String nombre) {
-        return true;
+    public void eliminarZona(String nombreZona) throws IllegalArgumentException, IllegalStateException {
+        Zona zonaAEliminar = buscarZonaPorNombre(nombreZona);
+        if (zonaAEliminar == null) {
+            throw new IllegalArgumentException("La zona especificada no existe.");
+        }
+        
+        // Verificación de integridad: No borrar zonas con ventas
+        for (Venta v : todasLasVentas) {
+            if (v.getZona().getNombre().equalsIgnoreCase(nombreZona)) {
+                throw new IllegalStateException("No se puede eliminar la zona '" + nombreZona + "' porque ya tiene entradas vendidas.");
+            }
+        }
+        
+        this.zonas.remove(zonaAEliminar);
+    }
+
+    public void limpiarZonas() throws IllegalStateException {
+        if (!this.todasLasVentas.isEmpty()) {
+            throw new IllegalStateException("No se pueden editar las zonas porque ya existen entradas vendidas para este concierto.");
+        }
+        this.zonas.clear();
     }
 
     public String getNombre() { return nombre; }
@@ -94,5 +127,10 @@ public class Concierto {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return this.nombre + " (" + this.fecha.toString() + ")";
     }
 }

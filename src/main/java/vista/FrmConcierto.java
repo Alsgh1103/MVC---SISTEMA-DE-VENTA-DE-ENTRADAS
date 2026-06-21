@@ -3,20 +3,40 @@ package vista;
 import controlador.ControladorPrincipal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import modelo.Concierto;
+
+import controlador.ControladorConcierto;
 
 public class FrmConcierto extends javax.swing.JFrame {
     
     // Variables para respetar el flujo MVC
-    private ControladorPrincipal ctrl;
+    private ControladorConcierto controladorConcierto;
     private javax.swing.JFrame vistaAnterior;
+    private Concierto conciertoAEditar;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmConcierto.class.getName());
 
     // Modificamos el constructor para recibir el controlador y la ventana anterior
     public FrmConcierto(ControladorPrincipal ctrl, javax.swing.JFrame vistaAnterior) {
-        this.ctrl = ctrl;
+        this.controladorConcierto = new ControladorConcierto(this, ctrl);
         this.vistaAnterior = vistaAnterior;
         initComponents();
         this.setLocationRelativeTo(null); // Centrar la ventana
+    }
+
+    // Nuevo constructor para edición/reconfiguración
+    public FrmConcierto(ControladorPrincipal ctrl, javax.swing.JFrame vistaAnterior, Concierto conciertoAEditar) {
+        this.controladorConcierto = new ControladorConcierto(this, ctrl);
+        this.vistaAnterior = vistaAnterior;
+        this.conciertoAEditar = conciertoAEditar;
+        initComponents();
+        this.setLocationRelativeTo(null);
+
+        // Pre-poblamos los campos de texto y bloqueamos edición
+        txtNombre.setText(conciertoAEditar.getNombre());
+        txtFecha.setText(conciertoAEditar.getFecha().toString());
+        txtNombre.setEditable(false); 
+        txtFecha.setEditable(false);
+        btnGuardar.setText("Reconfigurar Zonas");
     }
 
     /**
@@ -121,59 +141,35 @@ public class FrmConcierto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-String nombre = txtNombre.getText().trim();
-        String fechaStr = txtFecha.getText().trim();
+        if (conciertoAEditar != null) {
+            // MODO EDICIÓN
+            try {
+                controladorConcierto.prepararReconfiguracionZonas(conciertoAEditar);
+                ejecutarBucleZonas();
 
-        if (nombre.isEmpty() || fechaStr.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Campos vacíos", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        try {
-            // Conversión de datos en la Vista antes de mandar al Controlador
-            LocalDate fechaConcierto = LocalDate.parse(fechaStr);
-            
-            // DELEGACIÓN ESTRUCTURAL AL CONTROLADOR
-            ctrl.registrarNuevoConcierto(nombre, fechaConcierto);
-            
-            javax.swing.JOptionPane.showMessageDialog(this, "¡Concierto '" + nombre + "' registrado exitosamente!");
-            String numZonasStr = javax.swing.JOptionPane.showInputDialog(this, "¿Cuántas zonas tendrá este concierto?");
-            if (numZonasStr != null && !numZonasStr.trim().isEmpty()) {
-                try {
-                    int numZonas = Integer.parseInt(numZonasStr.trim());
-                    for (int i = 0; i < numZonas; i++) {
-                        String nombreZona = javax.swing.JOptionPane.showInputDialog(this, "Nombre de la zona " + (i + 1) + " (Ej: VIP):");
-                        if (nombreZona == null) break;
-
-                        String cap = javax.swing.JOptionPane.showInputDialog(this, "Capacidad total para " + nombreZona + ":");
-                        if (cap == null) break;
-
-                        String prec = javax.swing.JOptionPane.showInputDialog(this, "Precio (S/) para " + nombreZona + ":");
-                        if (prec == null) break;
-
-                        try {
-                            int capacidadParseada = Integer.parseInt(cap);
-                            int precioParseado = Integer.parseInt(prec);
-
-                            String resultado = ctrl.agregarZonaAlConcierto(nombreZona, capacidadParseada, precioParseado);
-
-                            if (resultado.equals("OK")) {
-                                javax.swing.JOptionPane.showMessageDialog(this, "Zona agregada con éxito.");
-                            } else {
-                                javax.swing.JOptionPane.showMessageDialog(this, resultado, "Error de Validación", javax.swing.JOptionPane.ERROR_MESSAGE);
-                                i--; 
-                            }
-                        } catch (NumberFormatException ex) {
-                            javax.swing.JOptionPane.showMessageDialog(this, "La capacidad y el precio deben ser números válidos.", "Error de Tipado", javax.swing.JOptionPane.ERROR_MESSAGE);
-                            i--; 
-                        }
+                if (this.vistaAnterior != null) {
+                    if (this.vistaAnterior instanceof FrmAdmin) {
+                        ((FrmAdmin) this.vistaAnterior).refrescarTabla();
                     }
-                } catch (NumberFormatException ex) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Número de zonas inválido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    this.vistaAnterior.setVisible(true);
                 }
+                this.dispose();
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Edición", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            // MODO CREACIÓN
+            String nombre = txtNombre.getText().trim();
+            String fechaStr = txtFecha.getText().trim();
+
+            // Delegar la validación y el registro al controlador
+            boolean exitoRegistro = controladorConcierto.registrarNuevoConcierto(nombre, fechaStr);
+            if (!exitoRegistro) {
+                return;
             }
 
-           
+            ejecutarBucleZonas();
+
             if (this.vistaAnterior != null) {
                 if (this.vistaAnterior instanceof FrmAdmin) {
                     ((FrmAdmin) this.vistaAnterior).refrescarTabla();
@@ -181,11 +177,35 @@ String nombre = txtNombre.getText().trim();
                 this.vistaAnterior.setVisible(true);
             }
             this.dispose();
-            
-        } catch (DateTimeParseException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Por favor use el formato YYYY-MM-DD.", "Error de Formato", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }        // TODO add your handling code here:
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void ejecutarBucleZonas() {
+        String numZonasStr = javax.swing.JOptionPane.showInputDialog(this, "¿Cuántas zonas tendrá este concierto?");
+        if (numZonasStr != null && !numZonasStr.trim().isEmpty()) {
+            try {
+                int numZonas = Integer.parseInt(numZonasStr.trim());
+                for (int i = 0; i < numZonas; i++) {
+                    String nombreZona = javax.swing.JOptionPane.showInputDialog(this, "Nombre de la zona " + (i + 1) + " (Ej: VIP):");
+                    if (nombreZona == null) break;
+
+                    String cap = javax.swing.JOptionPane.showInputDialog(this, "Capacidad total para " + nombreZona + ":");
+                    if (cap == null) break;
+
+                    String prec = javax.swing.JOptionPane.showInputDialog(this, "Precio (S/) para " + nombreZona + ":");
+                    if (prec == null) break;
+
+                    // El controlador valida y agrega la zona
+                    boolean exitoZona = controladorConcierto.agregarZonaAlConcierto(nombreZona, cap, prec);
+                    if (!exitoZona) {
+                        i--; // Reintentar la misma zona si falló la validación
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Número de zonas inválido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 
     /**
      * @param args the command line arguments

@@ -22,6 +22,8 @@ public class ControladorPrincipal {
         this.coleccionConciertos = new ColeccionConciertos();
         Usuario admin = new Usuario("99999999", "Administrador", "Sistema", "admin@gmail.com", "admin123", "ADM001");
         this.coleccionPersonas.guardarPersona(admin);
+        Usuario adminRapido = new Usuario("00000000", "Admin", "Pruebas", "admin", "admin", "ADM002");
+        this.coleccionPersonas.guardarPersona(adminRapido);
     }
 
     public Persona login(String correo, String contrasena) {
@@ -49,31 +51,9 @@ public class ControladorPrincipal {
         registrarNuevoCliente(dni, nombre, apellido, correo, contrasena, esSocio);
     }
 
-    public void registrarNuevoConcierto(String nombre, java.time.LocalDate fecha) {
-        Concierto nuevo = new Concierto(nombre, fecha);
-        coleccionConciertos.guardarConcierto(nuevo);
-        this.conciertoSeleccionado = nuevo;
-    }
-
     public void registrarNuevaVenta(Venta v) {
         if (conciertoSeleccionado != null) {
             conciertoSeleccionado.registrarVenta(v);
-        }
-    }
-    
-    public String agregarZonaAlConcierto(String nombre, int capacidad, int precio) {
-        try {
-        if (capacidad <= 0) return "La capacidad debe ser mayor a 0.";
-        if (precio < 0) return "El precio no puede ser negativo.";
-        if (nombre == null || nombre.trim().isEmpty()) return "El nombre no puede estar vacío.";
-
-        
-        int nuevoId = conciertoSeleccionado.getTodasLasZonas().size() + 1;
-        conciertoSeleccionado.agregarZona(new Zona(nuevoId, nombre, precio, capacidad));
-        return "OK";
-        
-        } catch (NumberFormatException e) {
-            return "Error: Capacidad y Precio deben ser números enteros.";
         }
     }
     
@@ -88,23 +68,25 @@ public class ControladorPrincipal {
 
         if (totalRows == 0) return new Object[0][0];
 
-        Object[][] datos = new Object[totalRows][4]; 
+        Object[][] datos = new Object[totalRows][5]; 
         int index = 0;
 
         for (Concierto c : todos) {
             ArrayList<Zona> zonas = c.getTodasLasZonas();
             if (zonas.isEmpty()) {
                 datos[index][0] = c.getNombre(); 
-                datos[index][1] = "Sin zonas";
-                datos[index][2] = "-";
+                datos[index][1] = c.getFecha().toString();
+                datos[index][2] = "Sin zonas";
                 datos[index][3] = "-";
+                datos[index][4] = "-";
                 index++;
             } else {
                 for (Zona z : zonas) {
                     datos[index][0] = c.getNombre(); 
-                    datos[index][1] = z.getNombre();
-                    datos[index][2] = z.getCapacidadDisponible();
-                    datos[index][3] = z.getCapacidadTotal() - z.getCapacidadDisponible();
+                    datos[index][1] = c.getFecha().toString();
+                    datos[index][2] = z.getNombre();
+                    datos[index][3] = z.getCapacidadDisponible();
+                    datos[index][4] = z.getCapacidadTotal() - z.getCapacidadDisponible();
                     index++;
                 }
             }
@@ -126,6 +108,10 @@ public class ControladorPrincipal {
 
     public ArrayList<Concierto> getTodosLosConciertos() {
         return coleccionConciertos.getTodosLosConciertos();
+    }
+
+    public ColeccionConciertos getColeccionConciertos() {
+        return coleccionConciertos;
     }
 
     public ColeccionPersonas getColeccionPersonas() {
@@ -160,6 +146,26 @@ public class ControladorPrincipal {
             return nuevaVenta; 
         } else {
             throw new Exception("La transacción fue rechazada. Verifique la disponibilidad, su límite de entradas o la tarjeta.");
+        }
+    }
+
+    public boolean eliminarConciertoGlobal(Concierto concierto) {
+        try {
+            this.coleccionConciertos.eliminarConcierto(concierto);
+            return true;
+        } catch (IllegalStateException e) {
+            javax.swing.JOptionPane.showMessageDialog(null, e.getMessage(), "Operación denegada", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public boolean eliminarZonaDeConcierto(Concierto concierto, String nombreZona) {
+        try {
+            concierto.eliminarZona(nombreZona);
+            return true;
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(null, e.getMessage(), "Error al eliminar", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 }
