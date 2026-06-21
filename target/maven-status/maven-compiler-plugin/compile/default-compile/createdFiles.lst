@@ -4,9 +4,11 @@ vista\FrmRegistro$2.class
 vista\FrmAdmin$1.class
 vista\FrmCliente$2.class
 vista\FrmAdmin$3.class
+vista\FrmAdmin$6.class
 vista\FrmAdmin.class
 vista\FrmCliente$4.class
 vista\FrmLogin.class
+vista\FrmAdmin$4.class
 vista\FrmMenuPrincipal.class
 vista\FrmLogin$1.class
 vista\FrmTarjeta$2.class
@@ -28,6 +30,7 @@ vista\FrmLogin$2.class
 controlador\ControladorConcierto.class
 vista\FrmTarjeta$1.class
 coleccion\ColeccionPersonas.class
+vista\FrmAdmin$5.class
 vista\FrmConcierto.class
 modelo\Cliente.class
 modelo\Persona.class

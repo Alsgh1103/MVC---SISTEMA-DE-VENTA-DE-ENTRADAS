@@ -32,11 +32,11 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
             
             cbxConcierto.removeAllItems();
             for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
-                cbxConcierto.addItem(con.getNombre());
+                cbxConcierto.addItem(con);
             }
             
             if (ctrl.getConciertoSeleccionado() != null) {
-                cbxConcierto.setSelectedItem(ctrl.getConciertoSeleccionado().getNombre());
+                cbxConcierto.setSelectedItem(ctrl.getConciertoSeleccionado());
             }
         }
     }
@@ -99,7 +99,7 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
 
         lblConcierto.setText("Seleccione el concierto:");
 
-        cbxConcierto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxConcierto.setModel(new javax.swing.DefaultComboBoxModel<>());
         cbxConcierto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxConciertoActionPerformed(evt);
@@ -230,14 +230,9 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMisComprasActionPerformed
 
     private void cbxConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxConciertoActionPerformed
-        String seleccion = (String) cbxConcierto.getSelectedItem();
+        modelo.Concierto seleccion = (modelo.Concierto) cbxConcierto.getSelectedItem();
         if (seleccion != null) {
-            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
-                if (con.getNombre().equals(seleccion)) {
-                    ctrl.setConciertoSeleccionado(con);
-                    break;
-                }
-            }
+            ctrl.setConciertoSeleccionado(seleccion);
         }
     }//GEN-LAST:event_cbxConciertoActionPerformed
 
@@ -246,7 +241,7 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnComprar;
     private javax.swing.JButton btnMisCompras;
     private javax.swing.JButton btnVerZonas;
-    private javax.swing.JComboBox<String> cbxConcierto;
+    private javax.swing.JComboBox<modelo.Concierto> cbxConcierto;
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblConcierto;
     private javax.swing.JLabel lblPuntos;

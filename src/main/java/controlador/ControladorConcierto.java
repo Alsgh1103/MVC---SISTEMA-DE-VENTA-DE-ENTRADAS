@@ -68,4 +68,12 @@ public class ControladorConcierto {
             return false;
         }
     }
+
+    public void prepararReconfiguracionZonas(Concierto concierto) throws IllegalStateException, IllegalArgumentException {
+        if (concierto == null) {
+            throw new IllegalArgumentException("No se ha seleccionado un concierto válido.");
+        }
+        this.conciertoActual = concierto;
+        this.conciertoActual.limpiarZonas(); // Vaciamos las zonas previas (N) para recibir las nuevas (M)
+    }
 }

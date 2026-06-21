@@ -3,6 +3,7 @@ package vista;
 import controlador.ControladorPrincipal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import modelo.Concierto;
 
 import controlador.ControladorConcierto;
 
@@ -11,6 +12,7 @@ public class FrmConcierto extends javax.swing.JFrame {
     // Variables para respetar el flujo MVC
     private ControladorConcierto controladorConcierto;
     private javax.swing.JFrame vistaAnterior;
+    private Concierto conciertoAEditar;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmConcierto.class.getName());
 
     // Modificamos el constructor para recibir el controlador y la ventana anterior
@@ -19,6 +21,22 @@ public class FrmConcierto extends javax.swing.JFrame {
         this.vistaAnterior = vistaAnterior;
         initComponents();
         this.setLocationRelativeTo(null); // Centrar la ventana
+    }
+
+    // Nuevo constructor para edición/reconfiguración
+    public FrmConcierto(ControladorPrincipal ctrl, javax.swing.JFrame vistaAnterior, Concierto conciertoAEditar) {
+        this.controladorConcierto = new ControladorConcierto(this, ctrl);
+        this.vistaAnterior = vistaAnterior;
+        this.conciertoAEditar = conciertoAEditar;
+        initComponents();
+        this.setLocationRelativeTo(null);
+
+        // Pre-poblamos los campos de texto y bloqueamos edición
+        txtNombre.setText(conciertoAEditar.getNombre());
+        txtFecha.setText(conciertoAEditar.getFecha().toString());
+        txtNombre.setEditable(false); 
+        txtFecha.setEditable(false);
+        btnGuardar.setText("Reconfigurar Zonas");
     }
 
     /**
@@ -123,15 +141,46 @@ public class FrmConcierto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String nombre = txtNombre.getText().trim();
-        String fechaStr = txtFecha.getText().trim();
+        if (conciertoAEditar != null) {
+            // MODO EDICIÓN
+            try {
+                controladorConcierto.prepararReconfiguracionZonas(conciertoAEditar);
+                ejecutarBucleZonas();
 
-        // Delegar la validación y el registro al controlador
-        boolean exitoRegistro = controladorConcierto.registrarNuevoConcierto(nombre, fechaStr);
-        if (!exitoRegistro) {
-            return;
+                if (this.vistaAnterior != null) {
+                    if (this.vistaAnterior instanceof FrmAdmin) {
+                        ((FrmAdmin) this.vistaAnterior).refrescarTabla();
+                    }
+                    this.vistaAnterior.setVisible(true);
+                }
+                this.dispose();
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Edición", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            // MODO CREACIÓN
+            String nombre = txtNombre.getText().trim();
+            String fechaStr = txtFecha.getText().trim();
+
+            // Delegar la validación y el registro al controlador
+            boolean exitoRegistro = controladorConcierto.registrarNuevoConcierto(nombre, fechaStr);
+            if (!exitoRegistro) {
+                return;
+            }
+
+            ejecutarBucleZonas();
+
+            if (this.vistaAnterior != null) {
+                if (this.vistaAnterior instanceof FrmAdmin) {
+                    ((FrmAdmin) this.vistaAnterior).refrescarTabla();
+                }
+                this.vistaAnterior.setVisible(true);
+            }
+            this.dispose();
         }
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void ejecutarBucleZonas() {
         String numZonasStr = javax.swing.JOptionPane.showInputDialog(this, "¿Cuántas zonas tendrá este concierto?");
         if (numZonasStr != null && !numZonasStr.trim().isEmpty()) {
             try {
@@ -156,15 +205,7 @@ public class FrmConcierto extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "Número de zonas inválido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
-
-        if (this.vistaAnterior != null) {
-            if (this.vistaAnterior instanceof FrmAdmin) {
-                ((FrmAdmin) this.vistaAnterior).refrescarTabla();
-            }
-            this.vistaAnterior.setVisible(true);
-        }
-        this.dispose();
-    }//GEN-LAST:event_btnGuardarActionPerformed
+    }
 
     /**
      * @param args the command line arguments
