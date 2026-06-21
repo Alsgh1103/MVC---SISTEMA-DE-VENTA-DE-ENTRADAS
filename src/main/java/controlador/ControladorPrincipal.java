@@ -49,31 +49,9 @@ public class ControladorPrincipal {
         registrarNuevoCliente(dni, nombre, apellido, correo, contrasena, esSocio);
     }
 
-    public void registrarNuevoConcierto(String nombre, java.time.LocalDate fecha) {
-        Concierto nuevo = new Concierto(nombre, fecha);
-        coleccionConciertos.guardarConcierto(nuevo);
-        this.conciertoSeleccionado = nuevo;
-    }
-
     public void registrarNuevaVenta(Venta v) {
         if (conciertoSeleccionado != null) {
             conciertoSeleccionado.registrarVenta(v);
-        }
-    }
-    
-    public String agregarZonaAlConcierto(String nombre, int capacidad, int precio) {
-        try {
-        if (capacidad <= 0) return "La capacidad debe ser mayor a 0.";
-        if (precio < 0) return "El precio no puede ser negativo.";
-        if (nombre == null || nombre.trim().isEmpty()) return "El nombre no puede estar vacío.";
-
-        
-        int nuevoId = conciertoSeleccionado.getTodasLasZonas().size() + 1;
-        conciertoSeleccionado.agregarZona(new Zona(nuevoId, nombre, precio, capacidad));
-        return "OK";
-        
-        } catch (NumberFormatException e) {
-            return "Error: Capacidad y Precio deben ser números enteros.";
         }
     }
     
@@ -126,6 +104,10 @@ public class ControladorPrincipal {
 
     public ArrayList<Concierto> getTodosLosConciertos() {
         return coleccionConciertos.getTodosLosConciertos();
+    }
+
+    public ColeccionConciertos getColeccionConciertos() {
+        return coleccionConciertos;
     }
 
     public ColeccionPersonas getColeccionPersonas() {

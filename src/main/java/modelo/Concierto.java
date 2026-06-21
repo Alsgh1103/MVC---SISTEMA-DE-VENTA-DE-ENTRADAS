@@ -18,8 +18,19 @@ public class Concierto {
         this.todosLasPersonas = new ArrayList<>();
     }
 
-    public boolean agregarZona(String nombre) {
-        return true;
+    public void registrarZona(String nombreZona, int capacidad, int precio) throws IllegalArgumentException {
+        if (capacidad <= 0) {
+            throw new IllegalArgumentException("La capacidad debe ser mayor a 0.");
+        }
+        if (precio < 0) {
+            throw new IllegalArgumentException("El precio no puede ser negativo.");
+        }
+        if (nombreZona == null || nombreZona.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de la zona no puede estar vacío.");
+        }
+        
+        int nuevoId = this.zonas.size() + 1;
+        this.zonas.add(new Zona(nuevoId, nombreZona, precio, capacidad));
     }
 
     public boolean eliminarZona(String nombre) {

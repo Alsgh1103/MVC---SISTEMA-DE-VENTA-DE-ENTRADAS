@@ -16,6 +16,22 @@ public class ColeccionConciertos {
         }
     }
 
+    public Concierto registrarConcierto(String nombre, java.time.LocalDate fecha) throws IllegalArgumentException {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del concierto no puede estar vacío.");
+        }
+        if (fecha == null) {
+            throw new IllegalArgumentException("La fecha del concierto no puede ser nula.");
+        }
+        if (buscarPorNombre(nombre) != null) {
+            throw new IllegalArgumentException("Ya existe un concierto registrado con ese nombre.");
+        }
+        
+        Concierto nuevo = new Concierto(nombre, fecha);
+        guardarConcierto(nuevo);
+        return nuevo;
+    }
+
     public Concierto buscarPorNombre(String nombre) {
         if (nombre == null) return null;
         for (Concierto c : conciertos) {
