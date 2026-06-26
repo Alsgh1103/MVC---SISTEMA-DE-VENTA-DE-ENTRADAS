@@ -58,7 +58,7 @@ public class ControladorPrincipal {
         if (conciertoSeleccionado != null) {
             conciertoSeleccionado.registrarVenta(v);
         }
-        this.coleccionVentas.guardarVenta(v);
+        this.coleccionVentas.registrarVenta(v);
     }
     
     public Object[][] getDatosZonasParaTabla() {
