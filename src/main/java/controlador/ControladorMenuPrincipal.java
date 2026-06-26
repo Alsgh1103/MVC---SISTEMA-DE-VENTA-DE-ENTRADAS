@@ -18,30 +18,18 @@ import javax.swing.JComboBox;
  * Controlador para la vista del Menú Principal (FrmMenuPrincipal).
  * Responsable de la navegación, del formateo de datos de usuario, de la
  * visualización de zonas/historial de compras y de la selección de concierto.
- *
- * @author Gianmarco
  */
 public class ControladorMenuPrincipal {
     private FrmMenuPrincipal vistaMenu;
     private ControladorPrincipal contextoCentral;
 
-    /**
-     * Constructor del controlador.
-     * @param vistaMenu Vista asociada al menú principal.
-     * @param contextoCentral Contexto de datos global compartido.
-     */
+    
     public ControladorMenuPrincipal(FrmMenuPrincipal vistaMenu, ControladorPrincipal contextoCentral) {
         this.vistaMenu = vistaMenu;
         this.contextoCentral = contextoCentral;
     }
 
-    /**
-     * Carga y formatea los datos del cliente y los conciertos en los componentes gráficos de la vista.
-     * @param lblBienvenida Etiqueta para mostrar el mensaje de bienvenida.
-     * @param lblPuntos Etiqueta para mostrar los puntos acumulados.
-     * @param lblConcierto Etiqueta para mostrar la información del rol de concierto.
-     * @param cbxConcierto ComboBox para mostrar los conciertos disponibles.
-     */
+   
     public void cargarDatosCliente(JLabel lblBienvenida, JLabel lblPuntos, JLabel lblConcierto, JComboBox<Concierto> cbxConcierto) {
         Persona usuario = contextoCentral.getUsuarioLogueado();
         if (usuario != null) {
@@ -66,19 +54,19 @@ public class ControladorMenuPrincipal {
         }
     }
 
-    /**
-     * Guarda el concierto seleccionado por el usuario en el contexto central.
-     * @param seleccion Concierto seleccionado.
-     */
+    
+     // Guarda el concierto seleccionado por el usuario en el contexto central.
+     
+     
     public void seleccionarConcierto(Concierto seleccion) {
         if (seleccion != null) {
             contextoCentral.setConciertoSeleccionado(seleccion);
         }
     }
 
-    /**
-     * Muestra las zonas, precios y disponibilidad del concierto actualmente seleccionado.
-     */
+    
+     // Muestra las zonas, precios y disponibilidad del concierto actualmente seleccionado.
+     
     public void verZonas() {
         Concierto conciertoSeleccionado = contextoCentral.getConciertoSeleccionado();
         if (conciertoSeleccionado != null) {
