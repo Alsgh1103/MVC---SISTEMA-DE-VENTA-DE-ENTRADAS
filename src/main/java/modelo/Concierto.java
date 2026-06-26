@@ -10,7 +10,13 @@ public class Concierto {
     private ArrayList<Venta> todasLasVentas;
     private ArrayList<Persona> todosLasPersonas;
 
-    public Concierto(String nombre, LocalDate fecha) {
+    public Concierto(String nombre, LocalDate fecha) throws IllegalArgumentException {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del concierto no puede estar vacío.");
+        }
+        if (fecha == null) {
+            throw new IllegalArgumentException("La fecha del concierto no puede ser nula.");
+        }
         this.nombre = nombre;
         this.fecha = fecha;
         this.zonas = new ArrayList<>();
