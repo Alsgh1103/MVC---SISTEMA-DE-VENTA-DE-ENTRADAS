@@ -1,23 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package vista;
+
 import controlador.ControladorPrincipal;
+import controlador.ControladorAdmin;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author alex_
  */
 public class FrmAdmin extends javax.swing.JFrame {
-    private ControladorPrincipal ctrl;
-    /**
-     * Creates new form FrmAdmin
-     * 
-     */
-   
+    private ControladorAdmin ctrlAdmin;
+    private ControladorPrincipal ctrlPrincipal;
     
     public FrmAdmin(ControladorPrincipal ctrl) {
-        this.ctrl = ctrl;
+        this.ctrlPrincipal = ctrl;
+        this.ctrlAdmin = new ControladorAdmin(this, ctrlPrincipal);
+        
         initComponents();
         refrescarTabla();
         this.setLocationRelativeTo(null);
@@ -32,6 +29,7 @@ public class FrmAdmin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         lblAuditoria = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblVentas = new javax.swing.JTable();
@@ -42,18 +40,32 @@ public class FrmAdmin extends javax.swing.JFrame {
         btnEliminarFila = new javax.swing.JButton();
         btnAnadirZonaIndividual = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        lblAuditoria.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         lblAuditoria.setText("AUDITORÍA DE VENTAS Y ZONAS");
 
+        tblVentas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tblVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Concierto", "Fecha", "Zona", "Capacidad Restante", "Entradas Vendidas"
+                "Concierto", "Zona", "Capacidad Restante", "Entradas Vendidas"
             }
         ));
         jScrollPane1.setViewportView(tblVentas);
@@ -72,6 +84,7 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
+        btnCrearConcierto.setBackground(new java.awt.Color(0, 204, 153));
         btnCrearConcierto.setText("Registrar Concierto");
         btnCrearConcierto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -79,13 +92,15 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
-        btnEditarZonas.setText("Editar Zonas");
+        btnEditarZonas.setText("Editar Zona");
         btnEditarZonas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarZonasActionPerformed(evt);
             }
         });
 
+        btnEliminarFila.setBackground(new java.awt.Color(204, 0, 51));
+        btnEliminarFila.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminarFila.setText("Eliminar Fila");
         btnEliminarFila.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -93,7 +108,7 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
-        btnAnadirZonaIndividual.setText("Añadir Zona a Concierto");
+        btnAnadirZonaIndividual.setText("Añadir Zona");
         btnAnadirZonaIndividual.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAnadirZonaIndividualActionPerformed(evt);
@@ -104,50 +119,48 @@ public class FrmAdmin extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
             .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(165, 165, 165)
-                        .addComponent(lblAuditoria, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblAuditoria, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCrearConcierto)
-                                .addGap(15, 15, 15)
-                                .addComponent(btnEditarZonas)
-                                .addGap(15, 15, 15)
-                                .addComponent(btnAnadirZonaIndividual))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnRefrescar)
-                                .addGap(15, 15, 15)
-                                .addComponent(btnEliminarFila)
-                                .addGap(15, 15, 15)
-                                .addComponent(btnCerrarSesion)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnRefrescar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnEditarZonas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnCrearConcierto)
+                                    .addComponent(btnEliminarFila, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                                    .addComponent(btnAnadirZonaIndividual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(29, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(21, Short.MAX_VALUE)
                 .addComponent(lblAuditoria)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCrearConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditarZonas)
-                    .addComponent(btnAnadirZonaIndividual))
-                .addGap(15, 15, 15)
+                    .addComponent(btnCerrarSesion)
+                    .addComponent(btnRefrescar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCrearConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRefrescar)
                     .addComponent(btnEliminarFila)
-                    .addComponent(btnCerrarSesion))
-                .addGap(17, 17, 17))
+                    .addComponent(btnAnadirZonaIndividual)
+                    .addComponent(btnEditarZonas))
+                .addGap(25, 25, 25))
         );
 
         pack();
@@ -158,43 +171,16 @@ public class FrmAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRefrescarActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        FrmLogin login = new FrmLogin(this.ctrl);
-        login.setVisible(true);
-        this.dispose();
+        ctrlAdmin.cerrarSesion();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnCrearConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearConciertoActionPerformed
-        FrmConcierto ventanaConcierto = new FrmConcierto(this.ctrl, this);
+        FrmConcierto ventanaConcierto = new FrmConcierto(this.ctrlPrincipal, this);
         ventanaConcierto.setVisible(true);
         this.setVisible(false); // Ocultamos el admin temporalmente
-  
     }//GEN-LAST:event_btnCrearConciertoActionPerformed
 
-    private void btnEditarZonasActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        int filaSeleccionada = tblVentas.getSelectedRow();
-        if (filaSeleccionada >= 0) {
-            String nombreConcierto = tblVentas.getValueAt(filaSeleccionada, 0).toString();
-            String fechaStr = tblVentas.getValueAt(filaSeleccionada, 1).toString();
-            try {
-                java.time.LocalDate fecha = java.time.LocalDate.parse(fechaStr);
-                modelo.Concierto seleccionado = ctrl.getColeccionConciertos().buscarPorNombreYFecha(nombreConcierto, fecha);
-
-                if (seleccionado != null) {
-                    FrmConcierto frmEdit = new FrmConcierto(ctrl, this, seleccionado);
-                    frmEdit.setVisible(true);
-                    this.setVisible(false);
-                } else {
-                    javax.swing.JOptionPane.showMessageDialog(this, "No se encontró el concierto especificado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (Exception e) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al procesar el concierto seleccionado: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione una fila de la tabla.");
-        }
-    }
-
-    private void btnEliminarFilaActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnEliminarFilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFilaActionPerformed
         int fila = tblVentas.getSelectedRow();
         if (fila < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila primero.");
@@ -205,13 +191,13 @@ public class FrmAdmin extends javax.swing.JFrame {
         java.time.LocalDate fechaConc = java.time.LocalDate.parse(tblVentas.getValueAt(fila, 1).toString());
         String nombreZona = tblVentas.getValueAt(fila, 2).toString();
 
-        modelo.Concierto concierto = ctrl.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fechaConc);
+        modelo.Concierto concierto = ctrlAdmin.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fechaConc);
         if (concierto == null) return;
 
         if (nombreZona.equals("Sin zonas") || nombreZona.equals("-")) {
             int conf = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar por completo el concierto vacío?", "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
             if (conf == javax.swing.JOptionPane.YES_OPTION) {
-                if (ctrl.eliminarConciertoGlobal(concierto)) {
+                if (ctrlAdmin.eliminarConciertoGlobal(concierto)) {
                     refrescarTabla();
                 }
             }
@@ -221,18 +207,18 @@ public class FrmAdmin extends javax.swing.JFrame {
                 javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE, null, opciones, opciones[0]);
 
             if (seleccion == 0) { // Borrar solo la zona
-                if (ctrl.eliminarZonaDeConcierto(concierto, nombreZona)) {
+                if (ctrlPrincipal.eliminarZonaDeConcierto(concierto, nombreZona)) {
                     refrescarTabla();
                 }
             } else if (seleccion == 1) { // Borrar todo
-                if (ctrl.eliminarConciertoGlobal(concierto)) {
+                if (ctrlPrincipal.eliminarConciertoGlobal(concierto)) {
                     refrescarTabla();
                 }
             }
         }
-    }
+    }//GEN-LAST:event_btnEliminarFilaActionPerformed
 
-    private void btnAnadirZonaIndividualActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnAnadirZonaIndividualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirZonaIndividualActionPerformed
         int fila = tblVentas.getSelectedRow();
         if (fila < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione en la tabla el concierto al que desea añadir una zona.");
@@ -241,7 +227,7 @@ public class FrmAdmin extends javax.swing.JFrame {
 
         String nombreConc = tblVentas.getValueAt(fila, 0).toString();
         java.time.LocalDate fechaConc = java.time.LocalDate.parse(tblVentas.getValueAt(fila, 1).toString());
-        modelo.Concierto concierto = ctrl.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fechaConc);
+        modelo.Concierto concierto = ctrlPrincipal.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fechaConc);
 
         if (concierto != null) {
             String nombreZona = javax.swing.JOptionPane.showInputDialog(this, "Nombre de la NUEVA zona (Ej: Platinum):");
@@ -265,26 +251,57 @@ public class FrmAdmin extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
+    }//GEN-LAST:event_btnAnadirZonaIndividualActionPerformed
+
+    private void btnEditarZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarZonasActionPerformed
+        int filaSeleccionada = tblVentas.getSelectedRow();
+        if (filaSeleccionada >= 0) {
+            String nombreConcierto = tblVentas.getValueAt(filaSeleccionada, 0).toString();
+            String fechaStr = tblVentas.getValueAt(filaSeleccionada, 1).toString();
+            try {
+                java.time.LocalDate fecha = java.time.LocalDate.parse(fechaStr);
+                modelo.Concierto seleccionado = ctrlAdmin.getColeccionConciertos().buscarPorNombreYFecha(nombreConcierto, fecha);
+
+                if (seleccionado != null) {
+                    FrmConcierto frmEdit = new FrmConcierto(ctrlPrincipal, this, seleccionado);
+                    frmEdit.setVisible(true);
+                    this.setVisible(false);
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "No se encontró el concierto especificado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al procesar el concierto seleccionado: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione una fila de la tabla.");
+        }        
+    }//GEN-LAST:event_btnEditarZonasActionPerformed
     
     public void refrescarTabla() {
         // Llama al controlador para obtener los datos formateados (Object[][])
-        Object[][] datos = ctrl.getDatosZonasParaTabla(); 
+        Object[][] datos = ctrlAdmin.obtenerDatosAuditoria(); 
         
         // Agregamos "Concierto" al inicio del arreglo de columnas
         String[] columnas = {"Concierto", "Fecha", "Zona", "Capacidad Restante", "Entradas Vendidas"};
         
+        DefaultTableModel modeloTabla = new DefaultTableModel(datos, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // La tabla de auditoría es de solo lectura
+            }
+        };
         // Al setear el modelo, la tabla se dibuja automáticamente con la nueva columna
-        tblVentas.setModel(new javax.swing.table.DefaultTableModel(datos, columnas));
+        tblVentas.setModel(modeloTabla);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnadirZonaIndividual;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnCrearConcierto;
     private javax.swing.JButton btnEditarZonas;
-    private javax.swing.JButton btnRefrescar;
     private javax.swing.JButton btnEliminarFila;
-    private javax.swing.JButton btnAnadirZonaIndividual;
+    private javax.swing.JButton btnRefrescar;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAuditoria;
     public javax.swing.JTable tblVentas;
