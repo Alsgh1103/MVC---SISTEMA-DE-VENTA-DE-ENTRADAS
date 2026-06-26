@@ -84,6 +84,7 @@ public class ControladorCliente {
         
         // Cargar los datos de la primera zona seleccionada por defecto al abrir la ventana
         onZonaSeleccionada();
+        evaluarEstadoBotonCompra();
     }
 
     /** Rellena el combo de zonas con las zonas del concierto actualmente seleccionado. */
@@ -104,18 +105,31 @@ public class ControladorCliente {
      */
     public void cargarTarjetasEnCombo() {
         vista.cbxTarjeta.removeAllItems();
-        Persona usuario = ctrl.getUsuarioLogueado();
-        if (usuario instanceof Cliente) {
-            Cliente c = (Cliente) usuario;
-            if (c.getTarjeta() != null) {
-                String num = c.getTarjeta().getNumero();
-                String ultimos = num.length() > 4
-                    ? num.substring(num.length() - 4) : num;
-                vista.cbxTarjeta.addItem("Tarjeta term. " + ultimos);
-            } else {
-                vista.cbxTarjeta.addItem("Sin tarjetas registradas");
+        boolean tieneTarjeta = false;
+
+        if (this.tarjetaActiva != null) {
+            String num = this.tarjetaActiva.getNumero();
+            String ultimos = num.length() > 4 ? num.substring(num.length() - 4) : num;
+            vista.cbxTarjeta.addItem("Tarjeta term. " + ultimos);
+            tieneTarjeta = true;
+        } else {
+            Persona usuario = ctrl.getUsuarioLogueado();
+            if (usuario instanceof Cliente) {
+                Cliente c = (Cliente) usuario;
+                if (c.getTarjeta() != null) {
+                    String num = c.getTarjeta().getNumero();
+                    String ultimos = num.length() > 4
+                        ? num.substring(num.length() - 4) : num;
+                    vista.cbxTarjeta.addItem("Tarjeta term. " + ultimos);
+                    tieneTarjeta = true;
+                }
             }
         }
+
+        if (!tieneTarjeta) {
+            vista.cbxTarjeta.addItem("Sin tarjetas registradas");
+        }
+
         vista.cbxTarjeta.addItem("Agregar nueva tarjeta...");
     }
 
@@ -183,6 +197,19 @@ public class ControladorCliente {
             vista.FrmTarjeta frmTarjeta = new vista.FrmTarjeta(this.ctrl, vista);
             frmTarjeta.setVisible(true);
         }
+        evaluarEstadoBotonCompra();
+    }
+
+    /**
+     * Habilita o deshabilita el botón de confirmar compra dependiendo
+     * de si hay una tarjeta válida seleccionada.
+     */
+    private void evaluarEstadoBotonCompra() {
+        String seleccion = (String) vista.cbxTarjeta.getSelectedItem();
+        boolean tarjetaValida = seleccion != null 
+                && !seleccion.equals("Agregar nueva tarjeta...") 
+                && !seleccion.equals("Sin tarjetas registradas");
+        vista.btnConfirmar.setEnabled(tarjetaValida);
     }
 
     /**
@@ -273,5 +300,6 @@ public class ControladorCliente {
         if (t != null) {
             vista.cbxTarjeta.setSelectedIndex(0);
         }
+        evaluarEstadoBotonCompra();
     }
 }

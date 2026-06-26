@@ -30,17 +30,6 @@ public class FrmCliente extends javax.swing.JFrame {
         this.controlador = ctrl.crearControladorCliente(this);
     }
 
-    /**
-     * API pública llamada desde ControladorTarjeta al regresar de FrmTarjeta.
-     * Delega en el controlador para actualizar la tarjeta activa y el combo.
-     *
-     * @param t  Tarjeta recién registrada (puede ser null).
-     */
-    public void setTarjetaActiva(modelo.Tarjeta t) {
-        if (this.controlador != null) {
-            this.controlador.setTarjetaActiva(t);
-        }
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
