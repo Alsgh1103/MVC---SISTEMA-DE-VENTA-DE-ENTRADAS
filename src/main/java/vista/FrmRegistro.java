@@ -4,6 +4,7 @@
  */
 package vista;
 import controlador.ControladorPrincipal;
+import controlador.ControladorRegistro;
 import modelo.Cliente;
 /**
  *
@@ -11,10 +12,12 @@ import modelo.Cliente;
  */
 public class FrmRegistro extends javax.swing.JFrame {
     private ControladorPrincipal ctrl;
+    private ControladorRegistro controladorRegistro;
     public FrmRegistro(ControladorPrincipal ctrl){
         this.ctrl = ctrl;
         initComponents();
         this.setLocationRelativeTo(null);
+        this.controladorRegistro = new ControladorRegistro(this, ctrl);
     }
         
         
@@ -154,21 +157,11 @@ public class FrmRegistro extends javax.swing.JFrame {
         String ape = txtApellido.getText().trim();
         String correo = txtCorreo.getText().trim();
         String pass = new String(txtPass.getPassword()).trim();
-        if (!dni.isEmpty() && !pass.isEmpty() && !nom.isEmpty() && !ape.isEmpty() && !correo.isEmpty()) {
-            ctrl.registrarNuevoCliente(dni, nom, ape, correo, pass, false);
-            javax.swing.JOptionPane.showMessageDialog(this, "Registro exitoso. Ya puedes iniciar sesión con tu correo.");
-            FrmLogin login = new FrmLogin(this.ctrl);
-            login.setVisible(true);
-            this.dispose();
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, completa todos los campos.");
-        }           
+        controladorRegistro.registrarUsuario(dni, nom, ape, correo, pass);          
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        FrmLogin login = new FrmLogin(this.ctrl);
-        login.setVisible(true);
-        this.dispose();
+        controladorRegistro.volverAlLogin();
     }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
