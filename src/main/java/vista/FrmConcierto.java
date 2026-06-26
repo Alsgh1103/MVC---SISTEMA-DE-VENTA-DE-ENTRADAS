@@ -134,83 +134,29 @@ public class FrmConcierto extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        if (this.vistaAnterior != null) {
-            this.vistaAnterior.setVisible(true);
-        }
-        this.dispose();
+        controladorConcierto.volver();
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        if (conciertoAEditar != null) {
-            // MODO EDICIÓN
-            try {
-                controladorConcierto.prepararReconfiguracionZonas(conciertoAEditar);
-                ejecutarBucleZonas();
-
-                if (this.vistaAnterior != null) {
-                    if (this.vistaAnterior instanceof FrmAdmin) {
-                        ((FrmAdmin) this.vistaAnterior).refrescarTabla();
-                    }
-                    this.vistaAnterior.setVisible(true);
-                }
-                this.dispose();
-            } catch (Exception e) {
-                javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Edición", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            // MODO CREACIÓN
-            String nombre = txtNombre.getText().trim();
-            String fechaStr = txtFecha.getText().trim();
-
-            // Delegar la validación y el registro al controlador
-            boolean exitoRegistro = controladorConcierto.registrarNuevoConcierto(nombre, fechaStr);
-            if (!exitoRegistro) {
-                return;
-            }
-
-            ejecutarBucleZonas();
-
-            if (this.vistaAnterior != null) {
-                if (this.vistaAnterior instanceof FrmAdmin) {
-                    ((FrmAdmin) this.vistaAnterior).refrescarTabla();
-                }
-                this.vistaAnterior.setVisible(true);
-            }
-            this.dispose();
-        }
+        controladorConcierto.guardar();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void ejecutarBucleZonas() {
-        String numZonasStr = javax.swing.JOptionPane.showInputDialog(this, "¿Cuántas zonas tendrá este concierto?");
-        if (numZonasStr != null && !numZonasStr.trim().isEmpty()) {
-            try {
-                int numZonas = Integer.parseInt(numZonasStr.trim());
-                for (int i = 0; i < numZonas; i++) {
-                    String nombreZona = javax.swing.JOptionPane.showInputDialog(this, "Nombre de la zona " + (i + 1) + " (Ej: VIP):");
-                    if (nombreZona == null) break;
-
-                    String cap = javax.swing.JOptionPane.showInputDialog(this, "Capacidad total para " + nombreZona + ":");
-                    if (cap == null) break;
-
-                    String prec = javax.swing.JOptionPane.showInputDialog(this, "Precio (S/) para " + nombreZona + ":");
-                    if (prec == null) break;
-
-                    // El controlador valida y agrega la zona
-                    boolean exitoZona = controladorConcierto.agregarZonaAlConcierto(nombreZona, cap, prec);
-                    if (!exitoZona) {
-                        i--; // Reintentar la misma zona si falló la validación
-                    }
-                }
-            } catch (NumberFormatException ex) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Número de zonas inválido.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        }
+    public String getNombre() {
+        return txtNombre.getText().trim();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-   
+    public String getFecha() {
+        return txtFecha.getText().trim();
+    }
+
+    public Concierto getConciertoAEditar() {
+        return conciertoAEditar;
+    }
+
+    public javax.swing.JFrame getVistaAnterior() {
+        return vistaAnterior;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnVolver;
