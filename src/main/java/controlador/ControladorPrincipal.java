@@ -134,27 +134,19 @@ public class ControladorPrincipal {
         this.usuarioLogueado = usuarioLogueado;
     }
     
-    public Venta procesarCompraConcierto(String nombreZona, int cantidad, Tarjeta tarjetaUsar) throws Exception {
-        if (conciertoSeleccionado == null) throw new Exception("Seleccione un concierto primero.");
-        
-        Zona zonaEncontrada = conciertoSeleccionado.buscarZonaPorNombre(nombreZona);
-        if (zonaEncontrada == null) throw new Exception("Zona no encontrada en el sistema.");
-        
-        if (cantidad <= 0) throw new Exception("La cantidad de entradas debe ser mayor a 0.");
+    // ==========================================================
+    // INSTANCIACIÓN DE CONTROLADORES (MÓDULO CLIENTE / TARJETA)
+    // ==========================================================
+    // Se sustituye la antigua lógica de control directo (procesarCompraConcierto)
+    // por la instanciación de los nuevos controladores, inyectando las dependencias
+    // correctas (vistas y colecciones centralizadas).
 
-        Persona usuario = this.usuarioLogueado;
-        if (!(usuario instanceof Cliente)) throw new Exception("El administrador no puede realizar compras.");
-        
-        Cliente cliente = (Cliente) usuario;
+    public ControladorCliente crearControladorCliente(vista.FrmCliente vista) {
+        return new ControladorCliente(this, vista, this.coleccionVentas);
+    }
 
-        Venta nuevaVenta = new Venta(cantidad, cliente, zonaEncontrada, tarjetaUsar);
-        
-        if (nuevaVenta.procesarCompra(tarjetaUsar.getCVV())) {
-            registrarNuevaVenta(nuevaVenta);
-            return nuevaVenta; 
-        } else {
-            throw new Exception("La transacción fue rechazada. Verifique la disponibilidad, su límite de entradas o la tarjeta.");
-        }
+    public ControladorTarjeta crearControladorTarjeta(vista.FrmTarjeta vista, vista.FrmCliente vistaCliente, ControladorCliente ctrlCliente) {
+        return new ControladorTarjeta(this, vista, ctrlCliente);
     }
 
     public boolean eliminarConciertoGlobal(Concierto concierto) {
