@@ -2,6 +2,7 @@ package controlador;
 
 import coleccion.ColeccionPersonas;
 import coleccion.ColeccionConciertos;
+import coleccion.ColeccionVentas;
 import modelo.Concierto;
 import modelo.Venta;
 import modelo.Cliente;
@@ -14,12 +15,14 @@ import java.util.ArrayList;
 public class ControladorPrincipal {
     private ColeccionPersonas coleccionPersonas;
     private ColeccionConciertos coleccionConciertos;
+    private ColeccionVentas coleccionVentas;
     private Persona usuarioLogueado;
     private Concierto conciertoSeleccionado;
 
     public ControladorPrincipal() {
         this.coleccionPersonas = new ColeccionPersonas();
         this.coleccionConciertos = new ColeccionConciertos();
+        this.coleccionVentas = new ColeccionVentas();
         Usuario admin = new Usuario("99999999", "Administrador", "Sistema", "admin@gmail.com", "admin123", "ADM001");
         this.coleccionPersonas.guardarPersona(admin);
         Usuario adminRapido = new Usuario("00000000", "Admin", "Pruebas", "admin", "admin", "ADM002");
@@ -55,6 +58,7 @@ public class ControladorPrincipal {
         if (conciertoSeleccionado != null) {
             conciertoSeleccionado.registrarVenta(v);
         }
+        this.coleccionVentas.guardarVenta(v);
     }
     
     public Object[][] getDatosZonasParaTabla() {
@@ -116,6 +120,10 @@ public class ControladorPrincipal {
 
     public ColeccionPersonas getColeccionPersonas() {
         return coleccionPersonas;
+    }
+
+    public ColeccionVentas getColeccionVentas() {
+        return coleccionVentas;
     }
 
     public Persona getUsuarioLogueado() {
