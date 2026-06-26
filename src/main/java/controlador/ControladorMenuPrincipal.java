@@ -14,11 +14,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 
-/**
- * Controlador para la vista del Menú Principal (FrmMenuPrincipal).
- * Responsable de la navegación, del formateo de datos de usuario, de la
- * visualización de zonas/historial de compras y de la selección de concierto.
- */
+
+  // Controlador para la vista del Menú Principal (FrmMenuPrincipal).
+  
 public class ControladorMenuPrincipal {
     private FrmMenuPrincipal vistaMenu;
     private ControladorPrincipal contextoCentral;
@@ -82,10 +80,9 @@ public class ControladorMenuPrincipal {
         }
     }
 
-    /**
-     * Muestra el historial de compras y puntos acumulados del cliente activo.
-     * Utiliza la colección ColeccionVentas para evitar el recorrido manual anidado.
-     */
+    
+     // Muestra el historial de compras y puntos acumulados del cliente activo.
+     
     public void verMisCompras() {
         Persona usuario = contextoCentral.getUsuarioLogueado();
         if (usuario instanceof Cliente) {
@@ -124,18 +121,18 @@ public class ControladorMenuPrincipal {
         }
     }
 
-    /**
-     * Dirige al usuario al flujo de compra de entradas, abriendo FrmCliente y cerrando el menú.
-     */
+    
+     // Dirige al usuario al flujo de compra de entradas, abriendo FrmCliente y cerrando el menú.
+     
     public void comprarEntradas() {
         FrmCliente cliente = new FrmCliente(contextoCentral);
         cliente.setVisible(true);
         vistaMenu.dispose();
     }
 
-    /**
-     * Cierra la sesión activa del usuario y regresa al portal de inicio de sesión (FrmLogin).
-     */
+    
+     // Cierra la sesión activa del usuario y regresa al portal de inicio de sesión (FrmLogin).
+     
     public void cerrarSesion() {
         contextoCentral.cerrarSesion();
         FrmLogin login = new FrmLogin(contextoCentral);
