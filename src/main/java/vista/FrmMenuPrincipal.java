@@ -4,6 +4,7 @@
  */
 package vista;
 import controlador.ControladorPrincipal;
+import controlador.ControladorLogin;
 /**
  *
  * @author alex_
@@ -180,7 +181,8 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         ctrl.cerrarSesion();
-        FrmLogin login = new FrmLogin(this.ctrl);
+        FrmLogin login = new FrmLogin();
+        ControladorLogin ctrlLogin = new ControladorLogin(login, this.ctrl);
         login.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed

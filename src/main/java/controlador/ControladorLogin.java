@@ -11,17 +11,35 @@ import vista.FrmRegistro;
 import modelo.Persona;
 import modelo.Usuario;
 import javax.swing.JOptionPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 /**
  *
  * @author alex_
  */
-public class ControladorLogin {
+public class ControladorLogin implements ActionListener {
     private FrmLogin vistaLogin;
     private ControladorPrincipal contextoCentral;
     
     public ControladorLogin(FrmLogin vistaLogin, ControladorPrincipal contextoCentral) {
         this.vistaLogin = vistaLogin;
         this.contextoCentral = contextoCentral;
+        
+        this.vistaLogin.btnIniciarSesion.addActionListener(this);
+        this.vistaLogin.btnRegistrarse.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == vistaLogin.btnIniciarSesion) {
+            String correo = vistaLogin.txtCorreo.getText();
+            String contrasena = new String(vistaLogin.txtContrasena.getPassword());
+            iniciarSesion(correo, contrasena);
+        }
+        
+        if (e.getSource() == vistaLogin.btnRegistrarse) {
+            abrirRegistro();
+        }
     }
     
     public void iniciarSesion(String correo, String contrasena) {
@@ -48,7 +66,8 @@ public class ControladorLogin {
         }
     }
     public void abrirRegistro() {
-        FrmRegistro registro = new FrmRegistro(contextoCentral);
+        FrmRegistro registro = new FrmRegistro();
+        ControladorRegistro ctrlRegistro = new ControladorRegistro(registro, contextoCentral);
         registro.setVisible(true);
         vistaLogin.dispose();
     }

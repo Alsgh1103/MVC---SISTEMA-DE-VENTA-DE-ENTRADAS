@@ -7,26 +7,13 @@ package vista;
 import controlador.ControladorPrincipal;
 import controlador.ControladorCliente;
 
-/**
- * Vista de compra de entradas para el cliente.
- *
- * Esta clase es un cascarón puramente visual.
- * Toda la lógica de negocio, inicialización y navegación
- * está delegada en {@link ControladorCliente}.
- *
- * @author alex_
- */
 public class FrmCliente extends javax.swing.JFrame {
 
-    /** Controlador dedicado que gestiona toda la lógica de esta vista. */
     public ControladorCliente controlador;
 
     public FrmCliente(ControladorPrincipal ctrl) {
         initComponents();
         this.setLocationRelativeTo(null);
-        // El controlador se construye DESPUÉS de initComponents para que
-        // los componentes ya existan cuando se registren los listeners.
-        // Se inyecta usando la instanciación centralizada en ControladorPrincipal
         this.controlador = ctrl.crearControladorCliente(this);
     }
 

@@ -3,26 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
-import controlador.ControladorPrincipal;
-import controlador.ControladorRegistro;
-import modelo.Cliente;
-/**
- *
- * @author alex_
- */
+
 public class FrmRegistro extends javax.swing.JFrame {
-    private ControladorPrincipal ctrl;
-    private ControladorRegistro controladorRegistro;
-    public FrmRegistro(ControladorPrincipal ctrl){
-        this.ctrl = ctrl;
+    public FrmRegistro() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.controladorRegistro = new ControladorRegistro(this, ctrl);
+        this.setTitle("Registro de Usuario");
     }
-        
-        
-
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,11 +36,6 @@ public class FrmRegistro extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnGuardar.setText("Guardar");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
 
         txtDni.setText(" ");
 
@@ -74,11 +56,6 @@ public class FrmRegistro extends javax.swing.JFrame {
         jLabel5.setText("CORREO");
 
         btnVolver.setText("Volver");
-        btnVolver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVolverActionPerformed(evt);
-            }
-        });
 
         jLabel6.setText("Bienvenido, complete sus datos para poder registrarse");
 
@@ -151,37 +128,25 @@ public class FrmRegistro extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        String dni = txtDni.getText().trim();
-        String nom = txtNombre.getText().trim();
-        String ape = txtApellido.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String pass = new String(txtPass.getPassword()).trim();
-        controladorRegistro.registrarUsuario(dni, nom, ape, correo, pass);          
-    }//GEN-LAST:event_btnGuardarActionPerformed
-
-    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        controladorRegistro.volverAlLogin();
-    }//GEN-LAST:event_btnVolverActionPerformed
-
     /**
      * @param args the command line arguments
      */
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnVolver;
+    public javax.swing.JButton btnGuardar;
+    public javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JTextField txtApellido;
-    private javax.swing.JTextField txtCorreo;
-    private javax.swing.JTextField txtDni;
-    private javax.swing.JTextField txtNombre;
-    private javax.swing.JPasswordField txtPass;
+    public javax.swing.JTextField txtApellido;
+    public javax.swing.JTextField txtCorreo;
+    public javax.swing.JTextField txtDni;
+    public javax.swing.JTextField txtNombre;
+    public javax.swing.JPasswordField txtPass;
     // End of variables declaration//GEN-END:variables
+
 }
