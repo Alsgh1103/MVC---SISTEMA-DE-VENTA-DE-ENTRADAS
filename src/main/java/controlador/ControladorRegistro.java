@@ -96,9 +96,32 @@ public class ControladorRegistro implements ActionListener {
             return false;
         }
 
+        // =========================================================
+        // 1. ATAJO DE DESARROLLADOR: Bypass (Salto) para correos @test.com
+        // =========================================================
+        if (correo.trim().toLowerCase().endsWith("@test.com")) {
+            contextoCentral.registrarNuevoCliente(dni.trim(), nombres.trim(), apellidos.trim(), correo.trim(), contrasena.trim(), false);
+            
+            JOptionPane.showMessageDialog(vistaRegistro, 
+                    "¡Usuario de prueba registrado exitosamente (Bypass activado)! Ya puede iniciar sesión.");
+            volverAlLogin();
+            return true;
+        }
+
+        // =========================================================
+        // 2. FLUJO DE CORREOS NORMALES (CONSOLA CHIVATA SEGURA)
+        // =========================================================
         String codigoAleatorio = String.valueOf((int)(Math.random() * 9000) + 1000);
-        servicio.ServicioCorreo.enviarCodigo(correo.trim(), codigoAleatorio);
-        JOptionPane.showMessageDialog(vistaRegistro, "Hemos enviado un código a su correo. Por favor, revíselo.");
+        
+        System.out.println("\n==============================================");
+        System.out.println("CÓDIGO DE VERIFICACIÓN GENERADO (PRUEBAS): " + codigoAleatorio);
+        System.out.println("==============================================\n");
+
+        // DESACTIVADO PARA PRUEBAS LOCALES (Descomentar para producción/entrega)
+        // servicio.ServicioCorreo.enviarCodigo(correo.trim(), codigoAleatorio);
+        
+        JOptionPane.showMessageDialog(vistaRegistro, "Código de validación simulado. Revíselo en la consola de NetBeans.");
+        
         vista.FrmValidarCodigo vistaValidar = new vista.FrmValidarCodigo();
         ControladorValidarCodigo ctrlValidar = new ControladorValidarCodigo(
                 vistaValidar, contextoCentral, codigoAleatorio, 

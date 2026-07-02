@@ -27,6 +27,10 @@ public class ControladorPrincipal {
         this.coleccionPersonas.guardarPersona(admin);
         Usuario adminRapido = new Usuario("00000000", "Admin", "Pruebas", "admin", "admin", "ADM002");
         this.coleccionPersonas.guardarPersona(adminRapido);
+
+        // Cliente de prueba para saltarse la validación por correo
+        Cliente clientePruebas = new Cliente("88888888", "Cliente", "Pruebas", "cliente", "cliente", false);
+        this.coleccionPersonas.guardarPersona(clientePruebas);
     }
 
     public Persona login(String correo, String contrasena) {
