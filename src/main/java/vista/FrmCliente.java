@@ -3,85 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
+
 import controlador.ControladorPrincipal;
-import modelo.Persona;
-import modelo.Cliente;
-import modelo.Zona;
-import java.util.ArrayList;
-/**
- *
- * @author alex_
- */
-import modelo.Concierto;
+import controlador.ControladorCliente;
 
 public class FrmCliente extends javax.swing.JFrame {
-    private ControladorPrincipal ctrl;
-    private double precioSeleccionado = 0.0;
-    private Concierto conciertoSeleccionado;
-    private modelo.Tarjeta tarjetaActiva;
 
-    public FrmCliente(ControladorPrincipal ctrl){
-        this.ctrl = ctrl;
-        this.conciertoSeleccionado = ctrl.getConciertoSeleccionado(); 
-        
-        if (this.conciertoSeleccionado == null && !ctrl.getTodosLosConciertos().isEmpty()) {
-            this.conciertoSeleccionado = ctrl.getTodosLosConciertos().get(0);
-            ctrl.setConciertoSeleccionado(this.conciertoSeleccionado);
-        }
+    public ControladorCliente controlador;
+
+    public FrmCliente(ControladorPrincipal ctrl) {
         initComponents();
         this.setLocationRelativeTo(null);
-        
-        modelo.Persona usuario = ctrl.getUsuarioLogueado();
-        if(usuario != null){
-            lblBienvenida.setText("Bienvenido, " + usuario.getNombres() + " " + usuario.getApellidos());
-            if (usuario instanceof Cliente){
-                Cliente clienteReal = (Cliente) usuario;
-                if(clienteReal.isSocio()){
-                    lblSocio.setText("Socio: Platino (30% desc)");
-                }else{
-                    lblSocio.setText("Cliente Regular");
-                }
-            }
-        }else{
-            lblBienvenida.setText("Bienvenido, Invitado");
-        }
-        
-        cargarZonasEnCombo();
-        cargarTarjetasEnCombo();
+        this.controlador = ctrl.crearControladorCliente(this);
     }
-    
-    private void cargarZonasEnCombo(){
-        cbxZonas.removeAllItems();
-        if (conciertoSeleccionado != null) {
-            ArrayList<Zona> lista = conciertoSeleccionado.getTodasLasZonas();
-            for(Zona z : lista){
-                cbxZonas.addItem(z.getNombre());
-            }
-        }
-    }
-    private void cargarTarjetasEnCombo() {
-        cbxTarjeta.removeAllItems();
-        modelo.Persona usuario = ctrl.getUsuarioLogueado();
-        if (usuario instanceof modelo.Cliente) {
-            modelo.Cliente c = (modelo.Cliente) usuario;
-            if (c.getTarjeta() != null) {
-                String num = c.getTarjeta().getNumero();
-                String ultimosCuatro = num.length() > 4 ? num.substring(num.length() - 4) : num;
-                cbxTarjeta.addItem("Tarjeta term. " + ultimosCuatro);
-            } else {
-                cbxTarjeta.addItem("Sin tarjetas registradas");
-            }
-        }
-        cbxTarjeta.addItem("Agregar nueva tarjeta...");
-    }
-    private void spnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {                                         
-        actualizarTotal();
-    }
-    private void actualizarTotal() {
-        int cantidad = (int) spnCantidad.getValue();
-        double total = this.precioSeleccionado * cantidad;
-        lblTotal.setText("Total a pagar: S/ " + total);
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -117,11 +52,6 @@ public class FrmCliente extends javax.swing.JFrame {
         lblSocio.setText("Socio: ");
 
         cbxZonas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbxZonas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxZonasActionPerformed(evt);
-            }
-        });
 
         lblDisponibilidad.setText("Capacidad Disponible: ");
 
@@ -140,18 +70,8 @@ public class FrmCliente extends javax.swing.JFrame {
         lblEntradas.setText("Cantidad de entradas");
 
         btnConfirmar.setText("Confirmar Compra");
-        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConfirmarActionPerformed(evt);
-            }
-        });
 
         btnVolver.setText("Volver");
-        btnVolver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVolverActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -230,11 +150,6 @@ public class FrmCliente extends javax.swing.JFrame {
         );
 
         cbxTarjeta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbxTarjeta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxTarjetaActionPerformed(evt);
-            }
-        });
 
         lblTarjeta.setText("Seleccione Tarjeta");
 
@@ -281,98 +196,23 @@ public class FrmCliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cbxZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxZonasActionPerformed
-        String nombreSeleccionado = (String) cbxZonas.getSelectedItem();
-        if (nombreSeleccionado != null && conciertoSeleccionado != null){
-            Zona zonaEncontrada = conciertoSeleccionado.buscarZonaPorNombre(nombreSeleccionado);
-            if(zonaEncontrada!=null){
-                this.precioSeleccionado = zonaEncontrada.getPrecio();
-                lblPrecio.setText("S/ " + zonaEncontrada.getPrecio());
-                lblCapacidad.setText("Disponibles: " + zonaEncontrada.getCapacidadDisponible());
-                actualizarTotal();
-            }
-        }
-    }//GEN-LAST:event_cbxZonasActionPerformed
-
-    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        String nombreZona = (String) cbxZonas.getSelectedItem();
-        int cantidad = (int) spnCantidad.getValue();
-        
-        // 1. Recolección de datos de la Vista
-        modelo.Tarjeta tarjetaUsar = this.tarjetaActiva;
-        if (tarjetaUsar == null) {
-            modelo.Persona usuario = ctrl.getUsuarioLogueado();
-            if (usuario instanceof Cliente) {
-                tarjetaUsar = ((Cliente) usuario).getTarjeta(); 
-            }
-        }
-        
-        if (tarjetaUsar == null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, registre o seleccione una tarjeta de pago.");
-            return;
-        }
-
-        // 2. Delegación total al Controlador
-        try {
-            // El controlador y el modelo se encargan del descuento, stock, puntos y creación de la Venta
-            modelo.Venta ventaRealizada = ctrl.procesarCompraConcierto(nombreZona, cantidad, tarjetaUsar);
-            
-            // 3. Respuesta visual de éxito
-            javax.swing.JOptionPane.showMessageDialog(this, "¡Compra Exitosa!\n" +
-                                                      "Código Transacción: " + ventaRealizada.getIdTransaccion() + "\n" +
-                                                      "Monto Total: S/ " + ventaRealizada.getMonto() + "\n" +
-                                                      "Asientos restantes: " + ventaRealizada.getZona().getCapacidadDisponible());
-            
-            FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl);
-            menu.setVisible(true);
-            this.dispose();
-            
-        } catch (Exception ex) {
-            // 4. Captura de errores de lógica de negocio (ej. falta de stock, tarjeta rechazada)
-            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error en la compra", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnConfirmarActionPerformed
-
-    private void cbxTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTarjetaActionPerformed
-        String seleccion = (String) cbxTarjeta.getSelectedItem();
-        if (seleccion != null && seleccion.equals("Agregar nueva tarjeta...")) {
-            FrmTarjeta frm = new FrmTarjeta(this.ctrl, this);
-            frm.setVisible(true);
-            this.setVisible(false);
-        }
-    }//GEN-LAST:event_cbxTarjetaActionPerformed
-
-    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl);
-        menu.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnVolverActionPerformed
-
-    public void setTarjetaActiva(modelo.Tarjeta t) {
-        this.tarjetaActiva = t;
-        cargarTarjetasEnCombo();
-        if (t != null) {
-            cbxTarjeta.setSelectedIndex(0); 
-        }
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnConfirmar;
-    private javax.swing.JButton btnVolver;
-    private javax.swing.JComboBox<String> cbxTarjeta;
-    private javax.swing.JComboBox<String> cbxZonas;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblBienvenida;
-    private javax.swing.JLabel lblCapacidad;
-    private javax.swing.JLabel lblDisponibilidad;
-    private javax.swing.JLabel lblEntradas;
-    private javax.swing.JLabel lblPrecio;
-    private javax.swing.JLabel lblPrecioU;
-    private javax.swing.JLabel lblSocio;
-    private javax.swing.JLabel lblTarjeta;
-    private javax.swing.JLabel lblTotal;
-    private javax.swing.JLabel lblTotalAPagar;
-    private javax.swing.JLabel lblZonas;
-    private javax.swing.JSpinner spnCantidad;
+    public javax.swing.JButton btnConfirmar;
+    public javax.swing.JButton btnVolver;
+    public javax.swing.JComboBox<String> cbxTarjeta;
+    public javax.swing.JComboBox<String> cbxZonas;
+    public javax.swing.JPanel jPanel1;
+    public javax.swing.JLabel lblBienvenida;
+    public javax.swing.JLabel lblCapacidad;
+    public javax.swing.JLabel lblDisponibilidad;
+    public javax.swing.JLabel lblEntradas;
+    public javax.swing.JLabel lblPrecio;
+    public javax.swing.JLabel lblPrecioU;
+    public javax.swing.JLabel lblSocio;
+    public javax.swing.JLabel lblTarjeta;
+    public javax.swing.JLabel lblTotal;
+    public javax.swing.JLabel lblTotalAPagar;
+    public javax.swing.JLabel lblZonas;
+    public javax.swing.JSpinner spnCantidad;
     // End of variables declaration//GEN-END:variables
 }

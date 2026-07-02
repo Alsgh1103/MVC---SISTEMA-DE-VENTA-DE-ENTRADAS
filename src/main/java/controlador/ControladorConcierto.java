@@ -5,154 +5,97 @@ import vista.FrmAdmin;
 import modelo.Concierto;
 import coleccion.ColeccionConciertos;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
-public class ControladorConcierto {
-    private FrmConcierto vistaConcierto;
+public class ControladorConcierto implements ActionListener { 
+    private FrmConcierto vista;
     private ControladorPrincipal contextoCentral;
-    private Concierto conciertoActual;
 
-    public ControladorConcierto(FrmConcierto vistaConcierto, ControladorPrincipal contextoCentral) {
-        this.vistaConcierto = vistaConcierto;
+    public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral) {
+        this.vista = vista;
         this.contextoCentral = contextoCentral;
+        
+        // Conectamos los botones de tu pantalla
+        this.vista.getBtnGuardar().addActionListener(this);
+        this.vista.getBtnVolver().addActionListener(this);
     }
 
-    public boolean registrarNuevoConcierto(String nombre, String fechaStr) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == vista.getBtnGuardar()) {
+            guardarConcierto();
+        } else if (e.getSource() == vista.getBtnVolver()) {
+            volver();
+        }
+    }
+
+    private void guardarConcierto() {
         try {
-            if (nombre == null || nombre.trim().isEmpty() || fechaStr == null || fechaStr.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(vistaConcierto, "Por favor, complete todos los campos.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
-                return false;
+            Concierto concierto = vista.getConciertoAEditar();
+
+            if (concierto != null) { // Si estamos editando
+                concierto.limpiarZonas(); 
+            } else { // Si es un concierto nuevo
+                String nombre = vista.getNombre();
+                
+                int anio = vista.getAnio();
+                int mes = vista.getMes();
+                int dia = vista.getDia();
+                LocalDate fecha = LocalDate.of(anio, mes, dia);
+                
+                ColeccionConciertos coleccion = contextoCentral.getColeccionConciertos();
+                concierto = coleccion.registrarConcierto(nombre, fecha);
+                contextoCentral.setConciertoSeleccionado(concierto);
             }
-            LocalDate fecha = LocalDate.parse(fechaStr);
-            ColeccionConciertos coleccion = contextoCentral.getColeccionConciertos();
-            this.conciertoActual = coleccion.registrarConcierto(nombre, fecha);
-            contextoCentral.setConciertoSeleccionado(this.conciertoActual);
-            
-            JOptionPane.showMessageDialog(vistaConcierto, "¡Concierto '" + nombre + "' registrado exitosamente!");
-            return true;
-        } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(vistaConcierto, "Formato de fecha inválido. Por favor use el formato YYYY-MM-DD.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            return false;
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(vistaConcierto, e.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
-            return false;
+
+            // Preguntamos las zonas con ventanas flotantes
+            pedirZonas(concierto);
+
+            vista.mostrarMensaje("Operación exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            volver();
+
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            vista.mostrarMensaje(ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            vista.mostrarMensaje("Fecha inválida", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public boolean agregarZonaAlConcierto(String nombreZona, String capacidadStr, String precioStr) {
+    private void pedirZonas(Concierto c) {
+        String numZonasStr = vista.pedirDato("¿Cuántas zonas tendrá?");
+        if (numZonasStr == null || numZonasStr.isEmpty()) return;
+
         try {
-            if (conciertoActual == null) {
-                JOptionPane.showMessageDialog(vistaConcierto, "No hay ningún concierto seleccionado para agregar zonas.", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            if (nombreZona == null || nombreZona.trim().isEmpty() || capacidadStr == null || capacidadStr.trim().isEmpty() || precioStr == null || precioStr.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(vistaConcierto, "Por favor, complete todos los campos de la zona.", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            
-            int capacidad;
-            int precio;
-            try {
-                capacidad = Integer.parseInt(capacidadStr.trim());
-                precio = Integer.parseInt(precioStr.trim());
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(vistaConcierto, "La capacidad y el precio deben ser números enteros válidos.", "Error de Tipado", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            
-            conciertoActual.registrarZona(nombreZona, capacidad, precio);
-            JOptionPane.showMessageDialog(vistaConcierto, "Zona agregada con éxito.");
-            return true;
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(vistaConcierto, e.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-    }
+            int numZonas = Integer.parseInt(numZonasStr);
+            for (int i = 0; i < numZonas; i++) {
+                String nombreZona = vista.pedirDato("Nombre de la zona " + (i + 1) + ":");
+                if (nombreZona == null) break;
+                String capStr = vista.pedirDato("Capacidad para " + nombreZona + ":");
+                if (capStr == null) break;
+                String precStr = vista.pedirDato("Precio para " + nombreZona + ":");
+                if (precStr == null) break;
 
-    public void prepararReconfiguracionZonas(Concierto concierto) throws IllegalStateException, IllegalArgumentException {
-        if (concierto == null) {
-            throw new IllegalArgumentException("No se ha seleccionado un concierto válido.");
+                try {
+                    c.registrarZona(nombreZona, Integer.parseInt(capStr), Integer.parseInt(precStr));
+                } catch (Exception e) {
+                    vista.mostrarMensaje("Datos inválidos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    i--; // Reintenta
+                }
+            }
+        } catch (Exception e) {
+            vista.mostrarMensaje("Número inválido", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.conciertoActual = concierto;
-        this.conciertoActual.limpiarZonas(); // Vaciamos las zonas previas (N) para recibir las nuevas (M)
     }
 
     public void volver() {
-        javax.swing.JFrame vistaAnterior = vistaConcierto.getVistaAnterior();
-        if (vistaAnterior != null) {
-            vistaAnterior.setVisible(true);
-        }
-        vistaConcierto.dispose();
-    }
-
-    public void guardar() {
-        Concierto conciertoAEditar = vistaConcierto.getConciertoAEditar();
-        if (conciertoAEditar != null) {
-            // MODO EDICIÓN
-            try {
-                prepararReconfiguracionZonas(conciertoAEditar);
-                ejecutarBucleZonas();
-
-                javax.swing.JFrame vistaAnterior = vistaConcierto.getVistaAnterior();
-                if (vistaAnterior != null) {
-                    if (vistaAnterior instanceof FrmAdmin) {
-                        ((FrmAdmin) vistaAnterior).refrescarTabla();
-                    }
-                    vistaAnterior.setVisible(true);
-                }
-                vistaConcierto.dispose();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(vistaConcierto, e.getMessage(), "Error de Edición", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            // MODO CREACIÓN
-            String nombre = vistaConcierto.getNombre();
-            String fechaStr = vistaConcierto.getFecha();
-
-            // Delegar la validación y el registro al controlador
-            boolean exitoRegistro = registrarNuevoConcierto(nombre, fechaStr);
-            if (!exitoRegistro) {
-                return;
-            }
-
-            ejecutarBucleZonas();
-
-            javax.swing.JFrame vistaAnterior = vistaConcierto.getVistaAnterior();
-            if (vistaAnterior != null) {
-                if (vistaAnterior instanceof FrmAdmin) {
-                    ((FrmAdmin) vistaAnterior).refrescarTabla();
-                }
-                vistaAnterior.setVisible(true);
-            }
-            vistaConcierto.dispose();
-        }
-    }
-
-    private void ejecutarBucleZonas() {
-        String numZonasStr = JOptionPane.showInputDialog(vistaConcierto, "¿Cuántas zonas tendrá este concierto?");
-        if (numZonasStr != null && !numZonasStr.trim().isEmpty()) {
-            try {
-                int numZonas = Integer.parseInt(numZonasStr.trim());
-                for (int i = 0; i < numZonas; i++) {
-                    String nombreZona = JOptionPane.showInputDialog(vistaConcierto, "Nombre de la zona " + (i + 1) + " (Ej: VIP):");
-                    if (nombreZona == null) break;
-
-                    String cap = JOptionPane.showInputDialog(vistaConcierto, "Capacidad total para " + nombreZona + ":");
-                    if (cap == null) break;
-
-                    String prec = JOptionPane.showInputDialog(vistaConcierto, "Precio (S/) para " + nombreZona + ":");
-                    if (prec == null) break;
-
-                    // El controlador valida y agrega la zona
-                    boolean exitoZona = agregarZonaAlConcierto(nombreZona, cap, prec);
-                    if (!exitoZona) {
-                        i--; // Reintentar la misma zona si falló la validación
-                    }
-                }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(vistaConcierto, "Número de zonas inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (vista.getVistaAnterior() != null) {
+            vista.getVistaAnterior().setVisible(true);
+            if (vista.getVistaAnterior() instanceof FrmAdmin) {
+                ((FrmAdmin) vista.getVistaAnterior()).refrescarTabla();
             }
         }
+        vista.dispose();
     }
 }

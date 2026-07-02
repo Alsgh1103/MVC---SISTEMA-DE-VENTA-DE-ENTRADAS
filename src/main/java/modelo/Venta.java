@@ -14,14 +14,19 @@ public class Venta {
     private Zona zona;
     private Tarjeta tarjeta;
 
-    // Eliminamos el parámetro double montoT, el modelo lo calcula por sí mismo
+    // El modelo calcula el monto por sí mismo a partir de zona y descuentos.
     public Venta(int cantidad, Cliente c, Zona z, Tarjeta t) {
+        // C3 — Regla de negocio: la cantidad debe ser positiva
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException(
+                "La cantidad de entradas debe ser mayor a 0.");
+        }
         this.cantidadEntradas = cantidad;
         this.cliente = c;
         this.zona = z;
         this.tarjeta = t;
-        this.monto = (int) calcularTotal(); 
-        
+        this.monto = (int) calcularTotal();
+
         LocalDate hoy = LocalDate.now();
         this.fecha = hoy.toString();
         DateTimeFormatter formatoId = DateTimeFormatter.ofPattern("ddMMyy");
@@ -37,32 +42,37 @@ public class Venta {
         return total;
     }
 
-    public boolean procesarCompra(int cvvIngresadoUsuario) {
-        // Validaciones de negocio
-        // Nota: Asegúrate de que Zona tenga un método verificarDisponibilidad
+    /**
+     * Procesa la compra aplicando todas las reglas de negocio del dominio.
+     * Lanza IllegalArgumentException con mensaje descriptivo ante cualquier fallo,
+     * en lugar de retornar false silenciosamente.
+     *
+     * @param cvvIngresadoUsuario  CVV introducido por el usuario en la vista.
+     * @throws IllegalArgumentException si no hay stock (P1), se supera el límite
+     *                                  de entradas (T1) o el CVV es incorrecto (T2).
+     */
+    public void procesarCompra(int cvvIngresadoUsuario) {
+        // P1 — Sin disponibilidad en la zona
         if (!zona.verificarDisponibilidad(cantidadEntradas)) {
-            return false;
+            throw new IllegalArgumentException(
+                "No hay entradas disponibles suficientes en la zona seleccionada.");
         }
-        if (!validarLimiteEntradas()) {
-            return false;
-        }
-        
-        // Si el pago pasa, aplicamos las consecuencias de la regla de negocio
-        if (tarjeta.registrarCompra(cantidadEntradas, cvvIngresadoUsuario)) {
-            this.monto = (int) calcularTotal();
-            
-            // 1. Reducimos el stock (Asumiendo que creaste o crearás este método en Zona)
-            zona.reducirCapacidad(this.cantidadEntradas); 
-            
-            // 2. Acumulamos puntos (10 puntos por entrada)
-            int puntosGanados = this.cantidadEntradas * 10;
-            cliente.setPuntos(cliente.getPuntos() + puntosGanados); 
-            
-            return true;
-        }
-        return false;
+
+        // T1 y T2 — registrarCompra lanza IllegalArgumentException si falla
+        tarjeta.registrarCompra(cantidadEntradas, cvvIngresadoUsuario);
+
+        // Compra aprobada: aplicamos las consecuencias de negocio
+        this.monto = (int) calcularTotal();
+
+        // 1. Reducimos el stock de la zona
+        zona.reducirCapacidad(this.cantidadEntradas);
+
+        // 2. Acumulamos puntos al cliente (10 puntos por entrada)
+        int puntosGanados = this.cantidadEntradas * 10;
+        cliente.setPuntos(cliente.getPuntos() + puntosGanados);
     }
 
+    /** Consulta auxiliar: ¿la tarjeta todavía puede absorber esta cantidad? */
     public boolean validarLimiteEntradas() {
         return tarjeta.puedeComprar(this.cantidadEntradas);
     }

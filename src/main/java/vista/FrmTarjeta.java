@@ -3,26 +3,47 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
+
+import controlador.ControladorCliente;
 import controlador.ControladorPrincipal;
+import controlador.ControladorTarjeta;
+
 /**
+ * Vista de registro de tarjeta de pago.
+ *
+ * Esta clase es un cascarón puramente visual.
+ * Toda la lógica de validación, persistencia y navegación
+ * está delegada en {@link ControladorTarjeta}.
  *
  * @author alex_
  */
 public class FrmTarjeta extends javax.swing.JFrame {
-    private ControladorPrincipal ctrl;
-    private FrmCliente vistaCliente;
+
     /**
-     * Creates new form FrmTarjeta
+     * Referencia a la vista del cliente, mantenida como campo público para
+     * que ControladorTarjeta pueda restaurarla al volver o guardar.
      */
+    public FrmCliente vistaCliente;
+
+    /** Controlador dedicado que gestiona toda la lógica de esta vista. */
+    private ControladorTarjeta controlador;
+
     public FrmTarjeta(ControladorPrincipal ctrl, FrmCliente vistaCliente) {
-        this.ctrl = ctrl;
         this.vistaCliente = vistaCliente;
         initComponents();
         this.setLocationRelativeTo(null);
-        modelo.Persona usuario = ctrl.getUsuarioLogueado();
-        if (usuario != null) {
-            lblRegistraNombre.setText("Registrar tu tarjeta, " + usuario.getNombres());
+
+        // Obtener el ControladorCliente de la FrmCliente (si existe)
+        // para poder notificarle la tarjeta activa al guardar.
+        ControladorCliente ctrlCliente = null;
+        if (vistaCliente != null) {
+            ctrlCliente = vistaCliente.controlador;
         }
+
+        // El controlador se construye DESPUÉS de initComponents para que
+        // los componentes ya existan cuando se registren los listeners.
+        // Se inyecta usando la instanciación centralizada en ControladorPrincipal
+        this.controlador = ctrl.crearControladorTarjeta(this, vistaCliente, ctrlCliente);
     }
 
     /**
@@ -58,32 +79,11 @@ public class FrmTarjeta extends javax.swing.JFrame {
 
         lblCvv.setText("CVV");
 
-        txtNumeroTarjeta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNumeroTarjetaActionPerformed(evt);
-            }
-        });
-
         btnGuardar.setText("Guardar Tarjeta");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
 
         btnVolver.setText("Volver");
-        btnVolver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVolverActionPerformed(evt);
-            }
-        });
 
         CheckTarjeta.setText("Guardar tarjeta para futuras compras");
-        CheckTarjeta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CheckTarjetaActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -175,81 +175,19 @@ public class FrmTarjeta extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtNumeroTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumeroTarjetaActionPerformed
-        
-    }//GEN-LAST:event_txtNumeroTarjetaActionPerformed
-
-    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        if (this.vistaCliente != null) {
-            this.vistaCliente.setVisible(true);
-        }
-        this.dispose();
-    }//GEN-LAST:event_btnVolverActionPerformed
-
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-    String nroTarjeta = txtNumeroTarjeta.getText().trim().replaceAll("\\s+", "");
-        String titular = txtNombreTarjeta.getText().trim();
-        String vencimiento = txtFechaVencimiento.getText().trim();
-        String cvvStr = txtCvv.getText().trim();
-        boolean guardarFuturas = CheckTarjeta.isSelected();
-        
-        if (nroTarjeta.isEmpty() || titular.isEmpty() || vencimiento.isEmpty() || cvvStr.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        if (!nroTarjeta.matches("\\d{13,19}")) { 
-            javax.swing.JOptionPane.showMessageDialog(this, "El número de tarjeta debe tener entre 13 y 19 dígitos numéricos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        int cvv = 0;
-        try {
-            cvv = Integer.parseInt(cvvStr);
-        } catch(NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El CVV debe ser únicamente numérico.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-
-        modelo.Tarjeta nuevaTarjeta = new modelo.Tarjeta(nroTarjeta, titular, vencimiento, cvv);
-        
-        if (guardarFuturas) {
-            modelo.Persona usuario = ctrl.getUsuarioLogueado();
-            if (usuario instanceof modelo.Cliente) {
-                modelo.Cliente cliente = (modelo.Cliente) usuario;
-                cliente.setTarjeta(nuevaTarjeta);
-            }
-        }
-        
-        if (this.vistaCliente != null) {
-            this.vistaCliente.setTarjetaActiva(nuevaTarjeta);
-            this.vistaCliente.setVisible(true);
-        }
-        
-        javax.swing.JOptionPane.showMessageDialog(this, "Tarjeta registrada correctamente.");
-        this.dispose();
-    
-    }//GEN-LAST:event_btnGuardarActionPerformed
-
-    private void CheckTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckTarjetaActionPerformed
-        
-    }//GEN-LAST:event_CheckTarjetaActionPerformed
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox CheckTarjeta;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnVolver;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JLabel lblCvv;
-    private javax.swing.JLabel lblNombre;
-    private javax.swing.JLabel lblNumTarjeta;
-    private javax.swing.JLabel lblRegistraNombre;
-    private javax.swing.JLabel lblVencimiento;
-    private javax.swing.JTextField txtCvv;
-    private javax.swing.JTextField txtFechaVencimiento;
-    private javax.swing.JTextField txtNombreTarjeta;
-    private javax.swing.JTextField txtNumeroTarjeta;
+    public javax.swing.JCheckBox CheckTarjeta;
+    public javax.swing.JButton btnGuardar;
+    public javax.swing.JButton btnVolver;
+    public javax.swing.JPanel jPanel2;
+    public javax.swing.JLabel lblCvv;
+    public javax.swing.JLabel lblNombre;
+    public javax.swing.JLabel lblNumTarjeta;
+    public javax.swing.JLabel lblRegistraNombre;
+    public javax.swing.JLabel lblVencimiento;
+    public javax.swing.JTextField txtCvv;
+    public javax.swing.JTextField txtFechaVencimiento;
+    public javax.swing.JTextField txtNombreTarjeta;
+    public javax.swing.JTextField txtNumeroTarjeta;
     // End of variables declaration//GEN-END:variables
 }

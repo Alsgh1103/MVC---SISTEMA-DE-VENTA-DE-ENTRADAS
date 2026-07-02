@@ -95,16 +95,14 @@ public class ControladorAdmin {
     }
 
     public void cerrarSesion() {
-        // 1. Limpiamos las variables de sesión en el modelo global
         contextoCentral.cerrarSesion();
 
-        // 2. Instanciamos la vista del Login pasándole el controlador principal
-        vista.FrmLogin login = new vista.FrmLogin(this.contextoCentral);
+        vista.FrmLogin login = new vista.FrmLogin();
+        
+        ControladorLogin ctrlLogin = new ControladorLogin(login, this.contextoCentral);
 
-        // 3. Hacemos visible la pantalla para volver a ingresar las credenciales
         login.setVisible(true);
 
-        // 4. Destruimos de forma segura la ventana de administración actual
         vistaAdmin.dispose();
     }
 }

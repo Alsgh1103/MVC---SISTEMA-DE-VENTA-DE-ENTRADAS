@@ -4,9 +4,10 @@ import vista.FrmRegistro;
 import vista.FrmLogin;
 import modelo.Persona;
 import javax.swing.JOptionPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-
-public class ControladorRegistro {
+public class ControladorRegistro implements ActionListener {
 
     private FrmRegistro vistaRegistro;
     private ControladorPrincipal contextoCentral;
@@ -14,6 +15,24 @@ public class ControladorRegistro {
     public ControladorRegistro(FrmRegistro vistaRegistro, ControladorPrincipal contextoCentral) {
         this.vistaRegistro = vistaRegistro;
         this.contextoCentral = contextoCentral;
+        this.vistaRegistro.btnGuardar.addActionListener(this);
+        this.vistaRegistro.btnVolver.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == vistaRegistro.btnGuardar) {
+            String dni = vistaRegistro.txtDni.getText();
+            String nom = vistaRegistro.txtNombre.getText();
+            String ape = vistaRegistro.txtApellido.getText();
+            String correo = vistaRegistro.txtCorreo.getText();
+            String pass = new String(vistaRegistro.txtPass.getPassword());
+            
+            registrarUsuario(dni, nom, ape, correo, pass);
+            
+        } else if (e.getSource() == vistaRegistro.btnVolver) {
+            volverAlLogin();
+        }
     }
 
     
@@ -77,29 +96,49 @@ public class ControladorRegistro {
             return false;
         }
 
+        // =========================================================
+        // 1. ATAJO DE DESARROLLADOR: Bypass (Salto) para correos @test.com
+        // =========================================================
+        if (correo.trim().toLowerCase().endsWith("@test.com")) {
+            contextoCentral.registrarNuevoCliente(dni.trim(), nombres.trim(), apellidos.trim(), correo.trim(), contrasena.trim(), false);
+            
+            JOptionPane.showMessageDialog(vistaRegistro, 
+                    "¡Usuario de prueba registrado exitosamente (Bypass activado)! Ya puede iniciar sesión.");
+            volverAlLogin();
+            return true;
+        }
+
+        // =========================================================
+        // 2. FLUJO DE CORREOS NORMALES (CONSOLA CHIVATA SEGURA)
+        // =========================================================
+        String codigoAleatorio = String.valueOf((int)(Math.random() * 9000) + 1000);
         
-        contextoCentral.registrarNuevoCliente(
-                dni.trim(),
-                nombres.trim(),
-                apellidos.trim(),
-                correo.trim(),
-                contrasena.trim(),
-                false
+        System.out.println("\n==============================================");
+        System.out.println("CÓDIGO DE VERIFICACIÓN GENERADO (PRUEBAS): " + codigoAleatorio);
+        System.out.println("==============================================\n");
+
+        // DESACTIVADO PARA PRUEBAS LOCALES (Descomentar para producción/entrega)
+        // servicio.ServicioCorreo.enviarCodigo(correo.trim(), codigoAleatorio);
+        
+        JOptionPane.showMessageDialog(vistaRegistro, "Código de validación simulado. Revíselo en la consola de NetBeans.");
+        
+        vista.FrmValidarCodigo vistaValidar = new vista.FrmValidarCodigo();
+        ControladorValidarCodigo ctrlValidar = new ControladorValidarCodigo(
+                vistaValidar, contextoCentral, codigoAleatorio, 
+                dni.trim(), nombres.trim(), apellidos.trim(), correo.trim(), contrasena.trim()
         );
-
-        JOptionPane.showMessageDialog(vistaRegistro,
-                "¡Registro exitoso! Bienvenido, " + nombres.trim() + ".\nYa puedes iniciar sesión.",
-                "Registro completado",
-                JOptionPane.INFORMATION_MESSAGE);
-
         
-        volverAlLogin();
+        vistaValidar.setVisible(true);
+        vistaRegistro.dispose();
+        
         return true;
+
     }
 
     
     public void volverAlLogin() {
-        FrmLogin login = new FrmLogin(contextoCentral);
+        FrmLogin login = new FrmLogin();
+        ControladorLogin ctrlLogin = new ControladorLogin(login, contextoCentral);
         login.setVisible(true);
         vistaRegistro.dispose();
     }

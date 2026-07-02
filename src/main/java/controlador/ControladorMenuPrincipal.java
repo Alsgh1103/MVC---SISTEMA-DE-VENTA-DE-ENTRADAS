@@ -135,7 +135,8 @@ public class ControladorMenuPrincipal {
      
     public void cerrarSesion() {
         contextoCentral.cerrarSesion();
-        FrmLogin login = new FrmLogin(contextoCentral);
+        FrmLogin login = new FrmLogin();
+        ControladorLogin ctrlLogin = new ControladorLogin(login, contextoCentral);
         login.setVisible(true);
         vistaMenu.dispose();
     }

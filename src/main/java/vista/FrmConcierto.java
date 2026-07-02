@@ -4,39 +4,61 @@ import controlador.ControladorPrincipal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import modelo.Concierto;
-
 import controlador.ControladorConcierto;
 
 public class FrmConcierto extends javax.swing.JFrame {
     
-    // Variables para respetar el flujo MVC
     private ControladorConcierto controladorConcierto;
     private javax.swing.JFrame vistaAnterior;
     private Concierto conciertoAEditar;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmConcierto.class.getName());
 
-    // Modificamos el constructor para recibir el controlador y la ventana anterior
     public FrmConcierto(ControladorPrincipal ctrl, javax.swing.JFrame vistaAnterior) {
-        this.controladorConcierto = new ControladorConcierto(this, ctrl);
         this.vistaAnterior = vistaAnterior;
         initComponents();
+        popularCombos();
+        this.controladorConcierto = new ControladorConcierto(this, ctrl);
         this.setLocationRelativeTo(null); // Centrar la ventana
     }
 
-    // Nuevo constructor para edición/reconfiguración
     public FrmConcierto(ControladorPrincipal ctrl, javax.swing.JFrame vistaAnterior, Concierto conciertoAEditar) {
-        this.controladorConcierto = new ControladorConcierto(this, ctrl);
         this.vistaAnterior = vistaAnterior;
         this.conciertoAEditar = conciertoAEditar;
         initComponents();
+        popularCombos();
+        this.controladorConcierto = new ControladorConcierto(this, ctrl);
         this.setLocationRelativeTo(null);
 
         // Pre-poblamos los campos de texto y bloqueamos edición
         txtNombre.setText(conciertoAEditar.getNombre());
-        txtFecha.setText(conciertoAEditar.getFecha().toString());
         txtNombre.setEditable(false); 
-        txtFecha.setEditable(false);
+        
+        LocalDate fecha = conciertoAEditar.getFecha();
+        cmbDia.setSelectedItem(String.valueOf(fecha.getDayOfMonth()));
+        cmbMes.setSelectedItem(String.valueOf(fecha.getMonthValue()));
+        cmbAnio.setSelectedItem(String.valueOf(fecha.getYear()));
+        
+        cmbDia.setEnabled(false);
+        cmbMes.setEnabled(false);
+        cmbAnio.setEnabled(false);
+        
         btnGuardar.setText("Reconfigurar Zonas");
+    }
+
+    private void popularCombos() {
+        cmbDia.removeAllItems();
+        for (int i = 1; i <= 31; i++) {
+            cmbDia.addItem(String.valueOf(i));
+        }
+        cmbMes.removeAllItems();
+        for (int i = 1; i <= 12; i++) {
+            cmbMes.addItem(String.valueOf(i));
+        }
+        cmbAnio.removeAllItems();
+        int anioActual = LocalDate.now().getYear();
+        for (int i = anioActual; i <= anioActual + 10; i++) {
+            cmbAnio.addItem(String.valueOf(i));
+        }
     }
 
     /**
@@ -49,12 +71,17 @@ public class FrmConcierto extends javax.swing.JFrame {
     private void initComponents() {
 
         txtNombre = new javax.swing.JTextField();
-        txtFecha = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        cmbDia = new javax.swing.JComboBox<>();
+        cmbMes = new javax.swing.JComboBox<>();
+        cmbAnio = new javax.swing.JComboBox<>();
+        txtDia = new javax.swing.JLabel();
+        txtMes = new javax.swing.JLabel();
+        txtAnio = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,44 +93,70 @@ public class FrmConcierto extends javax.swing.JFrame {
         btnVolver.setText("Volver");
         btnVolver.addActionListener(this::btnVolverActionPerformed);
 
-        jLabel1.setText("Ingresa fecha: ");
+        jLabel1.setText("Ingrese fecha: ");
 
-        jLabel2.setText("Ingresa nombre:");
+        jLabel2.setText("Ingrese nombre:");
 
         jLabel3.setText("Concierto");
+
+        cmbDia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbDia.addActionListener(this::cmbDiaActionPerformed);
+
+        cmbMes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        cmbAnio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        txtDia.setText("Dia");
+
+        txtMes.setText("Mes");
+
+        txtAnio.setText("Año");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 55, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(127, 127, 127))
+                        .addGap(82, 82, 82)
+                        .addComponent(btnVolver)
+                        .addGap(145, 145, 145)
+                        .addComponent(btnGuardar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(251, 251, 251)
-                        .addComponent(btnGuardar)
-                        .addGap(51, 51, 51))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmbDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(txtDia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(cmbMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(txtMes, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(82, 82, 82)
-                                .addComponent(btnVolver)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtFecha, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(59, 59, 59)
+                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(102, 102, 102))
         );
         layout.setVerticalGroup(
@@ -115,11 +168,18 @@ public class FrmConcierto extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtFecha, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(56, 56, 56)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDia)
+                    .addComponent(txtMes)
+                    .addComponent(txtAnio))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(cmbDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnVolver))
@@ -134,36 +194,58 @@ public class FrmConcierto extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        controladorConcierto.volver();
+        // Vacío, el listener del controlador se encarga
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        controladorConcierto.guardar();
+        // Vacío, el listener del controlador se encarga
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void cmbDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDiaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbDiaActionPerformed
 
     public String getNombre() {
         return txtNombre.getText().trim();
     }
 
-    public String getFecha() {
-        return txtFecha.getText().trim();
+    public int getDia() {
+        return Integer.parseInt(cmbDia.getSelectedItem().toString());
     }
 
-    public Concierto getConciertoAEditar() {
-        return conciertoAEditar;
+    public int getMes() {
+        return Integer.parseInt(cmbMes.getSelectedItem().toString());
     }
 
-    public javax.swing.JFrame getVistaAnterior() {
-        return vistaAnterior;
+    public int getAnio() {
+        return Integer.parseInt(cmbAnio.getSelectedItem().toString());
+    }
+
+    public Concierto getConciertoAEditar() { return conciertoAEditar; }
+    public javax.swing.JFrame getVistaAnterior() { return vistaAnterior; }
+    public javax.swing.JButton getBtnGuardar() { return btnGuardar; }
+    public javax.swing.JButton getBtnVolver() { return btnVolver; }
+
+    public void mostrarMensaje(String mensaje, String titulo, int tipo) {
+        javax.swing.JOptionPane.showMessageDialog(this, mensaje, titulo, tipo);
+    }
+
+    public String pedirDato(String mensaje) {
+        return javax.swing.JOptionPane.showInputDialog(this, mensaje);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnVolver;
+    private javax.swing.JComboBox<String> cmbAnio;
+    private javax.swing.JComboBox<String> cmbDia;
+    private javax.swing.JComboBox<String> cmbMes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField txtFecha;
+    private javax.swing.JLabel txtAnio;
+    private javax.swing.JLabel txtDia;
+    private javax.swing.JLabel txtMes;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
