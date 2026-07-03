@@ -28,8 +28,15 @@ public class ControladorConcierto implements ActionListener {
     public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral, Concierto conciertoAEditar) {
         this.vista = vista;
         this.contextoCentral = contextoCentral;
+        this.conciertoAEditar = conciertoAEditar;
         this.vista.getBtnGuardar().addActionListener(this);
         this.vista.getBtnVolver().addActionListener(this);
+
+        // Llenar combos de fecha
+        int anioActual = LocalDate.now().getYear();
+        vista.llenarComboDias(1, 31);
+        vista.llenarComboMeses(1, 12);
+        vista.llenarComboAnios(anioActual, anioActual + 5);
 
         // Si se proveyó un concierto, el controlador configura la vista para edición
         if (conciertoAEditar != null) {
@@ -61,9 +68,9 @@ public class ControladorConcierto implements ActionListener {
                 concierto.limpiarZonas(); 
             } else { 
                 String nombre = vista.getNombre();
-                int anio = vista.getAnio();
-                int mes = vista.getMes();
-                int dia = vista.getDia();
+                int anio = Integer.parseInt(vista.getAnio());
+                int mes = Integer.parseInt(vista.getMes());
+                int dia = Integer.parseInt(vista.getDia());
                 LocalDate fecha = LocalDate.of(anio, mes, dia);
 
                 ColeccionConciertos coleccion = contextoCentral.getColeccionConciertos();

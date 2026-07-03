@@ -97,7 +97,8 @@ public class ControladorAdmin implements ActionListener {
     }
 
     private void abrirCrearConcierto() {
-        FrmConcierto ventanaConcierto = new FrmConcierto(this.contextoCentral, vistaAdmin);
+        FrmConcierto ventanaConcierto = new FrmConcierto(vistaAdmin);
+        new ControladorConcierto(ventanaConcierto, contextoCentral);
         ventanaConcierto.setVisible(true);
         vistaAdmin.setVisible(false);
     }
@@ -115,7 +116,8 @@ public class ControladorAdmin implements ActionListener {
             Concierto seleccionado = contextoCentral.getColeccionConciertos().buscarPorNombreYFecha(nombreConcierto, fecha);
 
             if (seleccionado != null) {
-                FrmConcierto frmEdit = new FrmConcierto(contextoCentral, vistaAdmin, seleccionado);
+                FrmConcierto frmEdit = new FrmConcierto(vistaAdmin);
+                new ControladorConcierto(frmEdit, contextoCentral, seleccionado);
                 frmEdit.setVisible(true);
                 vistaAdmin.setVisible(false);
             } else {
