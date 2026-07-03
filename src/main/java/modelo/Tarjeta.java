@@ -4,6 +4,9 @@
  */
 package modelo;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 /**
  * Modelo de Tarjeta de pago.
  *
@@ -66,6 +69,18 @@ public class Tarjeta {
         // NUEVA Validación de fecha: formato YYYY-MM-DD
         if (!fecha.matches("\\d{4}-\\d{2}-\\d{2}")) {
             throw new IllegalArgumentException("Formato de fecha inválido. Por favor use el formato YYYY-MM-DD.");
+        }
+
+        // NUEVA Validación de fecha real y expiración
+        LocalDate fechaVencimiento;
+        try {
+            fechaVencimiento = LocalDate.parse(fecha);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("La fecha seleccionada no existe en el calendario.");
+        }
+
+        if (fechaVencimiento.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("La tarjeta ya ha expirado.");
         }
 
         // NUEVA Validación de CVV: entre 3 y 4 dígitos numéricos

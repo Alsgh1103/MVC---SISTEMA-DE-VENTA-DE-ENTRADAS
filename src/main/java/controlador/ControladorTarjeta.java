@@ -10,13 +10,13 @@ import vista.FrmTarjeta;
  * Controlador dedicado a FrmTarjeta.
  *
  * Responsabilidades:
- *   - Inicializar la etiqueta de bienvenida personalizada.
- *   - Reaccionar al botón "Guardar Tarjeta":
- *       · Lee los campos de texto de la vista.
- *       · Delega la validación y construcción al Modelo (Tarjeta.crear).
- *       · Si el usuario eligió guardar la tarjeta, la persiste en el cliente.
- *       · Devuelve el control a FrmCliente mediante ControladorCliente.
- *   - Reaccionar al botón "Volver": restaurar la vista anterior.
+ * - Inicializar la etiqueta de bienvenida personalizada.
+ * - Reaccionar al botón "Guardar Tarjeta":
+ * · Lee los campos de texto de la vista.
+ * · Delega la validación y construcción al Modelo (Tarjeta.crear).
+ * · Si el usuario eligió guardar la tarjeta, la persiste en el cliente.
+ * · Devuelve el control a FrmCliente mediante ControladorCliente.
+ * - Reaccionar al botón "Volver": restaurar la vista anterior.
  *
  * La vista (FrmTarjeta) es tratada como un cascarón puramente visual;
  * este controlador accede a sus componentes públicos directamente.
@@ -37,10 +37,10 @@ public class ControladorTarjeta {
     // ---------------------------------------------------------------
 
     public ControladorTarjeta(ControladorPrincipal ctrl,
-                               FrmTarjeta vista) {
-        this.ctrl               = ctrl;
-        this.vista              = vista;
-        
+            FrmTarjeta vista) {
+        this.ctrl = ctrl;
+        this.vista = vista;
+
         if (vista.vistaCliente != null) {
             this.controladorCliente = vista.vistaCliente.controlador;
         } else {
@@ -60,7 +60,23 @@ public class ControladorTarjeta {
         Persona usuario = ctrl.getUsuarioLogueado();
         if (usuario != null) {
             vista.lblRegistraNombre.setText(
-                "Registrar tu tarjeta, " + usuario.getNombres());
+                    "Registrar tu tarjeta, " + usuario.getNombres());
+        }
+
+        // Inicializar listas de ComboBoxes
+        vista.cbxDia.removeAllItems();
+        for (int i = 1; i <= 31; i++) {
+            vista.cbxDia.addItem(String.format("%02d", i));
+        }
+
+        vista.cbxMes.removeAllItems();
+        for (int i = 1; i <= 12; i++) {
+            vista.cbxMes.addItem(String.format("%02d", i));
+        }
+
+        vista.cbxAnio.removeAllItems();
+        for (int i = 2026; i <= 2031; i++) {
+            vista.cbxAnio.addItem(String.valueOf(i));
         }
     }
 
@@ -71,7 +87,7 @@ public class ControladorTarjeta {
     /** Conecta los botones de la vista con su lógica correspondiente. */
     private void registrarListeners() {
         vista.btnGuardar.addActionListener(e -> onGuardarTarjeta());
-        vista.btnVolver.addActionListener(e  -> onVolver());
+        vista.btnVolver.addActionListener(e -> onVolver());
         // CheckTarjeta y txtNumeroTarjeta no requieren lógica adicional aquí
     }
 
@@ -81,19 +97,23 @@ public class ControladorTarjeta {
 
     /**
      * Guarda la tarjeta:
-     *   1. Lee y normaliza los campos de la vista.
-     *   2. Delega la validación completa al método de fábrica Tarjeta.crear()
-     *      (campos vacíos V1, formato V2, CVV numérico V3).
-     *   3. Si el usuario marcó "guardar para futuras compras", persiste en cliente.
-     *   4. Notifica a ControladorCliente con la tarjeta activa.
-     *   5. Muestra confirmación y cierra esta ventana.
+     * 1. Lee y normaliza los campos de la vista.
+     * 2. Delega la validación completa al método de fábrica Tarjeta.crear()
+     * (campos vacíos V1, formato V2, CVV numérico V3).
+     * 3. Si el usuario marcó "guardar para futuras compras", persiste en cliente.
+     * 4. Notifica a ControladorCliente con la tarjeta activa.
+     * 5. Muestra confirmación y cierra esta ventana.
      */
     private void onGuardarTarjeta() {
         // Lectura de la vista (normalización idéntica a la original)
-        String nroTarjeta   = vista.txtNumeroTarjeta.getText().trim().replaceAll("\\s+", "");
-        String titular      = vista.txtNombreTarjeta.getText().trim();
-        String vencimiento  = vista.txtFechaVencimiento.getText().trim();
-        String cvvStr       = vista.txtCvv.getText().trim();
+        String nroTarjeta = vista.txtNumeroTarjeta.getText().trim().replaceAll("\\s+", "");
+        String titular = vista.txtNombreTarjeta.getText().trim();
+
+        String dia = vista.cbxDia.getSelectedItem().toString();
+        String mes = vista.cbxMes.getSelectedItem().toString();
+        String anio = vista.cbxAnio.getSelectedItem().toString();
+        String vencimiento = anio + "-" + mes + "-" + dia;
+        String cvvStr = vista.txtCvv.getText().trim();
         boolean guardarFuturas = vista.CheckTarjeta.isSelected();
 
         // Validación y construcción delegadas al Modelo —
@@ -103,10 +123,10 @@ public class ControladorTarjeta {
             nuevaTarjeta = Tarjeta.crear(nroTarjeta, titular, vencimiento, cvvStr);
         } catch (IllegalArgumentException ex) {
             javax.swing.JOptionPane.showMessageDialog(
-                vista,
-                ex.getMessage(),
-                "Error",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+                    vista,
+                    ex.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
 
