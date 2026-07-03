@@ -9,15 +9,39 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
-public class ControladorConcierto implements ActionListener { 
+public class ControladorConcierto implements ActionListener {
     private FrmConcierto vista;
     private ControladorPrincipal contextoCentral;
+    private Concierto conciertoAEditar;
 
+    /**
+     * Constructor para registrar un concierto nuevo.
+     */
     public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral) {
+        this(vista, contextoCentral, null);
+    }
+
+    /**
+     * Constructor para editar un concierto existente.
+     * Configura la vista en modo edición a través de prepararParaEdicion().
+     */
+    public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral, Concierto conciertoAEditar) {
         this.vista = vista;
         this.contextoCentral = contextoCentral;
         this.vista.getBtnGuardar().addActionListener(this);
         this.vista.getBtnVolver().addActionListener(this);
+
+        // Si se proveyó un concierto, el controlador configura la vista para edición
+        if (conciertoAEditar != null) {
+            LocalDate fecha = conciertoAEditar.getFecha();
+            vista.cargarDatosParaEdicion(
+                    conciertoAEditar.getNombre(),
+                    fecha.getDayOfMonth(),
+                    fecha.getMonthValue(),
+                    fecha.getYear());
+            vista.bloquearCamposEdicion();
+            vista.setBtnGuardarTexto("Reconfigurar Zonas");
+        }
     }
 
     @Override
@@ -31,7 +55,7 @@ public class ControladorConcierto implements ActionListener {
 
     private void guardarConcierto() {
         try {
-            Concierto concierto = vista.getConciertoAEditar();
+            Concierto concierto = this.conciertoAEditar;
 
             if (concierto != null) { 
                 concierto.limpiarZonas(); 
@@ -41,7 +65,7 @@ public class ControladorConcierto implements ActionListener {
                 int mes = vista.getMes();
                 int dia = vista.getDia();
                 LocalDate fecha = LocalDate.of(anio, mes, dia);
-                
+
                 ColeccionConciertos coleccion = contextoCentral.getColeccionConciertos();
                 concierto = coleccion.registrarConcierto(nombre, fecha);
                 contextoCentral.setConciertoSeleccionado(concierto);
@@ -60,15 +84,18 @@ public class ControladorConcierto implements ActionListener {
 
     private void pedirZonas(Concierto c) {
         String numZonasStr = vista.pedirDato("¿Cuántas zonas tendrá?");
-        if (numZonasStr == null || numZonasStr.isEmpty()) return;
+        if (numZonasStr == null || numZonasStr.isEmpty())
+            return;
 
         try {
             int numZonas = Integer.parseInt(numZonasStr);
             for (int i = 0; i < numZonas; i++) {
                 String nombreZona = vista.pedirDato("Nombre de la zona " + (i + 1) + ":");
-                if (nombreZona == null) break;
+                if (nombreZona == null)
+                    break;
                 String capStr = vista.pedirDato("Capacidad para " + nombreZona + ":");
-                if (capStr == null) break;
+                if (capStr == null)
+                    break;
                 String precStr = vista.pedirDato("Precio para " + nombreZona + ":");
                 if (capStr == null) break;
 
