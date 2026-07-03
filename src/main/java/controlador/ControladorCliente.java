@@ -177,11 +177,44 @@ public class ControladorCliente {
         }
     }
 
-    /** Recalcula y muestra el total a pagar según cantidad y precio unitario. */
+    /**
+     * Recalcula y muestra el total a pagar según cantidad, precio unitario,
+     * descuento de socio (30%) y descuento por emisor de tarjeta (multiplicativos).
+     */
     private void actualizarTotal() {
         int cantidad = (int) vista.spnCantidad.getValue();
         double total = this.precioSeleccionado * cantidad;
-        vista.lblTotal.setText("Total S/ " + total);
+
+        // Descuento de socio (30%) — multiplicativo
+        Persona usuario = ctrl.getUsuarioLogueado();
+        if (usuario instanceof Cliente && ((Cliente) usuario).isSocio()) {
+            total *= 0.70;
+        }
+
+        // Descuento por emisor de tarjeta — multiplicativo sobre el resultado anterior
+        Tarjeta t = obtenerTarjetaActual();
+        Concierto concierto = ctrl.getConciertoSeleccionado();
+        if (t != null && concierto != null) {
+            double descEmisor = concierto.getDescuentoParaEmisor(t.getEmisor());
+            if (descEmisor > 0) {
+                total *= (1.0 - descEmisor);
+            }
+        }
+
+        vista.lblTotal.setText("Total S/ " + String.format("%.2f", total));
+    }
+
+    /**
+     * Retorna la tarjeta actualmente seleccionada para la sesión de compra.
+     * Prioridad: tarjetaActiva (recién registrada) > tarjeta guardada del cliente.
+     */
+    private Tarjeta obtenerTarjetaActual() {
+        if (this.tarjetaActiva != null) return this.tarjetaActiva;
+        Persona usuario = ctrl.getUsuarioLogueado();
+        if (usuario instanceof Cliente) {
+            return ((Cliente) usuario).getTarjeta();
+        }
+        return null;
     }
 
     /**
@@ -251,6 +284,11 @@ public class ControladorCliente {
             Venta nuevaVenta = new Venta(cantidad, cliente, zonaEncontrada, tarjetaUsar);
             nuevaVenta.procesarCompra(tarjetaUsar.getCVV());
 
+            // Descuento por emisor de tarjeta aplicado multiplicativamente DESPUÉS
+            // de procesarCompra() para no interferir con las validaciones internas.
+            double descEmisor = conciertoSeleccionado.getDescuentoParaEmisor(tarjetaUsar.getEmisor());
+            nuevaVenta.aplicarDescuentoEmisor(descEmisor);
+
             // Registro (Dependencias inyectadas y centralizadas)
             conciertoSeleccionado.registrarVenta(nuevaVenta);
             this.coleccionVentas.registrarVenta(nuevaVenta);
@@ -260,7 +298,7 @@ public class ControladorCliente {
                 vista,
                 "¡Compra Exitosa!\n"
                 + "Código Transacción: " + nuevaVenta.getIdTransaccion() + "\n"
-                + "Monto Total: S/ "     + nuevaVenta.getMonto()         + "\n"
+                + "Monto Total: S/ "     + String.format("%.2f", nuevaVenta.getMonto()) + "\n"
                 + "Asientos restantes: " + nuevaVenta.getZona().getCapacidadDisponible());
 
             // Navegar al menú principal

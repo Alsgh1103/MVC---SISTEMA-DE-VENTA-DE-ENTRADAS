@@ -1,7 +1,7 @@
 package controlador;
 
 import vista.FrmConcierto;
-import vista.FrmAdmin;
+import controlador.ControladorAdmin;
 import modelo.Concierto;
 import coleccion.ColeccionConciertos;
 import java.time.LocalDate;
@@ -12,22 +12,27 @@ import javax.swing.JOptionPane;
 public class ControladorConcierto implements ActionListener {
     private FrmConcierto vista;
     private ControladorPrincipal contextoCentral;
+    private ControladorAdmin ctrlAdminAnterior;
     private Concierto conciertoAEditar;
 
     /**
-     * Constructor para registrar un concierto nuevo.
+     * Constructor para registrar un concierto nuevo (sin concierto existente).
+     * Delega en el constructor completo con ctrlAdminAnterior nulo.
      */
-    public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral) {
-        this(vista, contextoCentral, null);
+    public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral,
+            ControladorAdmin ctrlAdminAnterior) {
+        this(vista, contextoCentral, ctrlAdminAnterior, null);
     }
 
     /**
-     * Constructor para editar un concierto existente.
-     * Configura la vista en modo edición a través de prepararParaEdicion().
+     * Constructor completo: para editar un concierto existente y recibir
+     * la referencia al ControladorAdmin que debe refrescarse al volver.
      */
-    public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral, Concierto conciertoAEditar) {
+    public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral,
+            ControladorAdmin ctrlAdminAnterior, Concierto conciertoAEditar) {
         this.vista = vista;
         this.contextoCentral = contextoCentral;
+        this.ctrlAdminAnterior = ctrlAdminAnterior;
         this.conciertoAEditar = conciertoAEditar;
         this.vista.getBtnGuardar().addActionListener(this);
         this.vista.getBtnVolver().addActionListener(this);
@@ -121,9 +126,10 @@ public class ControladorConcierto implements ActionListener {
     public void volver() {
         if (vista.getVistaAnterior() != null) {
             vista.getVistaAnterior().setVisible(true);
-            if (vista.getVistaAnterior() instanceof FrmAdmin) {
-                // REFACTORIZADO: Llama al método puente para que se refresque mediante el ControladorAdmin
-                ((FrmAdmin) vista.getVistaAnterior()).invocarRefrescoDesdeControladorExterno();
+            // REFACTORIZADO: El controlador le habla directamente a su par lógico
+            // sin usar intermediarios visuales (sin invocarRefrescoDesdeControladorExterno).
+            if (ctrlAdminAnterior != null) {
+                ctrlAdminAnterior.refrescarTabla();
             }
         }
         vista.dispose();

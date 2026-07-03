@@ -18,11 +18,24 @@ import java.time.format.DateTimeParseException;
  * @author alex_
  */
 public class Tarjeta {
+
+    // ---------------------------------------------------------------
+    // EMISORES RECONOCIDOS
+    // ---------------------------------------------------------------
+
+    /**
+     * Emisores de tarjeta soportados por el sistema.
+     * Se usa para determinar el descuento aplicable por concierto.
+     */
+    public enum Emisor {
+        VISA, MASTERCARD, DINERS, AMERICAN_EXPRESS, DESCONOCIDO
+    }
     private String numero;
     private String nombre;
     private String fecha;
     private int CVV;
     private int cantidadComprada;
+    private Emisor emisor;
 
     // ---------------------------------------------------------------
     // Constructor interno — úsese el método de fábrica `crear()` para
@@ -34,6 +47,7 @@ public class Tarjeta {
         this.fecha = fecha;
         this.CVV = CVV;
         this.cantidadComprada = 0;
+        this.emisor = detectarEmisor(numero); // se detecta automáticamente al construir
     }
 
     // ---------------------------------------------------------------
@@ -100,6 +114,38 @@ public class Tarjeta {
     }
 
     // ---------------------------------------------------------------
+    // DETECCIÓN DE EMISOR (método estático — usable sin instanciar)
+    // ---------------------------------------------------------------
+
+    /**
+     * Detecta el emisor a partir de los primeros dígitos del número (IIN/BIN).
+     * Puede llamarse en tiempo real mientras el usuario escribe.
+     *
+     * Criterios estándar:
+     *   VISA             → empieza con 4, 13 o 16 dígitos
+     *   MASTERCARD       → 51-55 (16 dígitos) ó rango 2221-2720 (16 dígitos)
+     *   AMERICAN EXPRESS → empieza con 34 ó 37, 15 dígitos
+     *   DINERS           → empieza con 300-305, 36 ó 38, 14 dígitos
+     *
+     * @param numero Número de tarjeta (solo dígitos, puede ser parcial).
+     * @return Emisor detectado, o DESCONOCIDO si no coincide con ningún patrón.
+     */
+    public static Emisor detectarEmisor(String numero) {
+        if (numero == null || numero.isEmpty()) return Emisor.DESCONOCIDO;
+        // VISA: empieza con 4, 13 o 16 dígitos
+        if (numero.matches("4\\d{12}(?:\\d{3})?"))          return Emisor.VISA;
+        // MASTERCARD: 51-55 (16 dig) o rango BIN 2221-2720 (16 dig)
+        if (numero.matches("5[1-5]\\d{14}") ||
+            numero.matches("2(?:2[2-9][1-9]|[3-6]\\d{2}|7[01]\\d|720)\\d{12}"))
+                                                              return Emisor.MASTERCARD;
+        // AMERICAN EXPRESS: empieza con 34 o 37, 15 dígitos
+        if (numero.matches("3[47]\\d{13}"))                  return Emisor.AMERICAN_EXPRESS;
+        // DINERS: empieza con 300-305, 36 o 38, 14 dígitos
+        if (numero.matches("3(?:0[0-5]|[68])\\d{11,12}"))    return Emisor.DINERS;
+        return Emisor.DESCONOCIDO;
+    }
+
+    // ---------------------------------------------------------------
     // GETTERS
     // ---------------------------------------------------------------
     public String getNumero() {
@@ -120,6 +166,10 @@ public class Tarjeta {
 
     public int getCantidadComprada() {
         return cantidadComprada;
+    }
+
+    public Emisor getEmisor() {
+        return emisor;
     }
 
     // ---------------------------------------------------------------

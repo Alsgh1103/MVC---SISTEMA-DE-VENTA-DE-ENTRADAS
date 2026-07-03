@@ -88,12 +88,36 @@ public class ControladorTarjeta {
     private void registrarListeners() {
         vista.btnGuardar.addActionListener(e -> onGuardarTarjeta());
         vista.btnVolver.addActionListener(e -> onVolver());
-        // CheckTarjeta y txtNumeroTarjeta no requieren lógica adicional aquí
+
+        // Actualizar lblTipo en tiempo real mientras el usuario escribe el número
+        vista.txtNumeroTarjeta.getDocument().addDocumentListener(
+            new javax.swing.event.DocumentListener() {
+                public void insertUpdate(javax.swing.event.DocumentEvent e)  { actualizarLblTipo(); }
+                public void removeUpdate(javax.swing.event.DocumentEvent e)  { actualizarLblTipo(); }
+                public void changedUpdate(javax.swing.event.DocumentEvent e) { actualizarLblTipo(); }
+            }
+        );
     }
 
     // ---------------------------------------------------------------
     // HANDLERS DE EVENTOS
     // ---------------------------------------------------------------
+
+    /**
+     * Actualiza lblTipo con el emisor detectado a partir del número ingresado.
+     * Usa Tarjeta.detectarEmisor() (método estático) para no instanciar la tarjeta.
+     */
+    private void actualizarLblTipo() {
+        String numero = vista.txtNumeroTarjeta.getText().trim().replaceAll("\\s+", "");
+        Tarjeta.Emisor emisor = Tarjeta.detectarEmisor(numero);
+        switch (emisor) {
+            case VISA:             vista.lblTipo.setText("VISA");             break;
+            case MASTERCARD:       vista.lblTipo.setText("MASTERCARD");       break;
+            case DINERS:           vista.lblTipo.setText("DINERS");           break;
+            case AMERICAN_EXPRESS: vista.lblTipo.setText("AMERICAN EXPRESS"); break;
+            default:               vista.lblTipo.setText("-----");            break;
+        }
+    }
 
     /**
      * Guarda la tarjeta:

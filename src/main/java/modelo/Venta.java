@@ -9,7 +9,7 @@ public class Venta {
     private String idTransaccion;
     private String fecha;
     private int cantidadEntradas;
-    private int monto;
+    private double monto;
     private Cliente cliente;
     private Zona zona;
     private Tarjeta tarjeta;
@@ -25,7 +25,7 @@ public class Venta {
         this.cliente = c;
         this.zona = z;
         this.tarjeta = t;
-        this.monto = (int) calcularTotal();
+        this.monto = calcularTotal();
 
         LocalDate hoy = LocalDate.now();
         this.fecha = hoy.toString();
@@ -62,7 +62,7 @@ public class Venta {
         tarjeta.registrarCompra(cantidadEntradas, cvvIngresadoUsuario);
 
         // Compra aprobada: aplicamos las consecuencias de negocio
-        this.monto = (int) calcularTotal();
+        this.monto = calcularTotal();
 
         // 1. Reducimos el stock de la zona
         zona.reducirCapacidad(this.cantidadEntradas);
@@ -75,6 +75,21 @@ public class Venta {
     /** Consulta auxiliar: ¿la tarjeta todavía puede absorber esta cantidad? */
     public boolean validarLimiteEntradas() {
         return tarjeta.puedeComprar(this.cantidadEntradas);
+    }
+
+    /**
+     * Aplica el descuento por emisor de tarjeta de forma multiplicativa
+     * sobre el monto ya calculado por procesarCompra().
+     *
+     * Debe llamarse DESPUÉS de {@link #procesarCompra(int)} para no
+     * interferir con las validaciones internas de la compra.
+     *
+     * @param porcentaje Porcentaje de descuento (0.0 = sin descuento, 0.10 = 10%).
+     */
+    public void aplicarDescuentoEmisor(double porcentaje) {
+        if (porcentaje > 0 && porcentaje < 1) {
+            this.monto = this.monto * (1.0 - porcentaje);
+        }
     }
     
     // ... (El resto de tus getters y el método generarEntradas() se mantienen igual) ...
@@ -103,7 +118,7 @@ public class Venta {
         return cantidadEntradas;
     }
 
-    public int getMonto() {
+    public double getMonto() {
         return monto;
     }
 

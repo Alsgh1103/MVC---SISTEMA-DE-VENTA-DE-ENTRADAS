@@ -204,11 +204,7 @@ public class FrmAdmin extends javax.swing.JFrame {
         tblVentas.setModel(modeloTabla);
     }
     
-    public void invocarRefrescoDesdeControladorExterno() {
-        if (this.ctrlAdmin != null) {
-            this.ctrlAdmin.refrescarTabla();
-        }
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnAnadirZonaIndividual;
