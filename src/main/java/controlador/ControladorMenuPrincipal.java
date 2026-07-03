@@ -11,8 +11,6 @@ import modelo.Zona;
 import coleccion.ColeccionVentas;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
 
 
   // Controlador para la vista del Menú Principal (FrmMenuPrincipal).
@@ -25,29 +23,41 @@ public class ControladorMenuPrincipal {
     public ControladorMenuPrincipal(FrmMenuPrincipal vistaMenu, ControladorPrincipal contextoCentral) {
         this.vistaMenu = vistaMenu;
         this.contextoCentral = contextoCentral;
+
+        // Registrar listeners — el controlador es el único responsable de los eventos
+        vistaMenu.btnComprar.addActionListener(e -> comprarEntradas());
+        vistaMenu.btnCerrarSesion.addActionListener(e -> cerrarSesion());
+        vistaMenu.btnVerZonas.addActionListener(e -> verZonas());
+        vistaMenu.btnMisCompras.addActionListener(e -> verMisCompras());
+        vistaMenu.cbxConcierto.addActionListener(e ->
+            seleccionarConcierto((Concierto) vistaMenu.cbxConcierto.getSelectedItem())
+        );
+
+        // cargarDatosCliente() es invocado por FrmMenuPrincipal
+        // después de que this.controlador queda asignado.
     }
 
    
-    public void cargarDatosCliente(JLabel lblBienvenida, JLabel lblPuntos, JLabel lblConcierto, JComboBox<Concierto> cbxConcierto) {
+    public void cargarDatosCliente() {
         Persona usuario = contextoCentral.getUsuarioLogueado();
         if (usuario != null) {
-            lblBienvenida.setText("Bienvenido: " + usuario.getNombres() + " " + usuario.getApellidos());
-            
+            vistaMenu.lblBienvenida.setText("Bienvenido: " + usuario.getNombres() + " " + usuario.getApellidos());
+
             if (usuario instanceof Cliente) {
                 Cliente c = (Cliente) usuario;
-                lblPuntos.setText("Puntos: " + c.getPuntos());
+                vistaMenu.lblPuntos.setText("Puntos: " + c.getPuntos());
             } else {
-                lblPuntos.setText("Puntos: N/A");
-                lblConcierto.setText("Administración");
+                vistaMenu.lblPuntos.setText("Puntos: N/A");
+                vistaMenu.lblConcierto.setText("Administración");
             }
-            
-            cbxConcierto.removeAllItems();
+
+            vistaMenu.cbxConcierto.removeAllItems();
             for (Concierto con : contextoCentral.getTodosLosConciertos()) {
-                cbxConcierto.addItem(con);
+                vistaMenu.cbxConcierto.addItem(con);
             }
-            
+
             if (contextoCentral.getConciertoSeleccionado() != null) {
-                cbxConcierto.setSelectedItem(contextoCentral.getConciertoSeleccionado());
+                vistaMenu.cbxConcierto.setSelectedItem(contextoCentral.getConciertoSeleccionado());
             }
         }
     }

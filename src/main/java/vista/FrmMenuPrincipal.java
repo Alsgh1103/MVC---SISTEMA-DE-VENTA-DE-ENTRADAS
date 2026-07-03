@@ -3,43 +3,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
+import controlador.ControladorMenuPrincipal;
 import controlador.ControladorPrincipal;
-import controlador.ControladorLogin;
 /**
  *
  * @author alex_
  */
 public class FrmMenuPrincipal extends javax.swing.JFrame {
-    private ControladorPrincipal ctrl;
+    public ControladorMenuPrincipal controlador;
+
     public FrmMenuPrincipal(ControladorPrincipal ctrl) {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.ctrl = ctrl;
-        cargarDatosCliente();
-        
-    }
-    private void cargarDatosCliente() {
-        modelo.Persona usuario = ctrl.getUsuarioLogueado();
-        if (usuario != null) {
-            lblBienvenida.setText("Bienvenido: " + usuario.getNombres() + " " + usuario.getApellidos());
-            
-            if (usuario instanceof modelo.Cliente) {
-                modelo.Cliente c = (modelo.Cliente) usuario;
-                lblPuntos.setText("Puntos: " + c.getPuntos());
-            } else {
-                lblPuntos.setText("Puntos: N/A");
-                lblConcierto.setText("Administración");
-            }
-            
-            cbxConcierto.removeAllItems();
-            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
-                cbxConcierto.addItem(con);
-            }
-            
-            if (ctrl.getConciertoSeleccionado() != null) {
-                cbxConcierto.setSelectedItem(ctrl.getConciertoSeleccionado());
-            }
-        }
+        // controlador se asigna ANTES de cargarDatosCliente() para evitar
+        // NullPointerException: addItem() en el combo dispara su ActionListener,
+        // que llama a controlador.seleccionarConcierto() — si controlador fuera null, falla.
+        this.controlador = new ControladorMenuPrincipal(this, ctrl);
+        this.controlador.cargarDatosCliente();
     }
 
 
@@ -174,79 +154,34 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
-        FrmCliente cliente = new FrmCliente(this.ctrl);
-        cliente.setVisible(true);
-        this.dispose();
+        controlador.comprarEntradas();
     }//GEN-LAST:event_btnComprarActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        ctrl.cerrarSesion();
-        FrmLogin login = new FrmLogin();
-        ControladorLogin ctrlLogin = new ControladorLogin(login, this.ctrl);
-        login.setVisible(true);
-        this.dispose();
+        controlador.cerrarSesion();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnVerZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerZonasActionPerformed
-        if (ctrl.getConcierto() != null) {
-            StringBuilder sb = new StringBuilder("Zonas del Concierto: " + ctrl.getConcierto().getNombre() + "\n\n");
-            for (modelo.Zona z : ctrl.getConcierto().getTodasLasZonas()) {
-                sb.append("- ").append(z.getNombre())
-                  .append(": S/ ").append(z.getPrecio())
-                  .append(" (Disponibles: ").append(z.getCapacidadDisponible()).append("/").append(z.getCapacidadTotal()).append(")\n");
-            }
-            javax.swing.JOptionPane.showMessageDialog(this, sb.toString());
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "No hay concierto seleccionado.");
-        }
+        controlador.verZonas();
     }//GEN-LAST:event_btnVerZonasActionPerformed
 
     private void btnMisComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMisComprasActionPerformed
-        modelo.Persona usuario = ctrl.getUsuarioLogueado();
-        if (usuario instanceof modelo.Cliente) {
-            modelo.Cliente c = (modelo.Cliente) usuario;
-            StringBuilder sb = new StringBuilder("Historial de Compras de " + c.getNombres() + "\n");
-            sb.append("Puntos acumulados: ").append(c.getPuntos()).append("\n\n");
-            sb.append("Compras realizadas:\n");
-            
-            boolean tieneVentas = false;
-            for (modelo.Concierto con : ctrl.getTodosLosConciertos()) {
-                for (modelo.Venta v : con.getTodasLasVentas()) {
-                    if (v.getCliente().getDni().equals(c.getDni())) {
-                        sb.append("- ").append(con.getNombre())
-                          .append(" | ").append(v.getZona().getNombre())
-                          .append(" | Cantidad: ").append(v.getCantidadEntradas())
-                          .append(" | Total: S/ ").append(v.getMonto())
-                          .append(" | Transacción: ").append(v.getIdTransaccion()).append("\n");
-                        tieneVentas = true;
-                    }
-                }
-            }
-            if (!tieneVentas) {
-                sb.append("No has realizado ninguna compra todavía.");
-            }
-            javax.swing.JOptionPane.showMessageDialog(this, sb.toString());
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Esta opción solo está disponible para Clientes.");
-        }
+        controlador.verMisCompras();
     }//GEN-LAST:event_btnMisComprasActionPerformed
 
     private void cbxConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxConciertoActionPerformed
-        modelo.Concierto seleccion = (modelo.Concierto) cbxConcierto.getSelectedItem();
-        if (seleccion != null) {
-            ctrl.setConciertoSeleccionado(seleccion);
-        }
+        controlador.seleccionarConcierto((modelo.Concierto) cbxConcierto.getSelectedItem());
     }//GEN-LAST:event_cbxConciertoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCerrarSesion;
-    private javax.swing.JButton btnComprar;
-    private javax.swing.JButton btnMisCompras;
-    private javax.swing.JButton btnVerZonas;
-    private javax.swing.JComboBox<modelo.Concierto> cbxConcierto;
-    private javax.swing.JLabel lblBienvenida;
-    private javax.swing.JLabel lblConcierto;
-    private javax.swing.JLabel lblPuntos;
+    public javax.swing.JButton btnCerrarSesion;
+    public javax.swing.JButton btnComprar;
+    public javax.swing.JButton btnMisCompras;
+    public javax.swing.JButton btnVerZonas;
+    public javax.swing.JComboBox<modelo.Concierto> cbxConcierto;
+    public javax.swing.JLabel lblBienvenida;
+    public javax.swing.JLabel lblConcierto;
+    public javax.swing.JLabel lblPuntos;
     private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
 }

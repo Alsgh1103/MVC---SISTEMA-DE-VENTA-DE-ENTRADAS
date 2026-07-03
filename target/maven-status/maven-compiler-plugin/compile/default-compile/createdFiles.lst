@@ -1,11 +1,11 @@
-modelo\Entrada.class
 coleccion\ColeccionPersonas.class
-modelo\Tarjeta.class
 coleccion\ColeccionVentas.class
+modelo\Entrada.class
+modelo\Tarjeta.class
+modelo\Venta.class
+modelo\Concierto.class
+modelo\Zona.class
 modelo\Cliente.class
 modelo\Persona.class
-modelo\Venta.class
 coleccion\ColeccionConciertos.class
-modelo\Concierto.class
 com\mycompany\mvc\sis\entradas\MVCSISENTRADAS.class
-modelo\Zona.class
