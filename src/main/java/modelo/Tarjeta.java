@@ -63,6 +63,16 @@ public class Tarjeta {
                 "El número de tarjeta debe tener entre 13 y 19 dígitos numéricos.");
         }
 
+        // NUEVA Validación de fecha: formato YYYY-MM-DD
+        if (!fecha.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new IllegalArgumentException("Formato de fecha inválido. Por favor use el formato YYYY-MM-DD.");
+        }
+
+        // NUEVA Validación de CVV: entre 3 y 4 dígitos numéricos
+        if (!cvvStr.matches("\\d{3,4}")) {
+            throw new IllegalArgumentException("El CVV debe contener entre 3 y 4 dígitos numéricos.");
+        }
+
         // V3 — Validación: CVV debe ser estrictamente numérico
         int cvv;
         try {

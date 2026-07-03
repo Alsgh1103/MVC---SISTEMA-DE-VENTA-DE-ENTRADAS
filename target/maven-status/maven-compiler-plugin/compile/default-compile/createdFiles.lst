@@ -1,5 +1,9 @@
+controlador\ControladorValidarCodigo.class
+vista\FrmValidarCodigo.class
 coleccion\ColeccionPersonas.class
 coleccion\ColeccionVentas.class
+servicio\ServicioCorreo$1.class
+servicio\ServicioCorreo.class
 modelo\Entrada.class
 modelo\Tarjeta.class
 modelo\Venta.class

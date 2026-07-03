@@ -149,8 +149,8 @@ public class ControladorPrincipal {
         return new ControladorCliente(this, vista, this.coleccionVentas);
     }
 
-    public ControladorTarjeta crearControladorTarjeta(vista.FrmTarjeta vista, vista.FrmCliente vistaCliente, ControladorCliente ctrlCliente) {
-        return new ControladorTarjeta(this, vista, ctrlCliente);
+    public ControladorTarjeta crearControladorTarjeta(vista.FrmTarjeta vista) {
+        return new ControladorTarjeta(this, vista);
     }
 
     public boolean eliminarConciertoGlobal(Concierto concierto) {

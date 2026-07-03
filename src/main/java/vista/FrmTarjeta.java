@@ -4,7 +4,6 @@
  */
 package vista;
 
-import controlador.ControladorCliente;
 import controlador.ControladorPrincipal;
 import controlador.ControladorTarjeta;
 
@@ -33,17 +32,10 @@ public class FrmTarjeta extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
 
-        // Obtener el ControladorCliente de la FrmCliente (si existe)
-        // para poder notificarle la tarjeta activa al guardar.
-        ControladorCliente ctrlCliente = null;
-        if (vistaCliente != null) {
-            ctrlCliente = vistaCliente.controlador;
-        }
-
         // El controlador se construye DESPUÉS de initComponents para que
         // los componentes ya existan cuando se registren los listeners.
         // Se inyecta usando la instanciación centralizada en ControladorPrincipal
-        this.controlador = ctrl.crearControladorTarjeta(this, vistaCliente, ctrlCliente);
+        this.controlador = ctrl.crearControladorTarjeta(this);
     }
 
     /**

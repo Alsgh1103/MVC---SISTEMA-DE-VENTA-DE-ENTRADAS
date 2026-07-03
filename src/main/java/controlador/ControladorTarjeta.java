@@ -37,11 +37,15 @@ public class ControladorTarjeta {
     // ---------------------------------------------------------------
 
     public ControladorTarjeta(ControladorPrincipal ctrl,
-                               FrmTarjeta vista,
-                               ControladorCliente controladorCliente) {
+                               FrmTarjeta vista) {
         this.ctrl               = ctrl;
         this.vista              = vista;
-        this.controladorCliente = controladorCliente;
+        
+        if (vista.vistaCliente != null) {
+            this.controladorCliente = vista.vistaCliente.controlador;
+        } else {
+            this.controladorCliente = null;
+        }
 
         inicializarVista();
         registrarListeners();
