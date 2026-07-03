@@ -3,8 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
+import controlador.ControladorRegistro;
 
 public class FrmRegistro extends javax.swing.JFrame {
+    
+    public ControladorRegistro controlador;
+    
     public FrmRegistro() {
         initComponents();
         this.setLocationRelativeTo(null);
