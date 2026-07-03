@@ -175,9 +175,10 @@ public class FrmAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnCrearConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearConciertoActionPerformed
-        FrmConcierto ventanaConcierto = new FrmConcierto(this.ctrlPrincipal, this);
+        FrmConcierto ventanaConcierto = new FrmConcierto(this);
+        new controlador.ControladorConcierto(ventanaConcierto, this.ctrlPrincipal);
         ventanaConcierto.setVisible(true);
-        this.setVisible(false); // Ocultamos el admin temporalmente
+        this.setVisible(false);
     }//GEN-LAST:event_btnCrearConciertoActionPerformed
 
     private void btnEliminarFilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFilaActionPerformed
@@ -263,7 +264,8 @@ public class FrmAdmin extends javax.swing.JFrame {
                 modelo.Concierto seleccionado = ctrlAdmin.getColeccionConciertos().buscarPorNombreYFecha(nombreConcierto, fecha);
 
                 if (seleccionado != null) {
-                    FrmConcierto frmEdit = new FrmConcierto(ctrlPrincipal, this, seleccionado);
+                    FrmConcierto frmEdit = new FrmConcierto(this);
+                    new controlador.ControladorConcierto(frmEdit, ctrlPrincipal, seleccionado);
                     frmEdit.setVisible(true);
                     this.setVisible(false);
                 } else {
