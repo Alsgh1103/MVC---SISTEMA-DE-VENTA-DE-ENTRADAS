@@ -42,50 +42,25 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         lblConcierto = new javax.swing.JLabel();
         cbxConcierto = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         panel1.setLayout(new java.awt.GridBagLayout());
 
         lblBienvenida.setText("Bienvenido:");
 
         btnVerZonas.setText("Ver zonas y precios");
-        btnVerZonas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerZonasActionPerformed(evt);
-            }
-        });
 
         btnComprar.setText("Comprar Entradas");
-        btnComprar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnComprarActionPerformed(evt);
-            }
-        });
 
         btnMisCompras.setText("Mi Historial y Puntos");
-        btnMisCompras.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMisComprasActionPerformed(evt);
-            }
-        });
 
         btnCerrarSesion.setText("Cerrar Sesión");
-        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCerrarSesionActionPerformed(evt);
-            }
-        });
 
         lblPuntos.setText("Puntos:");
 
         lblConcierto.setText("Seleccione el concierto:");
 
         cbxConcierto.setModel(new javax.swing.DefaultComboBoxModel<>());
-        cbxConcierto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxConciertoActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

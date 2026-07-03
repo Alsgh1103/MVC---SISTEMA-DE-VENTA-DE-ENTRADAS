@@ -85,7 +85,7 @@ public class FrmConcierto extends javax.swing.JFrame {
         txtMes = new javax.swing.JLabel();
         txtAnio = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         txtNombre.addActionListener(this::txtNombreActionPerformed);
 

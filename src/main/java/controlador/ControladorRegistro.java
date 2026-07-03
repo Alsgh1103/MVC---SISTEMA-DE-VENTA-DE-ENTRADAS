@@ -28,19 +28,17 @@ public class ControladorRegistro implements ActionListener {
             String ape = vistaRegistro.txtApellido.getText();
             String correo = vistaRegistro.txtCorreo.getText();
             String pass = new String(vistaRegistro.txtPass.getPassword());
-            
+
             registrarUsuario(dni, nom, ape, correo, pass);
-            
+
         } else if (e.getSource() == vistaRegistro.btnVolver) {
             volverAlLogin();
         }
     }
 
-    
     public boolean registrarUsuario(String dni, String nombres, String apellidos,
-                                    String correo, String contrasena) {
+            String correo, String contrasena) {
 
-       
         if (estaVacio(dni) || estaVacio(nombres) || estaVacio(apellidos)
                 || estaVacio(correo) || estaVacio(contrasena)) {
             JOptionPane.showMessageDialog(vistaRegistro,
@@ -50,7 +48,6 @@ public class ControladorRegistro implements ActionListener {
             return false;
         }
 
-       
         if (!dni.trim().matches("\\d{8}")) {
             JOptionPane.showMessageDialog(vistaRegistro,
                     "El DNI debe contener exactamente 8 dígitos numéricos.",
@@ -59,7 +56,6 @@ public class ControladorRegistro implements ActionListener {
             return false;
         }
 
-        
         if (!correo.trim().contains("@") || !correo.trim().contains(".")) {
             JOptionPane.showMessageDialog(vistaRegistro,
                     "El correo electrónico ingresado no es válido.",
@@ -68,7 +64,6 @@ public class ControladorRegistro implements ActionListener {
             return false;
         }
 
-        
         if (contrasena.trim().length() < 6) {
             JOptionPane.showMessageDialog(vistaRegistro,
                     "La contraseña debe tener al menos 6 caracteres.",
@@ -77,7 +72,6 @@ public class ControladorRegistro implements ActionListener {
             return false;
         }
 
-        
         Persona personaPorDni = contextoCentral.getColeccionPersonas().buscarPorDni(dni.trim());
         if (personaPorDni != null) {
             JOptionPane.showMessageDialog(vistaRegistro,
@@ -87,7 +81,6 @@ public class ControladorRegistro implements ActionListener {
             return false;
         }
 
-        
         Persona personaPorCorreo = contextoCentral.getColeccionPersonas().buscarPorCorreo(correo.trim());
         if (personaPorCorreo != null) {
             JOptionPane.showMessageDialog(vistaRegistro,
@@ -101,9 +94,10 @@ public class ControladorRegistro implements ActionListener {
         // 1. ATAJO DE DESARROLLADOR: Bypass (Salto) para correos @test.com
         // =========================================================
         if (correo.trim().toLowerCase().endsWith("@test.com")) {
-            contextoCentral.registrarNuevoCliente(dni.trim(), nombres.trim(), apellidos.trim(), correo.trim(), contrasena.trim(), false);
-            
-            JOptionPane.showMessageDialog(vistaRegistro, 
+            contextoCentral.registrarNuevoCliente(dni.trim(), nombres.trim(), apellidos.trim(), correo.trim(),
+                    contrasena.trim(), false);
+
+            JOptionPane.showMessageDialog(vistaRegistro,
                     "¡Usuario de prueba registrado exitosamente (Bypass activado)! Ya puede iniciar sesión.");
             volverAlLogin();
             return true;
@@ -112,31 +106,24 @@ public class ControladorRegistro implements ActionListener {
         // =========================================================
         // 2. FLUJO DE CORREOS NORMALES (CONSOLA CHIVATA SEGURA)
         // =========================================================
-        String codigoAleatorio = String.valueOf((int)(Math.random() * 9000) + 1000);
-        
-        System.out.println("\n==============================================");
-        System.out.println("CÓDIGO DE VERIFICACIÓN GENERADO (PRUEBAS): " + codigoAleatorio);
-        System.out.println("==============================================\n");
+        String codigoAleatorio = String.valueOf((int) (Math.random() * 9000) + 1000);
 
-        // DESACTIVADO PARA PRUEBAS LOCALES (Descomentar para producción/entrega)
-        // servicio.ServicioCorreo.enviarCodigo(correo.trim(), codigoAleatorio);
-        
-        JOptionPane.showMessageDialog(vistaRegistro, "Código de validación simulado. Revíselo en la consola de NetBeans.");
-        
+        servicio.ServicioCorreo.enviarCodigo(correo.trim(), codigoAleatorio);
+
+        JOptionPane.showMessageDialog(vistaRegistro, "Se ha enviado un codigo de verificación, revíselo en su correo.");
+
         vista.FrmValidarCodigo vistaValidar = new vista.FrmValidarCodigo();
         ControladorValidarCodigo ctrlValidar = new ControladorValidarCodigo(
-                vistaValidar, contextoCentral, codigoAleatorio, 
-                dni.trim(), nombres.trim(), apellidos.trim(), correo.trim(), contrasena.trim()
-        );
-        
+                vistaValidar, contextoCentral, codigoAleatorio,
+                dni.trim(), nombres.trim(), apellidos.trim(), correo.trim(), contrasena.trim());
+
         vistaValidar.setVisible(true);
         vistaRegistro.dispose();
-        
+
         return true;
 
     }
 
-    
     public void volverAlLogin() {
         FrmLogin login = new FrmLogin();
         ControladorLogin ctrlLogin = new ControladorLogin(login, contextoCentral);

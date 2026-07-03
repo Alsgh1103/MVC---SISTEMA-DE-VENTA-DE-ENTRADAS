@@ -68,7 +68,7 @@ public class FrmTarjeta extends javax.swing.JFrame {
         lblTipo = new javax.swing.JLabel();
         lblRegistraNombre = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblNumTarjeta.setText("Numero Tarjeta:");
 

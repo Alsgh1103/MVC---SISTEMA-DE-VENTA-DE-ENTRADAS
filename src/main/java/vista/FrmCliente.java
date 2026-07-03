@@ -45,7 +45,7 @@ public class FrmCliente extends javax.swing.JFrame {
         cbxTarjeta = new javax.swing.JComboBox<>();
         lblTarjeta = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblBienvenida.setText("Bienvenido");
 
