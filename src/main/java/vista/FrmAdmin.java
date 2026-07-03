@@ -13,11 +13,13 @@ public class FrmAdmin extends javax.swing.JFrame {
     
     public FrmAdmin(ControladorPrincipal ctrl) {
         this.ctrlPrincipal = ctrl;
-        this.ctrlAdmin = new ControladorAdmin(this, ctrlPrincipal);
         
         initComponents();
-        refrescarTabla();
         this.setLocationRelativeTo(null);
+        
+        this.ctrlAdmin = new ControladorAdmin(this, ctrlPrincipal);
+        
+        this.ctrlAdmin.refrescarTabla();
     }
 
     /**
@@ -151,10 +153,11 @@ public class FrmAdmin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCrearConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCerrarSesion)
-                    .addComponent(btnRefrescar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnCerrarSesion)
+                        .addComponent(btnRefrescar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminarFila)
@@ -167,7 +170,7 @@ public class FrmAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRefrescarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarActionPerformed
-       refrescarTabla();
+       
     }//GEN-LAST:event_btnRefrescarActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -175,134 +178,45 @@ public class FrmAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnCrearConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearConciertoActionPerformed
-        FrmConcierto ventanaConcierto = new FrmConcierto(this);
-        new controlador.ControladorConcierto(ventanaConcierto, this.ctrlPrincipal);
-        ventanaConcierto.setVisible(true);
-        this.setVisible(false);
+    
     }//GEN-LAST:event_btnCrearConciertoActionPerformed
 
     private void btnEliminarFilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFilaActionPerformed
-        int fila = tblVentas.getSelectedRow();
-        if (fila < 0) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila primero.");
-            return;
-        }
 
-        String nombreConc = tblVentas.getValueAt(fila, 0).toString();
-        java.time.LocalDate fechaConc = java.time.LocalDate.parse(tblVentas.getValueAt(fila, 1).toString());
-        String nombreZona = tblVentas.getValueAt(fila, 2).toString();
-
-        modelo.Concierto concierto = ctrlAdmin.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fechaConc);
-        if (concierto == null) return;
-
-        if (nombreZona.equals("Sin zonas") || nombreZona.equals("-")) {
-            int conf = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar por completo el concierto vacío?", "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
-            if (conf == javax.swing.JOptionPane.YES_OPTION) {
-                if (ctrlAdmin.eliminarConciertoGlobal(concierto)) {
-                    refrescarTabla();
-                }
-            }
-        } else {
-            String[] opciones = {"Borrar SOLO esta Zona", "Borrar TODO el Concierto", "Cancelar"};
-            int seleccion = javax.swing.JOptionPane.showOptionDialog(this, "¿Qué desea eliminar?", "Opciones de Eliminación", 
-                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE, null, opciones, opciones[0]);
-
-            if (seleccion == 0) { // Borrar solo la zona
-                if (ctrlPrincipal.eliminarZonaDeConcierto(concierto, nombreZona)) {
-                    refrescarTabla();
-                }
-            } else if (seleccion == 1) { // Borrar todo
-                if (ctrlPrincipal.eliminarConciertoGlobal(concierto)) {
-                    refrescarTabla();
-                }
-            }
-        }
     }//GEN-LAST:event_btnEliminarFilaActionPerformed
 
     private void btnAnadirZonaIndividualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirZonaIndividualActionPerformed
-        int fila = tblVentas.getSelectedRow();
-        if (fila < 0) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione en la tabla el concierto al que desea añadir una zona.");
-            return;
-        }
-
-        String nombreConc = tblVentas.getValueAt(fila, 0).toString();
-        java.time.LocalDate fechaConc = java.time.LocalDate.parse(tblVentas.getValueAt(fila, 1).toString());
-        modelo.Concierto concierto = ctrlPrincipal.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fechaConc);
-
-        if (concierto != null) {
-            String nombreZona = javax.swing.JOptionPane.showInputDialog(this, "Nombre de la NUEVA zona (Ej: Platinum):");
-            if (nombreZona == null || nombreZona.trim().isEmpty()) return;
-
-            String capStr = javax.swing.JOptionPane.showInputDialog(this, "Capacidad total para " + nombreZona + ":");
-            if (capStr == null) return;
-
-            String precStr = javax.swing.JOptionPane.showInputDialog(this, "Precio (S/) para " + nombreZona + ":");
-            if (precStr == null) return;
-
-            try {
-                int capacidad = Integer.parseInt(capStr);
-                int precio = Integer.parseInt(precStr);
-                concierto.registrarZona(nombreZona, capacidad, precio);
-                refrescarTabla();
-                javax.swing.JOptionPane.showMessageDialog(this, "Zona añadida exitosamente sin borrar las anteriores.");
-            } catch (NumberFormatException ex) {
-                javax.swing.JOptionPane.showMessageDialog(this, "La capacidad y el precio deben ser números enteros.");
-            } catch (IllegalArgumentException ex) {
-                javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        }
+           
     }//GEN-LAST:event_btnAnadirZonaIndividualActionPerformed
 
     private void btnEditarZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarZonasActionPerformed
-        int filaSeleccionada = tblVentas.getSelectedRow();
-        if (filaSeleccionada >= 0) {
-            String nombreConcierto = tblVentas.getValueAt(filaSeleccionada, 0).toString();
-            String fechaStr = tblVentas.getValueAt(filaSeleccionada, 1).toString();
-            try {
-                java.time.LocalDate fecha = java.time.LocalDate.parse(fechaStr);
-                modelo.Concierto seleccionado = ctrlAdmin.getColeccionConciertos().buscarPorNombreYFecha(nombreConcierto, fecha);
-
-                if (seleccionado != null) {
-                    FrmConcierto frmEdit = new FrmConcierto(this);
-                    new controlador.ControladorConcierto(frmEdit, ctrlPrincipal, seleccionado);
-                    frmEdit.setVisible(true);
-                    this.setVisible(false);
-                } else {
-                    javax.swing.JOptionPane.showMessageDialog(this, "No se encontró el concierto especificado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (Exception e) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al procesar el concierto seleccionado: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione una fila de la tabla.");
-        }        
+      
     }//GEN-LAST:event_btnEditarZonasActionPerformed
     
-    public void refrescarTabla() {
-        // Llama al controlador para obtener los datos formateados (Object[][])
-        Object[][] datos = ctrlAdmin.obtenerDatosAuditoria(); 
-        
-        // Agregamos "Concierto" al inicio del arreglo de columnas
+    public void refrescarTabla(Object[][] datos) {
         String[] columnas = {"Concierto", "Fecha", "Zona", "Capacidad Restante", "Entradas Vendidas"};
-        
         DefaultTableModel modeloTabla = new DefaultTableModel(datos, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // La tabla de auditoría es de solo lectura
+                return false; 
             }
         };
-        // Al setear el modelo, la tabla se dibuja automáticamente con la nueva columna
         tblVentas.setModel(modeloTabla);
+    }
+    
+    public void invocarRefrescoDesdeControladorExterno() {
+        if (this.ctrlAdmin != null) {
+            this.ctrlAdmin.refrescarTabla();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAnadirZonaIndividual;
-    private javax.swing.JButton btnCerrarSesion;
-    private javax.swing.JButton btnCrearConcierto;
-    private javax.swing.JButton btnEditarZonas;
-    private javax.swing.JButton btnEliminarFila;
-    private javax.swing.JButton btnRefrescar;
+    public javax.swing.JButton btnAnadirZonaIndividual;
+    public javax.swing.JButton btnCerrarSesion;
+    public javax.swing.JButton btnCrearConcierto;
+    public javax.swing.JButton btnEditarZonas;
+    public javax.swing.JButton btnEliminarFila;
+    public javax.swing.JButton btnRefrescar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAuditoria;

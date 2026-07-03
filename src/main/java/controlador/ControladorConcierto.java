@@ -28,15 +28,6 @@ public class ControladorConcierto implements ActionListener {
     public ControladorConcierto(FrmConcierto vista, ControladorPrincipal contextoCentral, Concierto conciertoAEditar) {
         this.vista = vista;
         this.contextoCentral = contextoCentral;
-        this.conciertoAEditar = conciertoAEditar;
-
-        // El controlador decide los rangos y llena los combos
-        int anioActual = LocalDate.now().getYear();
-        vista.llenarComboDias(1, 31);
-        vista.llenarComboMeses(1, 12);
-        vista.llenarComboAnios(anioActual, anioActual + 10);
-
-        // Conectamos los botones
         this.vista.getBtnGuardar().addActionListener(this);
         this.vista.getBtnVolver().addActionListener(this);
 
@@ -66,14 +57,13 @@ public class ControladorConcierto implements ActionListener {
         try {
             Concierto concierto = this.conciertoAEditar;
 
-            if (concierto != null) { // Si estamos editando
-                concierto.limpiarZonas();
-            } else { // Si es un concierto nuevo
+            if (concierto != null) { 
+                concierto.limpiarZonas(); 
+            } else { 
                 String nombre = vista.getNombre();
-
-                int anio = Integer.parseInt(vista.getAnio());
-                int mes = Integer.parseInt(vista.getMes());
-                int dia = Integer.parseInt(vista.getDia());
+                int anio = vista.getAnio();
+                int mes = vista.getMes();
+                int dia = vista.getDia();
                 LocalDate fecha = LocalDate.of(anio, mes, dia);
 
                 ColeccionConciertos coleccion = contextoCentral.getColeccionConciertos();
@@ -81,9 +71,7 @@ public class ControladorConcierto implements ActionListener {
                 contextoCentral.setConciertoSeleccionado(concierto);
             }
 
-            // Preguntamos las zonas con ventanas flotantes
             pedirZonas(concierto);
-
             vista.mostrarMensaje("Operación exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             volver();
 
@@ -109,14 +97,13 @@ public class ControladorConcierto implements ActionListener {
                 if (capStr == null)
                     break;
                 String precStr = vista.pedirDato("Precio para " + nombreZona + ":");
-                if (precStr == null)
-                    break;
+                if (capStr == null) break;
 
                 try {
                     c.registrarZona(nombreZona, Integer.parseInt(capStr), Integer.parseInt(precStr));
                 } catch (Exception e) {
                     vista.mostrarMensaje("Datos inválidos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    i--; // Reintenta
+                    i--; 
                 }
             }
         } catch (Exception e) {
@@ -128,7 +115,8 @@ public class ControladorConcierto implements ActionListener {
         if (vista.getVistaAnterior() != null) {
             vista.getVistaAnterior().setVisible(true);
             if (vista.getVistaAnterior() instanceof FrmAdmin) {
-                ((FrmAdmin) vista.getVistaAnterior()).refrescarTabla();
+                // REFACTORIZADO: Llama al método puente para que se refresque mediante el ControladorAdmin
+                ((FrmAdmin) vista.getVistaAnterior()).invocarRefrescoDesdeControladorExterno();
             }
         }
         vista.dispose();
