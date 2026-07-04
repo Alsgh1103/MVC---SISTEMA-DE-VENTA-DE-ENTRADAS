@@ -35,11 +35,8 @@ public class ControladorHistorial {
             Venta v = ventasCliente.get(i);
             
             String nombreConcierto = "Desconocido";
-            for (Concierto con : contextoCentral.getColeccionConciertos().getTodosLosConciertos()) {
-                if (con.getTodasLasVentas().contains(v)) {
-                    nombreConcierto = con.getNombre();
-                    break;
-                }
+            if (v.getConcierto() != null) {
+                nombreConcierto = v.getConcierto().getNombre();
             }
             
             double precioOriginal = v.getZona().getPrecio() * v.getCantidadEntradas();

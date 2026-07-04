@@ -28,6 +28,9 @@ public class ControladorAdmin implements ActionListener, ItemListener {
         this.vistaAdmin.btnEditarZonas.addActionListener(this);
         this.vistaAdmin.btnEliminarSeleccionados.addActionListener(this);
         this.vistaAdmin.btnAnadirZona.addActionListener(this);
+        if (this.vistaAdmin.btnTransacciones != null) {
+            this.vistaAdmin.btnTransacciones.addActionListener(this);
+        }
 
         this.vistaAdmin.getCbmConciertos().addItemListener(this);
 
@@ -53,6 +56,8 @@ public class ControladorAdmin implements ActionListener, ItemListener {
             procesarEliminarSeleccionados();
         } else if (e.getSource() == vistaAdmin.btnAnadirZona) {
             abrirAnadirZona();
+        } else if (vistaAdmin.btnTransacciones != null && e.getSource() == vistaAdmin.btnTransacciones) {
+            abrirTransaccionesAdmin();
         }
     }
 
@@ -188,6 +193,19 @@ public class ControladorAdmin implements ActionListener, ItemListener {
         FrmZona frm = new FrmZona();
         new ControladorZona(frm, contextoCentral, this, c.getNombre(), c.getFecha(), null);
         frm.setVisible(true);
+    }
+
+    public void abrirTransaccionesAdmin() {
+        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        Concierto c = null;
+        if (idxCombo > 0) {
+            c = contextoCentral.getColeccionConciertos().getTodosLosConciertos().get(idxCombo - 1);
+        }
+        
+        vista.FrmTransaccionesAdmin frm = new vista.FrmTransaccionesAdmin();
+        new ControladorTransaccionesAdmin(frm, contextoCentral, c, this);
+        frm.setVisible(true);
+        vistaAdmin.setVisible(false);
     }
 
     private void abrirEditarZona() {

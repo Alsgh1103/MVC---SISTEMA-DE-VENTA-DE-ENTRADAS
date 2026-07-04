@@ -9,8 +9,7 @@ public class Concierto {
     private String nombre;
     private LocalDate fecha;
     private ArrayList<Zona> zonas;
-    // Compatibilidad temporal para compilar con la parte de Ventas
-    private ArrayList<Venta> todasLasVentas = new ArrayList<>();
+
     /** Descuentos aplicables por emisor de tarjeta, configurables por concierto. */
     private Map<Tarjeta.Emisor, Double> descuentosPorEmisor = new EnumMap<>(Tarjeta.Emisor.class);
 
@@ -99,12 +98,4 @@ public class Concierto {
         return this.nombre + " (" + this.fecha.toString() + ")";
     }
 
-    // Compatibilidad temporal para compilar con la parte de Ventas
-    public void registrarVenta(Venta v) {
-        this.todasLasVentas.add(v);
-    }
-
-    public ArrayList<Venta> getTodasLasVentas() {
-        return todasLasVentas;
-    }
 }

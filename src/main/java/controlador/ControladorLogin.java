@@ -43,10 +43,12 @@ public class ControladorLogin implements ActionListener {
     }
     
     public void iniciarSesion(String correo, String contrasena) {
-        if (correo.isEmpty() || contrasena.isEmpty()) {
-            JOptionPane.showMessageDialog(vistaLogin, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        vistaLogin.btnIniciarSesion.setEnabled(false);
+        try {
+            if (correo.isEmpty() || contrasena.isEmpty()) {
+                JOptionPane.showMessageDialog(vistaLogin, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         Persona p = contextoCentral.login(correo, contrasena);
         if (p != null) {
             JOptionPane.showMessageDialog(vistaLogin, "¡Bienvenido, " + p.getNombres() + "!");
@@ -64,10 +66,13 @@ public class ControladorLogin implements ActionListener {
         } else {
             JOptionPane.showMessageDialog(vistaLogin, "Credenciales incorrectas.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        } finally {
+            vistaLogin.btnIniciarSesion.setEnabled(true);
+        }
     }
     public void abrirRegistro() {
         FrmRegistro registro = new FrmRegistro();
-        ControladorRegistro ctrlRegistro = new ControladorRegistro(registro, contextoCentral);
+        new ControladorRegistro(registro, contextoCentral);
         registro.setVisible(true);
         vistaLogin.dispose();
     }

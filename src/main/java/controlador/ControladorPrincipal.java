@@ -9,7 +9,7 @@ import modelo.Cliente;
 import modelo.Persona;
 import modelo.Usuario;
 import modelo.Zona;
-import modelo.Tarjeta;
+
 import java.util.ArrayList;
 
 public class ControladorPrincipal {
@@ -70,9 +70,6 @@ public class ControladorPrincipal {
     }
 
     public void registrarNuevaVenta(Venta v) {
-        if (conciertoSeleccionado != null) {
-            conciertoSeleccionado.registrarVenta(v);
-        }
         this.coleccionVentas.registrarVenta(v);
     }
     

@@ -23,10 +23,7 @@ public class FrmTarjeta extends javax.swing.JFrame {
      * que ControladorTarjeta pueda restaurarla al volver o guardar.
      */
     public FrmComprarEntradas vistaCliente;
-
-    /** Controlador dedicado que gestiona toda la lógica de esta vista. */
-    private ControladorTarjeta controlador;
-
+    
     public FrmTarjeta(ControladorPrincipal ctrl, FrmComprarEntradas vistaCliente) {
         this.vistaCliente = vistaCliente;
         initComponents();
@@ -35,7 +32,7 @@ public class FrmTarjeta extends javax.swing.JFrame {
         // El controlador se construye DESPUÉS de initComponents para que
         // los componentes ya existan cuando se registren los listeners.
         // Se inyecta usando la instanciación centralizada en ControladorPrincipal
-        this.controlador = ctrl.crearControladorTarjeta(this);
+        ctrl.crearControladorTarjeta(this);
     }
 
     /**

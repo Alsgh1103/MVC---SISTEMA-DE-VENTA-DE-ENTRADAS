@@ -11,7 +11,7 @@ public class MVCSISENTRADAS {
     public static void main(String[] args) {
         ControladorPrincipal ctrl = new ControladorPrincipal();
         FrmLogin login = new FrmLogin(); 
-        controlador.ControladorLogin ctrlLogin = new controlador.ControladorLogin(login, ctrl);
+        new controlador.ControladorLogin(login, ctrl);
         login.setVisible(true);
     }
 }

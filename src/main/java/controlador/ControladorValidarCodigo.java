@@ -43,7 +43,7 @@ public class ControladorValidarCodigo implements ActionListener {
                 JOptionPane.showMessageDialog(vistaValidar,
                         "¡Registro completado con éxito! Ahora puede iniciar sesión.");
                 FrmLogin login = new FrmLogin();
-                ControladorLogin ctrlLogin = new ControladorLogin(login, contextoCentral);
+                new ControladorLogin(login, contextoCentral);
                 login.setVisible(true);
                 vistaValidar.dispose();
 
@@ -53,7 +53,7 @@ public class ControladorValidarCodigo implements ActionListener {
             }
         } else if (e.getSource() == vistaValidar.btnCancelar) {
             FrmLogin login = new FrmLogin();
-            ControladorLogin ctrlLogin = new ControladorLogin(login, contextoCentral);
+            new ControladorLogin(login, contextoCentral);
             login.setVisible(true);
             vistaValidar.dispose();
         }

@@ -11,6 +11,7 @@ C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\ma
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorPrincipal.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorRegistro.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorTarjeta.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorTransaccionesAdmin.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorValidarCodigo.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorZona.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Cliente.java
@@ -31,5 +32,6 @@ C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\ma
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmMenuPrincipal.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmRegistro.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmTarjeta.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmTransaccionesAdmin.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmValidarCodigo.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmZona.java

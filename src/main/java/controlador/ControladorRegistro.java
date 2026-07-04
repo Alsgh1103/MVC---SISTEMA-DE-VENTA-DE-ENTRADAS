@@ -116,7 +116,7 @@ public class ControladorRegistro implements ActionListener {
         JOptionPane.showMessageDialog(vistaRegistro, "Se ha enviado un codigo de verificación, revíselo en su correo.");
 
         vista.FrmValidarCodigo vistaValidar = new vista.FrmValidarCodigo();
-        ControladorValidarCodigo ctrlValidar = new ControladorValidarCodigo(
+        new ControladorValidarCodigo(
                 vistaValidar, contextoCentral, codigoAleatorio,
                 dni.trim(), nombres.trim(), apellidos.trim(), correo.trim(), contrasena.trim());
 
@@ -129,7 +129,7 @@ public class ControladorRegistro implements ActionListener {
 
     public void volverAlLogin() {
         FrmLogin login = new FrmLogin();
-        ControladorLogin ctrlLogin = new ControladorLogin(login, contextoCentral);
+        new ControladorLogin(login, contextoCentral);
         login.setVisible(true);
         vistaRegistro.dispose();
     }

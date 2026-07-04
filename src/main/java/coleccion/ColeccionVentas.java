@@ -40,4 +40,21 @@ public class ColeccionVentas {
         }
         return resultado;
     }
+
+    /**
+     * Busca y filtra las ventas realizadas para un concierto específico.
+     * @param c Concierto a buscar.
+     * @return Listado de ventas asociadas a dicho concierto.
+     */
+    public ArrayList<Venta> buscarVentasPorConcierto(modelo.Concierto c) {
+        ArrayList<Venta> resultado = new ArrayList<>();
+        if (c != null) {
+            for (Venta v : ventas) {
+                if (v.getConcierto() != null && v.getConcierto() == c) {
+                    resultado.add(v);
+                }
+            }
+        }
+        return resultado;
+    }
 }

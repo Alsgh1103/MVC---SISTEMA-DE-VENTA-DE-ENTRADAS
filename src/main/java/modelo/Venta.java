@@ -13,9 +13,10 @@ public class Venta {
     private Cliente cliente;
     private Zona zona;
     private Tarjeta tarjeta;
+    private Concierto concierto;
 
     // El modelo calcula el monto por sí mismo a partir de zona y descuentos.
-    public Venta(int cantidad, Cliente c, Zona z, Tarjeta t) {
+    public Venta(int cantidad, Cliente c, Zona z, Tarjeta t, Concierto concierto) {
         // C3 — Regla de negocio: la cantidad debe ser positiva
         if (cantidad <= 0) {
             throw new IllegalArgumentException(
@@ -25,6 +26,7 @@ public class Venta {
         this.cliente = c;
         this.zona = z;
         this.tarjeta = t;
+        this.concierto = concierto;
         this.monto = calcularTotal();
 
         LocalDate hoy = LocalDate.now();
@@ -136,5 +138,9 @@ public class Venta {
 
     public Tarjeta getTarjeta() {
         return tarjeta;
+    }
+
+    public Concierto getConcierto() {
+        return concierto;
     }
 }

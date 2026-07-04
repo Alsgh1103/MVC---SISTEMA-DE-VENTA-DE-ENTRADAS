@@ -294,8 +294,9 @@ public class ControladorComprarEntradas {
             if (vista.chkUsarPuntos != null && vista.chkUsarPuntos.isSelected() && usuario instanceof Cliente) {
                 Cliente c = (Cliente) usuario;
                 int bloques10 = c.getPuntos() / 10;
+                if (bloques10 > 5) bloques10 = 5;
                 if (bloques10 > 0) {
-                    double descuentoPuntos = bloques10 * 0.02; // 2% por cada 10 puntos
+                    double descuentoPuntos = bloques10 * 0.02;
                     subtotalFinal *= (1.0 - descuentoPuntos);
                     if (!descTexto.isEmpty())
                         descTexto += " + ";
@@ -399,6 +400,7 @@ public class ControladorComprarEntradas {
 
             boolean usoPuntos = vista.chkUsarPuntos != null && vista.chkUsarPuntos.isSelected();
             int bloques10 = cliente.getPuntos() / 10;
+            if (bloques10 > 5) bloques10 = 5;
             double descuentoPuntos = usoPuntos && bloques10 > 0 ? bloques10 * 0.02 : 0.0;
 
             for (int i = 0; i < modelo.getRowCount(); i++) {
@@ -407,7 +409,7 @@ public class ControladorComprarEntradas {
 
                 Zona zona = concierto.buscarZonaPorNombre(nombreZona);
 
-                Venta nuevaVenta = new Venta(cantidad, cliente, zona, tarjetaUsar);
+                Venta nuevaVenta = new Venta(cantidad, cliente, zona, tarjetaUsar, concierto);
                 nuevaVenta.procesarCompra(tarjetaUsar.getCVV());
 
                 double descEmisor = concierto.getDescuentoParaEmisor(tarjetaUsar.getEmisor());
@@ -417,7 +419,7 @@ public class ControladorComprarEntradas {
                     nuevaVenta.aplicarDescuentoPuntos(descuentoPuntos);
                 }
 
-                concierto.registrarVenta(nuevaVenta);
+
                 this.coleccionVentas.registrarVenta(nuevaVenta);
 
                 granTotalMonto += nuevaVenta.getMonto();
