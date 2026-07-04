@@ -28,8 +28,9 @@ public class ControladorRegistro implements ActionListener {
             String ape = vistaRegistro.txtApellido.getText();
             String correo = vistaRegistro.txtCorreo.getText();
             String pass = new String(vistaRegistro.txtPass.getPassword());
+            java.util.Date fechaNac = vistaRegistro.dateFechaNacimiento.getDate();
 
-            registrarUsuario(dni, nom, ape, correo, pass);
+            registrarUsuario(dni, nom, ape, correo, pass, fechaNac);
 
         } else if (e.getSource() == vistaRegistro.btnVolver) {
             volverAlLogin();
@@ -37,13 +38,30 @@ public class ControladorRegistro implements ActionListener {
     }
 
     public boolean registrarUsuario(String dni, String nombres, String apellidos,
-            String correo, String contrasena) {
+            String correo, String contrasena, java.util.Date fechaNac) {
 
         if (estaVacio(dni) || estaVacio(nombres) || estaVacio(apellidos)
-                || estaVacio(correo) || estaVacio(contrasena)) {
+                || estaVacio(correo) || estaVacio(contrasena) || fechaNac == null) {
             JOptionPane.showMessageDialog(vistaRegistro,
                     "Por favor, complete todos los campos.",
                     "Campos vacíos",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        java.util.Calendar hoy = java.util.Calendar.getInstance();
+        java.util.Calendar nac = java.util.Calendar.getInstance();
+        nac.setTime(fechaNac);
+        
+        int edad = hoy.get(java.util.Calendar.YEAR) - nac.get(java.util.Calendar.YEAR);
+        if (hoy.get(java.util.Calendar.DAY_OF_YEAR) < nac.get(java.util.Calendar.DAY_OF_YEAR)) {
+            edad--;
+        }
+        
+        if (edad < 18) {
+            JOptionPane.showMessageDialog(vistaRegistro,
+                    "Debe ser mayor de 18 años para registrarse.",
+                    "Edad insuficiente",
                     JOptionPane.WARNING_MESSAGE);
             return false;
         }

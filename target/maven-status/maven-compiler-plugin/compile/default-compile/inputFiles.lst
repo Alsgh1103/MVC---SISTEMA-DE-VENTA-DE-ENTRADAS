@@ -1,30 +1,32 @@
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\coleccion\ColeccionConciertos.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\coleccion\ColeccionPersonas.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\coleccion\ColeccionVentas.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\com\mycompany\mvc\sis\entradas\MVCSISENTRADAS.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorAdmin.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorCliente.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorConcierto.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorLogin.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorMenuPrincipal.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorPrincipal.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorRegistro.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorTarjeta.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\controlador\ControladorValidarCodigo.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\modelo\Cliente.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\modelo\Concierto.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\modelo\Entrada.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\modelo\Persona.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\modelo\Tarjeta.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\modelo\Usuario.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\modelo\Venta.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\modelo\Zona.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\servicio\ServicioCorreo.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\vista\FrmAdmin.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\vista\FrmCliente.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\vista\FrmConcierto.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\vista\FrmLogin.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\vista\FrmMenuPrincipal.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\vista\FrmRegistro.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\vista\FrmTarjeta.java
-C:\Users\odiol\Desktop\MVC-Danilo-2\src\main\java\vista\FrmValidarCodigo.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\coleccion\ColeccionConciertos.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\coleccion\ColeccionPersonas.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\coleccion\ColeccionVentas.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\com\mycompany\mvc\sis\entradas\MVCSISENTRADAS.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorAdmin.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorCliente.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorConcierto.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorLogin.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorMenuPrincipal.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorPrincipal.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorRegistro.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorTarjeta.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorValidarCodigo.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorZona.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Cliente.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Concierto.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Entrada.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Persona.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Tarjeta.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Usuario.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Venta.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Zona.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\servicio\ServicioCorreo.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmAdmin.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmCliente.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmConcierto.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmLogin.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmMenuPrincipal.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmRegistro.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmTarjeta.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmValidarCodigo.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmZona.java

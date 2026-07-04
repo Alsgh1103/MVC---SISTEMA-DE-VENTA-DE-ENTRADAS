@@ -7,11 +7,14 @@ import modelo.Venta;
 import modelo.Zona;
 import vista.FrmAdmin;
 import vista.FrmConcierto;
+import vista.FrmZona;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
-public class ControladorAdmin implements ActionListener {
+public class ControladorAdmin implements ActionListener, ItemListener {
     private FrmAdmin vistaAdmin;
     private ControladorPrincipal contextoCentral;
 
@@ -21,12 +24,19 @@ public class ControladorAdmin implements ActionListener {
         
         this.vistaAdmin.btnRefrescar.addActionListener(this);
         this.vistaAdmin.btnCerrarSesion.addActionListener(this);
-        this.vistaAdmin.btnCrearConcierto.addActionListener(this);
+        this.vistaAdmin.btnRegistrarConcierto.addActionListener(this);
         this.vistaAdmin.btnEditarZonas.addActionListener(this);
-        this.vistaAdmin.btnEliminarFila.addActionListener(this);
-        this.vistaAdmin.btnAnadirZonaIndividual.addActionListener(this);
+        this.vistaAdmin.btnEliminarSeleccionados.addActionListener(this);
+        this.vistaAdmin.btnAnadirZona.addActionListener(this);
         
-        //refrescarTabla();
+        this.vistaAdmin.getCbmConciertos().addItemListener(this);
+        
+        poblarComboBox();
+        refrescarTabla();
+    }
+    
+    public FrmAdmin getVista() {
+        return this.vistaAdmin;
     }
 
     @Override
@@ -35,19 +45,54 @@ public class ControladorAdmin implements ActionListener {
             refrescarTabla();
         } else if (e.getSource() == vistaAdmin.btnCerrarSesion) {
             cerrarSesion();
-        } else if (e.getSource() == vistaAdmin.btnCrearConcierto) {
+        } else if (e.getSource() == vistaAdmin.btnRegistrarConcierto) {
             abrirCrearConcierto();
         } else if (e.getSource() == vistaAdmin.btnEditarZonas) {
-            abrirEditarZonas();
-        } else if (e.getSource() == vistaAdmin.btnEliminarFila) {
-            procesarEliminarFila();
-        } else if (e.getSource() == vistaAdmin.btnAnadirZonaIndividual) {
-            procesarAnadirZona();
+            abrirEditarZona();
+        } else if (e.getSource() == vistaAdmin.btnEliminarSeleccionados) {
+            procesarEliminarSeleccionados();
+        } else if (e.getSource() == vistaAdmin.btnAnadirZona) {
+            abrirAnadirZona();
+        }
+    }
+    
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            refrescarTabla();
         }
     }
 
+    public void poblarComboBox() {
+        vistaAdmin.getCbmConciertos().removeItemListener(this);
+        vistaAdmin.getCbmConciertos().removeAllItems();
+        vistaAdmin.getCbmConciertos().addItem("Todos los Conciertos");
+        
+        for (Concierto c : contextoCentral.getColeccionConciertos().getTodosLosConciertos()) {
+            vistaAdmin.getCbmConciertos().addItem(c.getNombre() + " (" + c.getFecha().toString() + ")");
+        }
+        
+        Concierto ultimo = contextoCentral.getConciertoSeleccionado();
+        if(ultimo != null) {
+            vistaAdmin.getCbmConciertos().setSelectedItem(ultimo.getNombre() + " (" + ultimo.getFecha().toString() + ")");
+        }
+        vistaAdmin.getCbmConciertos().addItemListener(this);
+    }
+
     public void refrescarTabla() {
-        vistaAdmin.refrescarTabla(obtenerDatosAuditoria());
+        Object[][] datos = obtenerDatosAuditoria();
+        String[] columnas = {"Seleccionar", "Zona", "Capacidad Restante", "Entradas Vendidas", "Precio"};
+        javax.swing.table.DefaultTableModel modeloTabla = new javax.swing.table.DefaultTableModel(datos, columnas) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 0 ? Boolean.class : super.getColumnClass(columnIndex);
+            }
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 0; // Solo los checkbox son editables
+            }
+        };
+        vistaAdmin.tblVentas.setModel(modeloTabla);
     }
 
     public Object[][] obtenerDatosAuditoria() {
@@ -55,43 +100,45 @@ public class ControladorAdmin implements ActionListener {
         ArrayList<Concierto> todosConciertos = cc.getTodosLosConciertos();
         ColeccionVentas cv = contextoCentral.getColeccionVentas();
         ArrayList<Venta> todasLasVentas = cv.getTodasLasVentas();
-
-        int totalFilas = 0;
-        for (Concierto c : todosConciertos) {
-            int cantidadZonas = c.getTodasLasZonas().size();
-            totalFilas += (cantidadZonas == 0) ? 1 : cantidadZonas;
+        
+        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        Concierto filtro = null;
+        if(idxCombo > 0) {
+            filtro = todosConciertos.get(idxCombo - 1);
         }
 
-        if (totalFilas == 0) return new Object[0][5];
-        Object[][] matriz = new Object[totalFilas][5]; 
-        int index = 0;
-
+        ArrayList<Zona> zonasAMostrar = new ArrayList<>();
+        ArrayList<Concierto> conciertosAsociados = new ArrayList<>();
+        
         for (Concierto c : todosConciertos) {
-            ArrayList<Zona> zonasDelConcierto = c.getTodasLasZonas();
-            if (zonasDelConcierto.isEmpty()) {
-                matriz[index][0] = c.getNombre(); 
-                matriz[index][1] = c.getFecha().toString();
-                matriz[index][2] = "Sin zonas";
-                matriz[index][3] = "-";
-                matriz[index][4] = 0; 
-                index++;
-            } else {
-                for (Zona z : zonasDelConcierto) {
-                    matriz[index][0] = c.getNombre();
-                    matriz[index][1] = c.getFecha().toString();
-                    matriz[index][2] = z.getNombre();
-                    matriz[index][3] = z.getCapacidadDisponible();
-
-                    int contadorEntradasVendidas = 0;
-                    for (Venta v : todasLasVentas) {
-                        if (v.getZona() == z) {
-                            contadorEntradasVendidas += v.getCantidadEntradas();
-                        }
-                    }
-                    matriz[index][4] = contadorEntradasVendidas; 
-                    index++;
+            if(filtro == null || c == filtro) {
+                for(Zona z : c.getTodasLasZonas()) {
+                    conciertosAsociados.add(c);
+                    zonasAMostrar.add(z);
                 }
             }
+        }
+
+        if (zonasAMostrar.isEmpty()) return new Object[0][5];
+        
+        Object[][] matriz = new Object[zonasAMostrar.size()][5]; 
+
+        for (int i = 0; i < zonasAMostrar.size(); i++) {
+            Concierto c = conciertosAsociados.get(i);
+            Zona z = zonasAMostrar.get(i);
+            
+            matriz[i][0] = false; 
+            matriz[i][1] = z.getNombre() + " (" + c.getNombre() + ")";
+            matriz[i][2] = z.getCapacidadDisponible();
+
+            int contadorEntradasVendidas = 0;
+            for (Venta v : todasLasVentas) {
+                if (v.getZona() == z) {
+                    contadorEntradasVendidas += v.getCantidadEntradas();
+                }
+            }
+            matriz[i][3] = contadorEntradasVendidas; 
+            matriz[i][4] = "S/ " + z.getPrecio();
         }
         return matriz;
     }
@@ -103,126 +150,103 @@ public class ControladorAdmin implements ActionListener {
         vistaAdmin.setVisible(false);
     }
 
-    private void abrirEditarZonas() {
-        int filaSeleccionada = vistaAdmin.tblVentas.getSelectedRow();
-        if (filaSeleccionada < 0) {
-            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Por favor, seleccione una fila de la tabla.");
+    private void abrirAnadirZona() {
+        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        if (idxCombo <= 0) {
+            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Debe seleccionar un concierto específico en el desplegable de arriba para añadirle zonas.");
             return;
         }
-        String nombreConcierto = vistaAdmin.tblVentas.getValueAt(filaSeleccionada, 0).toString();
-        String fechaStr = vistaAdmin.tblVentas.getValueAt(filaSeleccionada, 1).toString();
-        try {
-            java.time.LocalDate fecha = java.time.LocalDate.parse(fechaStr);
-            Concierto seleccionado = contextoCentral.getColeccionConciertos().buscarPorNombreYFecha(nombreConcierto, fecha);
-
-            if (seleccionado != null) {
-                FrmConcierto frmEdit = new FrmConcierto(vistaAdmin);
-                new ControladorConcierto(frmEdit, contextoCentral, this, seleccionado);
-                frmEdit.setVisible(true);
-                vistaAdmin.setVisible(false);
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "No se encontró el concierto especificado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Error al procesar el concierto: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void procesarEliminarFila() {
-        int fila = vistaAdmin.tblVentas.getSelectedRow();
-        if (fila < 0) {
-            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Seleccione una fila primero.");
-            return;
-        }
-        String nombreConc = vistaAdmin.tblVentas.getValueAt(fila, 0).toString();
-        String fechaStr = vistaAdmin.tblVentas.getValueAt(fila, 1).toString();
-        String nombreZona = vistaAdmin.tblVentas.getValueAt(fila, 2).toString();
+        Concierto c = contextoCentral.getColeccionConciertos().getTodosLosConciertos().get(idxCombo - 1);
         
-        if (nombreZona.equals("Sin zonas") || nombreZona.equals("-")) {
-            int conf = javax.swing.JOptionPane.showConfirmDialog(vistaAdmin, "¿Eliminar por completo el concierto vacío?", "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
-            if (conf == javax.swing.JOptionPane.YES_OPTION) {
-                eliminarConciertoVacio(nombreConc, fechaStr);
-                refrescarTabla();
-            }
-        } else {
-            String[] opciones = {"Borrar SOLO esta Zona", "Borrar TODO el Concierto", "Cancelar"};
-            int seleccion = javax.swing.JOptionPane.showOptionDialog(vistaAdmin, "¿Qué desea eliminar?", "Opciones de Eliminación", 
-                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.WARNING_MESSAGE, null, opciones, opciones[0]);
-
-            if (seleccion == 0) {
-                eliminarZonaEspecifica(nombreConc, fechaStr, nombreZona);
-                refrescarTabla();
-            } else if (seleccion == 1) {
-                eliminarConciertoCompleto(nombreConc, fechaStr);
-                refrescarTabla();
-            }
-        }
+        FrmZona frm = new FrmZona();
+        new ControladorZona(frm, contextoCentral, this, c.getNombre(), c.getFecha(), null);
+        frm.setVisible(true);
     }
 
-    private void procesarAnadirZona() {
-        int fila = vistaAdmin.tblVentas.getSelectedRow();
-        if (fila < 0) {
-            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Seleccione en la tabla el concierto al que desea añadir una zona.");
+    private void abrirEditarZona() {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) vistaAdmin.tblVentas.getModel();
+        int rowCount = model.getRowCount();
+        
+        int selectedRows = 0;
+        int lastSelectedRow = -1;
+        for (int i = 0; i < rowCount; i++) {
+            Boolean checked = (Boolean) model.getValueAt(i, 0);
+            if (checked != null && checked) {
+                selectedRows++;
+                lastSelectedRow = i;
+            }
+        }
+        
+        if (selectedRows != 1) {
+            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Por favor seleccione exactamente UNA zona (marcando el cuadro) para editarla.");
             return;
         }
+        
+        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        Concierto filtro = null;
+        if(idxCombo > 0) {
+            filtro = contextoCentral.getColeccionConciertos().getTodosLosConciertos().get(idxCombo - 1);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Por favor seleccione un concierto individual en el desplegable primero.");
+            return;
+        }
+        
+        String cell1 = model.getValueAt(lastSelectedRow, 1).toString();
+        String[] parts = cell1.split(" \\(");
+        String zonaName = parts[0];
+        
+        Zona zonaAEditar = null;
+        for (Zona z : filtro.getTodasLasZonas()) {
+            if (z.getNombre().equals(zonaName)) {
+                zonaAEditar = z;
+                break;
+            }
+        }
+        
+        if (zonaAEditar != null) {
+            FrmZona frm = new FrmZona();
+            new ControladorZona(frm, contextoCentral, this, filtro.getNombre(), filtro.getFecha(), zonaAEditar);
+            frm.setVisible(true);
+        }
+    }
 
-        String nombreConc = vistaAdmin.tblVentas.getValueAt(fila, 0).toString();
-        String fechaStr = vistaAdmin.tblVentas.getValueAt(fila, 1).toString();
+    private void procesarEliminarSeleccionados() {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) vistaAdmin.tblVentas.getModel();
+        int rowCount = model.getRowCount();
+        
+        boolean eliminoAlgo = false;
+        
+        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        Concierto filtro = null;
 
-        String nombreZona = javax.swing.JOptionPane.showInputDialog(vistaAdmin, "Nombre de la NUEVA zona (Ej: Platinum):");
-        if (nombreZona == null || nombreZona.trim().isEmpty()) return;
-
-        String capStr = javax.swing.JOptionPane.showInputDialog(vistaAdmin, "Capacidad total para " + nombreZona + ":");
-        if (capStr == null) return;
-
-        String precStr = javax.swing.JOptionPane.showInputDialog(vistaAdmin, "Precio (S/) para " + nombreZona + ":");
-        if (precStr == null) return;
-
-        try {
-            agregarZonaAConcierto(nombreConc, fechaStr, nombreZona, capStr, precStr);
+        if(idxCombo > 0) {
+            filtro = contextoCentral.getColeccionConciertos().getTodosLosConciertos().get(idxCombo - 1);
+        }
+        
+        for (int i = rowCount - 1; i >= 0; i--) {
+            Boolean checked = (Boolean) model.getValueAt(i, 0);
+            if (checked != null && checked) {
+                String cell1 = model.getValueAt(i, 1).toString();
+                if(filtro != null) {
+                    String[] parts = cell1.split(" \\(");
+                    String zonaName = parts[0];
+                    if(!zonaName.equals("Sin zonas -")) {
+                        contextoCentral.eliminarZonaDeConcierto(filtro, zonaName);
+                        eliminoAlgo = true;
+                    }
+                } else {
+                     javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Por favor seleccione un concierto individual en el desplegable para eliminar múltiples zonas.");
+                     return;
+                }
+            }
+        }
+        
+        if(eliminoAlgo) {
+            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Zonas seleccionadas eliminadas exitosamente.");
             refrescarTabla();
-            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "Zona añadida exitosamente sin borrar las anteriores.");
-        } catch (NumberFormatException ex) {
-            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "La capacidad y el precio deben ser números enteros.");
-        } catch (IllegalArgumentException ex) {
-            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, ex.getLocalizedMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(vistaAdmin, "No se seleccionó ninguna zona válida.");
         }
-    }
-
-    public void eliminarConciertoVacio(String nombreConc, String fechaStr) {
-        java.time.LocalDate fecha = java.time.LocalDate.parse(fechaStr);
-        Concierto concierto = contextoCentral.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fecha);
-        if (concierto != null) {
-            contextoCentral.eliminarConciertoGlobal(concierto);
-        }
-    }
-
-    public void eliminarZonaEspecifica(String nombreConc, String fechaStr, String nombreZona) {
-        java.time.LocalDate fecha = java.time.LocalDate.parse(fechaStr);
-        Concierto concierto = contextoCentral.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fecha);
-        if (concierto != null) {
-            contextoCentral.eliminarZonaDeConcierto(concierto, nombreZona);
-        }
-    }
-
-    public void eliminarConciertoCompleto(String nombreConc, String fechaStr) {
-        java.time.LocalDate fecha = java.time.LocalDate.parse(fechaStr);
-        Concierto concierto = contextoCentral.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fecha);
-        if (concierto != null) {
-            contextoCentral.eliminarConciertoGlobal(concierto);
-        }
-    }
-
-    public void agregarZonaAConcierto(String nombreConc, String fechaStr, String nombreZona, String capStr, String precStr) throws NumberFormatException, IllegalArgumentException {
-        java.time.LocalDate fecha = java.time.LocalDate.parse(fechaStr);
-        Concierto concierto = contextoCentral.getColeccionConciertos().buscarPorNombreYFecha(nombreConc, fecha);
-
-        if (concierto == null) {
-            throw new IllegalArgumentException("El concierto especificado no existe.");
-        }
-        int capacidad = Integer.parseInt(capStr);
-        int precio = Integer.parseInt(precStr);
-        concierto.registrarZona(nombreZona, capacidad, precio);
     }
 
     public void cerrarSesion() {
@@ -231,9 +255,5 @@ public class ControladorAdmin implements ActionListener {
         new ControladorLogin(login, this.contextoCentral);
         login.setVisible(true);
         vistaAdmin.dispose();
-    }
-
-    public ColeccionConciertos getColeccionConciertos() {
-        return contextoCentral.getColeccionConciertos();
     }
 }
