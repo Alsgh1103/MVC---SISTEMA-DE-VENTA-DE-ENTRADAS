@@ -3,8 +3,9 @@ C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\ma
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\coleccion\ColeccionVentas.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\com\mycompany\mvc\sis\entradas\MVCSISENTRADAS.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorAdmin.java
-C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorCliente.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorComprarEntradas.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorConcierto.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorHistorial.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorLogin.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorMenuPrincipal.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\controlador\ControladorPrincipal.java
@@ -21,9 +22,11 @@ C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\ma
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Venta.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\modelo\Zona.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\servicio\ServicioCorreo.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\TestRun.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmAdmin.java
-C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmCliente.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmComprarEntradas.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmConcierto.java
+C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmHistorial.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmLogin.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmMenuPrincipal.java
 C:\Users\alex_\Desktop\JAVA SESIONES\sistema de entradas\MVC-SIS.ENTRADAS\src\main\java\vista\FrmRegistro.java

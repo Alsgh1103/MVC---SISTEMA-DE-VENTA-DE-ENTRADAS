@@ -39,7 +39,7 @@ public class ControladorValidarCodigo implements ActionListener {
         if (e.getSource() == vistaValidar.btnVerificar) {
             String codigoIngresado = vistaValidar.txtCodigo.getText().trim();
             if (codigoIngresado.equals(codigoGenerado)) {
-                contextoCentral.registrarNuevoCliente(dniTemp, nomTemp, apeTemp, correoTemp, passTemp, false);
+                contextoCentral.registrarNuevoCliente(dniTemp, nomTemp, apeTemp, correoTemp, passTemp);
                 JOptionPane.showMessageDialog(vistaValidar,
                         "¡Registro completado con éxito! Ahora puede iniciar sesión.");
                 FrmLogin login = new FrmLogin();

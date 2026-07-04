@@ -2,14 +2,12 @@ package controlador;
 
 import vista.FrmMenuPrincipal;
 import vista.FrmLogin;
-import vista.FrmCliente;
+import vista.FrmComprarEntradas;
+import vista.FrmHistorial;
 import modelo.Persona;
 import modelo.Cliente;
 import modelo.Concierto;
-import modelo.Venta;
 import modelo.Zona;
-import coleccion.ColeccionVentas;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 
@@ -27,11 +25,19 @@ public class ControladorMenuPrincipal {
         // Registrar listeners — el controlador es el único responsable de los eventos
         vistaMenu.btnComprar.addActionListener(e -> comprarEntradas());
         vistaMenu.btnCerrarSesion.addActionListener(e -> cerrarSesion());
-        vistaMenu.btnVerZonas.addActionListener(e -> verZonas());
         vistaMenu.btnMisCompras.addActionListener(e -> verMisCompras());
-        vistaMenu.cbxConcierto.addActionListener(e ->
-            seleccionarConcierto((Concierto) vistaMenu.cbxConcierto.getSelectedItem())
-        );
+        vistaMenu.cbxConcierto.addActionListener(e -> {
+            Object selected = vistaMenu.cbxConcierto.getSelectedItem();
+            if (selected instanceof String) {
+                String nombreConcierto = (String) selected;
+                for (Concierto con : contextoCentral.getTodosLosConciertos()) {
+                    if (con.getNombre().equals(nombreConcierto)) {
+                        seleccionarConcierto(con);
+                        break;
+                    }
+                }
+            }
+        });
 
         // cargarDatosCliente() es invocado por FrmMenuPrincipal
         // después de que this.controlador queda asignado.
@@ -53,11 +59,11 @@ public class ControladorMenuPrincipal {
 
             vistaMenu.cbxConcierto.removeAllItems();
             for (Concierto con : contextoCentral.getTodosLosConciertos()) {
-                vistaMenu.cbxConcierto.addItem(con);
+                vistaMenu.cbxConcierto.addItem(con.getNombre());
             }
 
             if (contextoCentral.getConciertoSeleccionado() != null) {
-                vistaMenu.cbxConcierto.setSelectedItem(contextoCentral.getConciertoSeleccionado());
+                vistaMenu.cbxConcierto.setSelectedItem(contextoCentral.getConciertoSeleccionado().getNombre());
             }
         }
     }
@@ -97,47 +103,29 @@ public class ControladorMenuPrincipal {
         Persona usuario = contextoCentral.getUsuarioLogueado();
         if (usuario instanceof Cliente) {
             Cliente c = (Cliente) usuario;
-            StringBuilder sb = new StringBuilder("Historial de Compras de " + c.getNombres() + "\n");
-            sb.append("Puntos acumulados: ").append(c.getPuntos()).append("\n\n");
-            sb.append("Compras realizadas:\n");
-            
-            ColeccionVentas coleccionVentas = contextoCentral.getColeccionVentas();
-            ArrayList<Venta> ventasCliente = coleccionVentas.buscarVentasPorCliente(c.getDni());
-            
-            boolean tieneVentas = !ventasCliente.isEmpty();
-            for (Venta v : ventasCliente) {
-                String nombreConcierto = "Concierto Desconocido";
-                // Buscamos el nombre del concierto correspondiente a la venta
-                for (Concierto con : contextoCentral.getColeccionConciertos().getTodosLosConciertos()) {
-                    if (con.getTodasLasVentas().contains(v)) {
-                        nombreConcierto = con.getNombre();
-                        break;
-                    }
-                }
-                
-                sb.append("- ").append(nombreConcierto)
-                  .append(" | ").append(v.getZona().getNombre())
-                  .append(" | Cantidad: ").append(v.getCantidadEntradas())
-                  .append(" | Total: S/ ").append(v.getMonto())
-                  .append(" | Transacción: ").append(v.getIdTransaccion()).append("\n");
-            }
-            
-            if (!tieneVentas) {
-                sb.append("No has realizado ninguna compra todavía.");
-            }
-            JOptionPane.showMessageDialog(vistaMenu, sb.toString());
+            FrmHistorial frm = new FrmHistorial();
+            new ControladorHistorial(frm, contextoCentral, c);
+            frm.setVisible(true);
+            vistaMenu.dispose();
         } else {
-            JOptionPane.showMessageDialog(vistaMenu, "Esta opción solo está disponible para Clientes.");
+            JOptionPane.showMessageDialog(vistaMenu, "Solo los clientes tienen historial de compras.");
         }
     }
 
     
-     // Dirige al usuario al flujo de compra de entradas, abriendo FrmCliente y cerrando el menú.
+     // Dirige al usuario al flujo de compra de entradas, abriendo FrmComprarEntradas y cerrando el menú.
      
     public void comprarEntradas() {
-        FrmCliente cliente = new FrmCliente(contextoCentral);
-        cliente.setVisible(true);
-        vistaMenu.dispose();
+        try {
+            FrmComprarEntradas cliente = new FrmComprarEntradas(contextoCentral);
+            cliente.setVisible(true);
+            vistaMenu.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(vistaMenu, 
+                "Ocurrió un error al abrir la ventana:\n" + e.toString(), 
+                "Error Crítico", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     

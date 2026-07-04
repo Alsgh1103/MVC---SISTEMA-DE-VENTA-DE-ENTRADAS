@@ -42,7 +42,7 @@ public class FrmRegistro extends javax.swing.JFrame {
         txtPass = new javax.swing.JPasswordField();
         dateFechaNacimiento = new com.toedter.calendar.JDateChooser();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         btnGuardar.setBackground(new java.awt.Color(65, 150, 75));
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));

@@ -19,7 +19,7 @@ public class Venta {
         // C3 — Regla de negocio: la cantidad debe ser positiva
         if (cantidad <= 0) {
             throw new IllegalArgumentException(
-                "La cantidad de entradas debe ser mayor a 0.");
+                    "La cantidad de entradas debe ser mayor a 0.");
         }
         this.cantidadEntradas = cantidad;
         this.cliente = c;
@@ -35,11 +35,7 @@ public class Venta {
     }
 
     public double calcularTotal() {
-        double total = zona.getPrecio() * cantidadEntradas;
-        if (cliente.isSocio()) {
-            total *= 0.7; // Regla de negocio: 30% descuento
-        }
-        return total;
+        return zona.getPrecio() * cantidadEntradas;
     }
 
     /**
@@ -47,15 +43,16 @@ public class Venta {
      * Lanza IllegalArgumentException con mensaje descriptivo ante cualquier fallo,
      * en lugar de retornar false silenciosamente.
      *
-     * @param cvvIngresadoUsuario  CVV introducido por el usuario en la vista.
+     * @param cvvIngresadoUsuario CVV introducido por el usuario en la vista.
      * @throws IllegalArgumentException si no hay stock (P1), se supera el límite
-     *                                  de entradas (T1) o el CVV es incorrecto (T2).
+     *                                  de entradas (T1) o el CVV es incorrecto
+     *                                  (T2).
      */
     public void procesarCompra(int cvvIngresadoUsuario) {
         // P1 — Sin disponibilidad en la zona
         if (!zona.verificarDisponibilidad(cantidadEntradas)) {
             throw new IllegalArgumentException(
-                "No hay entradas disponibles suficientes en la zona seleccionada.");
+                    "No hay entradas disponibles suficientes en la zona seleccionada.");
         }
 
         // T1 y T2 — registrarCompra lanza IllegalArgumentException si falla
@@ -91,8 +88,15 @@ public class Venta {
             this.monto = this.monto * (1.0 - porcentaje);
         }
     }
-    
-    // ... (El resto de tus getters y el método generarEntradas() se mantienen igual) ...
+
+    public void aplicarDescuentoPuntos(double porcentaje) {
+        if (porcentaje > 0 && porcentaje < 1) {
+            this.monto = this.monto * (1.0 - porcentaje);
+        }
+    }
+
+    // ... (El resto de tus getters y el método generarEntradas() se mantienen
+    // igual) ...
     public ArrayList<Entrada> generarEntradas() {
         ArrayList<Entrada> entradasGeneradas = new ArrayList<>();
         for (int i = 1; i <= this.cantidadEntradas; i++) {
@@ -101,8 +105,8 @@ public class Venta {
         }
         return entradasGeneradas;
     }
-    
-        public static int getContadorVentas() {
+
+    public static int getContadorVentas() {
         return contadorVentas;
     }
 

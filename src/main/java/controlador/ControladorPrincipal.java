@@ -29,8 +29,19 @@ public class ControladorPrincipal {
         this.coleccionPersonas.guardarPersona(adminRapido);
 
         // Cliente de prueba para saltarse la validación por correo
-        Cliente clientePruebas = new Cliente("88888888", "Cliente", "Pruebas", "cliente", "cliente", false);
+        Cliente clientePruebas = new Cliente("87654321", "Maria", "Pruebas", "maria@pruebas.com", "maria123");
         this.coleccionPersonas.guardarPersona(clientePruebas);
+        
+        // Cliente rápido de pruebas
+        Cliente clienteRapido = new Cliente("11111111", "Cliente", "Pruebas", "cliente", "cliente");
+        this.coleccionPersonas.guardarPersona(clienteRapido);
+
+        Concierto conciertoPrueba = new Concierto("Megadeth en Lima", java.time.LocalDate.now().plusDays(30));
+        conciertoPrueba.registrarZona("VIP",      50,  350);
+        conciertoPrueba.registrarZona("Platinum", 100, 200);
+        conciertoPrueba.registrarZona("General",  200, 100);
+        this.coleccionConciertos.guardarConcierto(conciertoPrueba);
+        this.conciertoSeleccionado = conciertoPrueba;
     }
 
     public Persona login(String correo, String contrasena) {
@@ -49,13 +60,13 @@ public class ControladorPrincipal {
         }
     }
 
-    public void registrarNuevoCliente(String dni, String nombre, String apellido, String correo, String contrasena, boolean esSocio) {
-        Cliente nuevo = new Cliente(dni, nombre, apellido, correo, contrasena, esSocio);
+    public void registrarNuevoCliente(String dni, String nombre, String apellido, String correo, String contrasena) {
+        Cliente nuevo = new Cliente(dni, nombre, apellido, correo, contrasena);
         coleccionPersonas.guardarPersona(nuevo);
     }
 
-    public void registrarNuevaPersona(String dni, String nombre, String apellido, String correo, String contrasena, boolean esSocio) {
-        registrarNuevoCliente(dni, nombre, apellido, correo, contrasena, esSocio);
+    public void registrarNuevaPersona(String dni, String nombre, String apellido, String correo, String contrasena) {
+        registrarNuevoCliente(dni, nombre, apellido, correo, contrasena);
     }
 
     public void registrarNuevaVenta(Venta v) {
@@ -145,8 +156,8 @@ public class ControladorPrincipal {
     // por la instanciación de los nuevos controladores, inyectando las dependencias
     // correctas (vistas y colecciones centralizadas).
 
-    public ControladorCliente crearControladorCliente(vista.FrmCliente vista) {
-        return new ControladorCliente(this, vista, this.coleccionVentas);
+    public ControladorComprarEntradas crearControladorCliente(vista.FrmComprarEntradas vista) {
+        return new ControladorComprarEntradas(this, vista, this.coleccionVentas);
     }
 
     public ControladorTarjeta crearControladorTarjeta(vista.FrmTarjeta vista) {

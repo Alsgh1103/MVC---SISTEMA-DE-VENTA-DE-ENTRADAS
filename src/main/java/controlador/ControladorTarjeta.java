@@ -3,41 +3,19 @@ package controlador;
 import modelo.Cliente;
 import modelo.Persona;
 import modelo.Tarjeta;
-import vista.FrmCliente;
+import vista.FrmComprarEntradas;
 import vista.FrmTarjeta;
 
 /**
  * Controlador dedicado a FrmTarjeta.
- *
- * Responsabilidades:
- * - Inicializar la etiqueta de bienvenida personalizada.
- * - Reaccionar al botón "Guardar Tarjeta":
- * · Lee los campos de texto de la vista.
- * · Delega la validación y construcción al Modelo (Tarjeta.crear).
- * · Si el usuario eligió guardar la tarjeta, la persiste en el cliente.
- * · Devuelve el control a FrmCliente mediante ControladorCliente.
- * - Reaccionar al botón "Volver": restaurar la vista anterior.
- *
- * La vista (FrmTarjeta) es tratada como un cascarón puramente visual;
- * este controlador accede a sus componentes públicos directamente.
  */
 public class ControladorTarjeta {
 
     private final ControladorPrincipal ctrl;
     private final FrmTarjeta vista;
+    private final ControladorComprarEntradas controladorCliente;
 
-    /**
-     * Referencia al controlador de FrmCliente para poder devolverle
-     * la tarjeta recién creada sin acoplar las vistas entre sí.
-     */
-    private final ControladorCliente controladorCliente;
-
-    // ---------------------------------------------------------------
-    // Constructor
-    // ---------------------------------------------------------------
-
-    public ControladorTarjeta(ControladorPrincipal ctrl,
-            FrmTarjeta vista) {
+    public ControladorTarjeta(ControladorPrincipal ctrl, FrmTarjeta vista) {
         this.ctrl = ctrl;
         this.vista = vista;
 
@@ -47,101 +25,102 @@ public class ControladorTarjeta {
             this.controladorCliente = null;
         }
 
-        inicializarVista();
         registrarListeners();
     }
 
-    // ---------------------------------------------------------------
-    // INICIALIZACIÓN
-    // ---------------------------------------------------------------
-
-    /** Personaliza la etiqueta de bienvenida con el nombre del usuario logueado. */
-    private void inicializarVista() {
-        Persona usuario = ctrl.getUsuarioLogueado();
-        if (usuario != null) {
-            vista.lblRegistraNombre.setText(
-                    "Registrar tu tarjeta, " + usuario.getNombres());
-        }
-
-        // Inicializar listas de ComboBoxes
-        vista.cbxDia.removeAllItems();
-        for (int i = 1; i <= 31; i++) {
-            vista.cbxDia.addItem(String.format("%02d", i));
-        }
-
-        vista.cbxMes.removeAllItems();
-        for (int i = 1; i <= 12; i++) {
-            vista.cbxMes.addItem(String.format("%02d", i));
-        }
-
-        vista.cbxAnio.removeAllItems();
-        for (int i = 2026; i <= 2031; i++) {
-            vista.cbxAnio.addItem(String.valueOf(i));
-        }
-    }
-
-    // ---------------------------------------------------------------
-    // REGISTRO DE LISTENERS
-    // ---------------------------------------------------------------
-
-    /** Conecta los botones de la vista con su lógica correspondiente. */
     private void registrarListeners() {
         vista.btnGuardar.addActionListener(e -> onGuardarTarjeta());
-        vista.btnVolver.addActionListener(e -> onVolver());
+        vista.btnVolver1.addActionListener(e -> onVolver());
 
-        // Actualizar lblTipo en tiempo real mientras el usuario escribe el número
-        vista.txtNumeroTarjeta.getDocument().addDocumentListener(
-            new javax.swing.event.DocumentListener() {
-                public void insertUpdate(javax.swing.event.DocumentEvent e)  { actualizarLblTipo(); }
-                public void removeUpdate(javax.swing.event.DocumentEvent e)  { actualizarLblTipo(); }
-                public void changedUpdate(javax.swing.event.DocumentEvent e) { actualizarLblTipo(); }
+        // Actualizar lblTipo y auto-formatear en tiempo real mientras el usuario escribe el número
+        vista.txtNumeroTarjeta.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            private boolean formatting = false;
+
+            private void formatAndDetect() {
+                if (formatting) return;
+                formatting = true;
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    try {
+                        String text = vista.txtNumeroTarjeta.getText().replaceAll("[^\\d]", "");
+                        if (text.length() > 19) {
+                            text = text.substring(0, 19);
+                        }
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < text.length(); i++) {
+                            if (i > 0 && i % 4 == 0) sb.append(" ");
+                            sb.append(text.charAt(i));
+                        }
+                        vista.txtNumeroTarjeta.setText(sb.toString());
+                        actualizarLblTipo(text);
+                    } finally {
+                        formatting = false;
+                    }
+                });
             }
-        );
+
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { formatAndDetect(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { formatAndDetect(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { formatAndDetect(); }
+        });
     }
 
-    // ---------------------------------------------------------------
-    // HANDLERS DE EVENTOS
-    // ---------------------------------------------------------------
-
-    /**
-     * Actualiza lblTipo con el emisor detectado a partir del número ingresado.
-     * Usa Tarjeta.detectarEmisor() (método estático) para no instanciar la tarjeta.
-     */
-    private void actualizarLblTipo() {
-        String numero = vista.txtNumeroTarjeta.getText().trim().replaceAll("\\s+", "");
-        Tarjeta.Emisor emisor = Tarjeta.detectarEmisor(numero);
+    private void actualizarLblTipo(String numeroSoloDigitos) {
+        Tarjeta.Emisor emisor = detectarEmisorParcial(numeroSoloDigitos);
+        
+        String rutaImagen = null;
         switch (emisor) {
-            case VISA:             vista.lblTipo.setText("VISA");             break;
-            case MASTERCARD:       vista.lblTipo.setText("MASTERCARD");       break;
-            case DINERS:           vista.lblTipo.setText("DINERS");           break;
-            case AMERICAN_EXPRESS: vista.lblTipo.setText("AMERICAN EXPRESS"); break;
-            default:               vista.lblTipo.setText("-----");            break;
+            case VISA:             rutaImagen = "/img/visa.png"; break;
+            case MASTERCARD:       rutaImagen = "/img/master.png"; break;
+            case DINERS:           rutaImagen = "/img/dinners.png"; break;
+            case AMERICAN_EXPRESS: rutaImagen = "/img/amex.png"; break;
+            default:               rutaImagen = null; break;
+        }
+
+        if (rutaImagen != null) {
+            try {
+                java.net.URL imgUrl = getClass().getResource(rutaImagen);
+                if (imgUrl != null) {
+                    // Escalar la imagen un poco si es necesario, pero si cabe, normal
+                    javax.swing.ImageIcon icono = new javax.swing.ImageIcon(imgUrl);
+                    vista.lblTipo.setIcon(icono);
+                    vista.lblTipo.setText(""); 
+                } else {
+                    vista.lblTipo.setIcon(null);
+                    vista.lblTipo.setText(emisor.toString());
+                }
+            } catch (Exception ex) {
+                vista.lblTipo.setIcon(null);
+                vista.lblTipo.setText(emisor.toString());
+            }
+        } else {
+            vista.lblTipo.setIcon(null);
+            vista.lblTipo.setText("-----");
         }
     }
 
-    /**
-     * Guarda la tarjeta:
-     * 1. Lee y normaliza los campos de la vista.
-     * 2. Delega la validación completa al método de fábrica Tarjeta.crear()
-     * (campos vacíos V1, formato V2, CVV numérico V3).
-     * 3. Si el usuario marcó "guardar para futuras compras", persiste en cliente.
-     * 4. Notifica a ControladorCliente con la tarjeta activa.
-     * 5. Muestra confirmación y cierra esta ventana.
-     */
+    private Tarjeta.Emisor detectarEmisorParcial(String numero) {
+        if (numero == null || numero.isEmpty()) return Tarjeta.Emisor.DESCONOCIDO;
+        if (numero.startsWith("4")) return Tarjeta.Emisor.VISA;
+        if (numero.matches("^5[1-5].*") || numero.matches("^2(?:2[2-9]|[3-6]|7[0-2]).*")) return Tarjeta.Emisor.MASTERCARD;
+        if (numero.matches("^3[47].*")) return Tarjeta.Emisor.AMERICAN_EXPRESS;
+        if (numero.matches("^3(?:0[0-5]|[68]).*")) return Tarjeta.Emisor.DINERS;
+        return Tarjeta.Emisor.DESCONOCIDO;
+    }
+
     private void onGuardarTarjeta() {
-        // Lectura de la vista (normalización idéntica a la original)
-        String nroTarjeta = vista.txtNumeroTarjeta.getText().trim().replaceAll("\\s+", "");
+        String nroTarjeta = vista.txtNumeroTarjeta.getText().trim().replaceAll("[^\\d]", "");
         String titular = vista.txtNombreTarjeta.getText().trim();
 
-        String dia = vista.cbxDia.getSelectedItem().toString();
-        String mes = vista.cbxMes.getSelectedItem().toString();
-        String anio = vista.cbxAnio.getSelectedItem().toString();
-        String vencimiento = anio + "-" + mes + "-" + dia;
+        // Extraer fecha y ponerla al ÚLTIMO día del mes para que Tarjeta.crear no la marque como expirada prematuramente
+        int mesInt = vista.dateMonth.getMonth() + 1; // 1-12
+        int anioInt = vista.dateYear.getYear();
+        
+        java.time.YearMonth ym = java.time.YearMonth.of(anioInt, mesInt);
+        String vencimiento = ym.atEndOfMonth().toString(); // YYYY-MM-DD
+        
         String cvvStr = vista.txtCvv.getText().trim();
         boolean guardarFuturas = vista.CheckTarjeta.isSelected();
 
-        // Validación y construcción delegadas al Modelo —
-        // Tarjeta.crear() lanza IllegalArgumentException con el mensaje exacto.
         Tarjeta nuevaTarjeta;
         try {
             nuevaTarjeta = Tarjeta.crear(nroTarjeta, titular, vencimiento, cvvStr);
@@ -149,13 +128,11 @@ public class ControladorTarjeta {
             javax.swing.JOptionPane.showMessageDialog(
                     vista,
                     ex.getMessage(),
-                    "Error",
+                    "Error de validación",
                     javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Si el usuario quiere guardar la tarjeta para futuras compras,
-        // la persistimos en el objeto Cliente de la sesión.
         if (guardarFuturas) {
             Persona usuario = ctrl.getUsuarioLogueado();
             if (usuario instanceof Cliente) {
@@ -163,14 +140,11 @@ public class ControladorTarjeta {
             }
         }
 
-        // Notificar a ControladorCliente (y, transitivamente, a FrmCliente)
-        // que hay una tarjeta activa para esta sesión.
         if (controladorCliente != null) {
             controladorCliente.setTarjetaActiva(nuevaTarjeta);
         }
 
-        // Restaurar la vista del cliente y cerrar esta ventana
-        FrmCliente frmCliente = obtenerFrmCliente();
+        FrmComprarEntradas frmCliente = obtenerFrmCliente();
         if (frmCliente != null) {
             frmCliente.setVisible(true);
         }
@@ -179,24 +153,15 @@ public class ControladorTarjeta {
         vista.dispose();
     }
 
-    /** Vuelve a FrmCliente sin guardar ningún dato. */
     private void onVolver() {
-        FrmCliente frmCliente = obtenerFrmCliente();
+        FrmComprarEntradas frmCliente = obtenerFrmCliente();
         if (frmCliente != null) {
             frmCliente.setVisible(true);
         }
         vista.dispose();
     }
 
-    // ---------------------------------------------------------------
-    // UTILIDADES
-    // ---------------------------------------------------------------
-
-    /**
-     * Obtiene la referencia a FrmCliente desde la vista actual.
-     * FrmTarjeta guarda internamente una referencia pública a vistaCliente.
-     */
-    private FrmCliente obtenerFrmCliente() {
+    private FrmComprarEntradas obtenerFrmCliente() {
         return vista.vistaCliente;
     }
 }

@@ -58,7 +58,7 @@ public class FrmAdmin extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         btnRefrescar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -182,7 +182,7 @@ public class FrmAdmin extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Seleccionar", "Zona", "Capacidad Restante", "Entradas Vendidas", "Precio"
+                "✓", "Zona", "Capacidad Restante", "Entradas Vendidas", "Precio"
             }
         ));
         jScrollPane1.setViewportView(tblVentas);
