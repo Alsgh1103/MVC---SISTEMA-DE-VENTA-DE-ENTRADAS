@@ -55,10 +55,13 @@ public class ControladorLogin implements ActionListener {
 
             boolean esAdmin = p instanceof Usuario;
             if (esAdmin) {
-                FrmAdmin ventanaAdmin = new FrmAdmin(contextoCentral);
+                FrmAdmin ventanaAdmin = new FrmAdmin();
+                new ControladorAdmin(ventanaAdmin, contextoCentral);
                 ventanaAdmin.setVisible(true);
             } else {
-                FrmMenuPrincipal ventanaPrincipal = new FrmMenuPrincipal(contextoCentral);
+                FrmMenuPrincipal ventanaPrincipal = new FrmMenuPrincipal();
+                ControladorMenuPrincipal ctrlMenu = new ControladorMenuPrincipal(ventanaPrincipal, contextoCentral);
+                ctrlMenu.cargarDatosCliente();
                 ventanaPrincipal.setVisible(true);
             }
             vistaLogin.dispose();

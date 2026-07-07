@@ -4,17 +4,11 @@
  */
 package vista;
 
-import controlador.ControladorPrincipal;
-import controlador.ControladorComprarEntradas;
-
 public class FrmComprarEntradas extends javax.swing.JFrame {
 
-    public ControladorComprarEntradas controlador;
-
-    public FrmComprarEntradas(ControladorPrincipal ctrl) {
+    public FrmComprarEntradas() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.controlador = ctrl.crearControladorCliente(this);
     }
 
 
@@ -91,11 +85,6 @@ public class FrmComprarEntradas extends javax.swing.JFrame {
         lblZonas.setText("Seleccionar Zona:");
 
         cbxZonas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbxZonas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxZonasActionPerformed(evt);
-            }
-        });
 
         preciolabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         preciolabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/dolar.png"))); // NOI18N
@@ -115,11 +104,6 @@ public class FrmComprarEntradas extends javax.swing.JFrame {
 
         btnAgregarCarrito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/carrito-de-compras.png"))); // NOI18N
         btnAgregarCarrito.setText("Agregar al carrito");
-        btnAgregarCarrito.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarCarritoActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -211,11 +195,6 @@ public class FrmComprarEntradas extends javax.swing.JFrame {
 
         btnEliminarSeleccionados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/borrar.png"))); // NOI18N
         btnEliminarSeleccionados.setText("Eliminar Seleccionados");
-        btnEliminarSeleccionados.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarSeleccionadosActionPerformed(evt);
-            }
-        });
 
         lblMisPuntos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblMisPuntos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/aprobar-banca.png"))); // NOI18N
@@ -266,11 +245,6 @@ public class FrmComprarEntradas extends javax.swing.JFrame {
         btnConfirmar.setBackground(new java.awt.Color(65, 150, 75));
         btnConfirmar.setForeground(new java.awt.Color(255, 255, 255));
         btnConfirmar.setText("Confirmar Compra");
-        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConfirmarActionPerformed(evt);
-            }
-        });
 
         btnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/volver-flecha.png"))); // NOI18N
         btnVolver.setText("Volver");
@@ -313,22 +287,6 @@ public class FrmComprarEntradas extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnAgregarCarritoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCarritoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarCarritoActionPerformed
-
-    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnConfirmarActionPerformed
-
-    private void btnEliminarSeleccionadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarSeleccionadosActionPerformed
-
-    }//GEN-LAST:event_btnEliminarSeleccionadosActionPerformed
-
-    private void cbxZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxZonasActionPerformed
-        // Evento manejado desde el controlador
-    }//GEN-LAST:event_cbxZonasActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnAgregarCarrito;

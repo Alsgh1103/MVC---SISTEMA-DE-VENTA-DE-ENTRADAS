@@ -32,7 +32,7 @@ public class ControladorAdmin implements ActionListener, ItemListener {
             this.vistaAdmin.btnTransacciones.addActionListener(this);
         }
 
-        this.vistaAdmin.getCbmConciertos().addItemListener(this);
+        this.vistaAdmin.cbmConciertos.addItemListener(this);
 
         poblarComboBox();
         refrescarTabla();
@@ -69,24 +69,24 @@ public class ControladorAdmin implements ActionListener, ItemListener {
     }
 
     public void poblarComboBox() {
-        vistaAdmin.getCbmConciertos().removeItemListener(this);
-        vistaAdmin.getCbmConciertos().removeAllItems();
-        vistaAdmin.getCbmConciertos().addItem("Todos los Conciertos");
+        vistaAdmin.cbmConciertos.removeItemListener(this);
+        vistaAdmin.cbmConciertos.removeAllItems();
+        vistaAdmin.cbmConciertos.addItem("Todos los Conciertos");
 
         for (Concierto c : contextoCentral.getColeccionConciertos().getTodosLosConciertos()) {
-            vistaAdmin.getCbmConciertos().addItem(c.getNombre() + " (" + c.getFecha().toString() + ")");
+            vistaAdmin.cbmConciertos.addItem(c.getNombre() + " (" + c.getFecha().toString() + ")");
         }
 
         Concierto ultimo = contextoCentral.getConciertoSeleccionado();
         if (ultimo != null) {
-            vistaAdmin.getCbmConciertos()
+            vistaAdmin.cbmConciertos
                     .setSelectedItem(ultimo.getNombre() + " (" + ultimo.getFecha().toString() + ")");
         }
-        vistaAdmin.getCbmConciertos().addItemListener(this);
+        vistaAdmin.cbmConciertos.addItemListener(this);
     }
 
     public void refrescarTabla() {
-        boolean mostrarConcierto = vistaAdmin.getCbmConciertos().getSelectedIndex() <= 0;
+        boolean mostrarConcierto = vistaAdmin.cbmConciertos.getSelectedIndex() <= 0;
         Object[][] datos = obtenerDatosAuditoria(mostrarConcierto);
 
         String[] columnas;
@@ -124,7 +124,7 @@ public class ControladorAdmin implements ActionListener, ItemListener {
         ColeccionVentas cv = contextoCentral.getColeccionVentas();
         ArrayList<Venta> todasLasVentas = cv.getTodasLasVentas();
 
-        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        int idxCombo = vistaAdmin.cbmConciertos.getSelectedIndex();
         Concierto filtro = null;
         if (idxCombo > 0) {
             filtro = todosConciertos.get(idxCombo - 1);
@@ -175,14 +175,14 @@ public class ControladorAdmin implements ActionListener, ItemListener {
     }
 
     private void abrirCrearConcierto() {
-        FrmConcierto ventanaConcierto = new FrmConcierto(vistaAdmin);
+        FrmConcierto ventanaConcierto = new FrmConcierto();
         new ControladorConcierto(ventanaConcierto, contextoCentral, this);
         ventanaConcierto.setVisible(true);
         vistaAdmin.setVisible(false);
     }
 
     private void abrirAnadirZona() {
-        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        int idxCombo = vistaAdmin.cbmConciertos.getSelectedIndex();
         if (idxCombo <= 0) {
             javax.swing.JOptionPane.showMessageDialog(vistaAdmin,
                     "Debe seleccionar un concierto específico en el desplegable de arriba para añadirle zonas.");
@@ -196,7 +196,7 @@ public class ControladorAdmin implements ActionListener, ItemListener {
     }
 
     public void abrirTransaccionesAdmin() {
-        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        int idxCombo = vistaAdmin.cbmConciertos.getSelectedIndex();
         Concierto c = null;
         if (idxCombo > 0) {
             c = contextoCentral.getColeccionConciertos().getTodosLosConciertos().get(idxCombo - 1);
@@ -229,7 +229,7 @@ public class ControladorAdmin implements ActionListener, ItemListener {
             return;
         }
 
-        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        int idxCombo = vistaAdmin.cbmConciertos.getSelectedIndex();
         Concierto filtro = null;
         if (idxCombo > 0) {
             filtro = contextoCentral.getColeccionConciertos().getTodosLosConciertos().get(idxCombo - 1);
@@ -265,7 +265,7 @@ public class ControladorAdmin implements ActionListener, ItemListener {
 
         boolean eliminoAlgo = false;
 
-        int idxCombo = vistaAdmin.getCbmConciertos().getSelectedIndex();
+        int idxCombo = vistaAdmin.cbmConciertos.getSelectedIndex();
         Concierto filtro = null;
 
         if (idxCombo > 0) {

@@ -2,26 +2,12 @@ package vista;
 
 public class FrmConcierto extends javax.swing.JFrame {
 
-    private javax.swing.JFrame vistaAnterior;
-
-    /**
-     * Constructor único y limpio. Solo inicializa los componentes gráficos.
-     * El controlador es responsable de llenar los combos y configurar el modo.
-     *
-     * @param vistaAnterior ventana a la que se regresa al cerrar
-     */
-    public FrmConcierto(javax.swing.JFrame vistaAnterior) {
-        this.vistaAnterior = vistaAnterior;
+    public FrmConcierto() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
 
 
-
-    /** Cambia el texto del botón Guardar. */
-    public void setBtnGuardarTexto(String texto) {
-        btnGuardar.setText(texto);
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -71,8 +57,6 @@ public class FrmConcierto extends javax.swing.JFrame {
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Detalle del concierto", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Microsoft Tai Le", 0, 18))); // NOI18N
-
-        txtNombre.addActionListener(this::txtNombreActionPerformed);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/concierto.png"))); // NOI18N
         jLabel1.setText("Nombre del Concierto:");
@@ -147,55 +131,6 @@ public class FrmConcierto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txtNombreActionPerformed
-
-    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnVolverActionPerformed
-        // Vacío, el listener del controlador se encarga
-    }// GEN-LAST:event_btnVolverActionPerformed
-
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnGuardarActionPerformed
-        // Vacío, el listener del controlador se encarga
-    }// GEN-LAST:event_btnGuardarActionPerformed
-
-    private void cmbDiaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmbDiaActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_cmbDiaActionPerformed
-
-    public String getNombre() {
-        return txtNombre.getText().trim();
-    }
-
-
-
-    public javax.swing.JFrame getVistaAnterior() {
-        return vistaAnterior;
-    }
-
-    public javax.swing.JButton getBtnGuardar() {
-        return btnGuardar;
-    }
-
-    public javax.swing.JButton getBtnVolver() {
-        return btnVolver;
-    }
-
-    public void mostrarMensaje(String mensaje, String titulo, int tipo) {
-        javax.swing.JOptionPane.showMessageDialog(this, mensaje, titulo, tipo);
-    }
-
-    public String pedirDato(String mensaje) {
-        return javax.swing.JOptionPane.showInputDialog(this, mensaje);
-    }
-
-    public com.toedter.calendar.JDateChooser getDateFechaEvento() {
-        return dateFechaEvento;
-    }
-
-    public javax.swing.JTextField getTxtNombre() {
-        return txtNombre;
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnGuardar;

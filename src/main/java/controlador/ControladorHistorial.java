@@ -3,7 +3,6 @@ package controlador;
 import vista.FrmHistorial;
 import vista.FrmMenuPrincipal;
 import modelo.Cliente;
-import modelo.Concierto;
 import modelo.Venta;
 import coleccion.ColeccionVentas;
 import javax.swing.table.DefaultTableModel;
@@ -95,7 +94,9 @@ public class ControladorHistorial {
     }
 
     private void onVolver() {
-        FrmMenuPrincipal menu = new FrmMenuPrincipal(this.contextoCentral);
+        FrmMenuPrincipal menu = new FrmMenuPrincipal();
+        ControladorMenuPrincipal ctrlMenu = new ControladorMenuPrincipal(menu, this.contextoCentral);
+        ctrlMenu.cargarDatosCliente();
         menu.setVisible(true);
         vista.dispose();
     }

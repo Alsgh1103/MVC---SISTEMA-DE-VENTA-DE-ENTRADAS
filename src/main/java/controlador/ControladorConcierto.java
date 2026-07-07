@@ -35,8 +35,8 @@ public class ControladorConcierto implements ActionListener {
 
     private void guardarConcierto() {
         try {
-            String nombre = vista.getTxtNombre().getText().trim();
-            java.util.Date utilDate = vista.getDateFechaEvento().getDate();
+            String nombre = vista.txtNombre.getText().trim();
+            java.util.Date utilDate = vista.dateFechaEvento.getDate();
 
             if (nombre.isEmpty() || utilDate == null) {
                 JOptionPane.showMessageDialog(vista, "Por favor, complete todos los campos (Nombre y Fecha).", "Campos vacíos", JOptionPane.WARNING_MESSAGE);

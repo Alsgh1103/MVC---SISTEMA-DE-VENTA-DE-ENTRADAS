@@ -28,11 +28,9 @@ public class ControladorPrincipal {
         Usuario adminRapido = new Usuario("00000000", "Admin", "Pruebas", "admin", "admin", "ADM002");
         this.coleccionPersonas.guardarPersona(adminRapido);
 
-        // Cliente de prueba para saltarse la validación por correo
         Cliente clientePruebas = new Cliente("87654321", "Maria", "Pruebas", "maria@pruebas.com", "maria123");
         this.coleccionPersonas.guardarPersona(clientePruebas);
         
-        // Cliente rápido de pruebas
         Cliente clienteRapido = new Cliente("11111111", "Cliente", "Pruebas", "cliente", "cliente");
         this.coleccionPersonas.guardarPersona(clienteRapido);
 
@@ -146,20 +144,7 @@ public class ControladorPrincipal {
         this.usuarioLogueado = usuarioLogueado;
     }
     
-    // ==========================================================
-    // INSTANCIACIÓN DE CONTROLADORES (MÓDULO CLIENTE / TARJETA)
-    // ==========================================================
-    // Se sustituye la antigua lógica de control directo (procesarCompraConcierto)
-    // por la instanciación de los nuevos controladores, inyectando las dependencias
-    // correctas (vistas y colecciones centralizadas).
 
-    public ControladorComprarEntradas crearControladorCliente(vista.FrmComprarEntradas vista) {
-        return new ControladorComprarEntradas(this, vista, this.coleccionVentas);
-    }
-
-    public ControladorTarjeta crearControladorTarjeta(vista.FrmTarjeta vista) {
-        return new ControladorTarjeta(this, vista);
-    }
 
     public boolean eliminarConciertoGlobal(Concierto concierto) {
         try {

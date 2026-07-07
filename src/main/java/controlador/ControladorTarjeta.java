@@ -15,15 +15,10 @@ public class ControladorTarjeta {
     private final FrmTarjeta vista;
     private final ControladorComprarEntradas controladorCliente;
 
-    public ControladorTarjeta(ControladorPrincipal ctrl, FrmTarjeta vista) {
+    public ControladorTarjeta(ControladorPrincipal ctrl, FrmTarjeta vista, ControladorComprarEntradas controladorCliente) {
         this.ctrl = ctrl;
         this.vista = vista;
-
-        if (vista.vistaCliente != null) {
-            this.controladorCliente = vista.vistaCliente.controlador;
-        } else {
-            this.controladorCliente = null;
-        }
+        this.controladorCliente = controladorCliente;
 
         registrarListeners();
     }
@@ -162,6 +157,9 @@ public class ControladorTarjeta {
     }
 
     private FrmComprarEntradas obtenerFrmCliente() {
-        return vista.vistaCliente;
+        if (controladorCliente != null) {
+            return controladorCliente.getVista();
+        }
+        return null;
     }
 }

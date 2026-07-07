@@ -11,9 +11,6 @@ import vista.FrmMenuPrincipal;
 
 import javax.swing.table.DefaultTableModel;
 
-/**
- * Controlador dedicado a FrmComprarEntradas con lógica de Carrito de Compras.
- */
 public class ControladorComprarEntradas {
 
     private final ControladorPrincipal ctrl;
@@ -38,7 +35,6 @@ public class ControladorComprarEntradas {
     }
 
     private void inicializarVista() {
-        // Limitar spinner entre 0 y 4
         javax.swing.SpinnerNumberModel spinnerModel = new javax.swing.SpinnerNumberModel(1, 0, 4, 1);
         vista.spnCantidad.setModel(spinnerModel);
 
@@ -47,13 +43,10 @@ public class ControladorComprarEntradas {
         onZonaSeleccionada();
         evaluarEstadoBotonCompra();
 
-        // Configurar el modelo de la tabla si no está configurado
         DefaultTableModel modelo = (DefaultTableModel) vista.tblCarrito.getModel();
 
-        // Limpiar filas vacías por defecto de NetBeans
         modelo.setRowCount(0);
 
-        // Ajustar el ancho de la columna de Check ("✓" o "Seleccionar")
         if (vista.tblCarrito.getColumnModel().getColumnCount() > 0) {
             javax.swing.table.TableColumnModel columnModel = vista.tblCarrito.getColumnModel();
             
@@ -62,7 +55,6 @@ public class ControladorComprarEntradas {
             colCheck.setMinWidth(40);
             colCheck.setPreferredWidth(40);
             
-            // Ajustar el ancho de la columna "Zona"
             if (columnModel.getColumnCount() > 1) {
                 javax.swing.table.TableColumn colZona = columnModel.getColumn(1);
                 colZona.setMaxWidth(75);
@@ -70,7 +62,6 @@ public class ControladorComprarEntradas {
                 colZona.setPreferredWidth(75);
             }
             
-            // Ajustar el ancho de la columna "Cantidad"
             if (columnModel.getColumnCount() > 3) {
                 javax.swing.table.TableColumn colCant = columnModel.getColumn(3);
                 colCant.setMaxWidth(70);
@@ -80,18 +71,15 @@ public class ControladorComprarEntradas {
             
             boolean tieneColumnaDescuento = columnModel.getColumnCount() >= 6;
             if (tieneColumnaDescuento) {
-                // Columna Descuento (índice 4)
                 javax.swing.table.TableColumn colDesc = columnModel.getColumn(4);
                 colDesc.setPreferredWidth(130);
                 colDesc.setMinWidth(110);
                 
-                // Columna Subtotal (índice 5)
                 javax.swing.table.TableColumn colSubtotal = columnModel.getColumn(5);
                 colSubtotal.setMaxWidth(85);
                 colSubtotal.setMinWidth(85);
                 colSubtotal.setPreferredWidth(85);
             } else if (columnModel.getColumnCount() > 4) {
-                // Columna Subtotal (índice 4 si no hay descuento)
                 javax.swing.table.TableColumn colSubtotal = columnModel.getColumn(4);
                 colSubtotal.setMaxWidth(85);
                 colSubtotal.setMinWidth(85);
@@ -174,7 +162,6 @@ public class ControladorComprarEntradas {
             Zona zona = concierto.buscarZonaPorNombre(nombreSeleccionado);
             if (zona != null) {
                 this.precioSeleccionado = zona.getPrecio();
-                // Actualizar las etiquetas visuales
                 if (vista.lblPrecio != null) {
                     vista.lblPrecio.setText(String.format("S/ %.2f", this.precioSeleccionado));
                 }
@@ -212,7 +199,6 @@ public class ControladorComprarEntradas {
 
         DefaultTableModel modelo = (DefaultTableModel) vista.tblCarrito.getModel();
 
-        // Detectar si la tabla tiene 5 o 6 columnas
         boolean tieneColumnaDescuento = modelo.getColumnCount() >= 6;
 
         if (tieneColumnaDescuento) {
@@ -311,10 +297,10 @@ public class ControladorComprarEntradas {
             double subtotalRedondeado = Math.round(subtotalFinal * 100.0) / 100.0;
 
             if (tieneColumnaDescuento) {
-                modelo.setValueAt(descTexto, i, 4); // Columna Descuento
-                modelo.setValueAt(subtotalRedondeado, i, 5); // Columna Subtotal
+                modelo.setValueAt(descTexto, i, 4);
+                modelo.setValueAt(subtotalRedondeado, i, 5); 
             } else {
-                modelo.setValueAt(subtotalRedondeado, i, 4); // Columna Subtotal
+                modelo.setValueAt(subtotalRedondeado, i, 4); 
             }
 
             granTotal += subtotalFinal;
@@ -341,11 +327,12 @@ public class ControladorComprarEntradas {
         String seleccion = (String) vista.cbxTarjeta.getSelectedItem();
         if ("Agregar nueva tarjeta...".equals(seleccion)) {
             vista.setVisible(false);
-            vista.FrmTarjeta frmTarjeta = new vista.FrmTarjeta(this.ctrl, vista);
+            vista.FrmTarjeta frmTarjeta = new vista.FrmTarjeta();
+            new ControladorTarjeta(this.ctrl, frmTarjeta, this);
             frmTarjeta.setVisible(true);
         }
         evaluarEstadoBotonCompra();
-        actualizarTotalCarrito(); // Recalcular total por si cambió el emisor de la tarjeta
+        actualizarTotalCarrito(); 
     }
 
     private void evaluarEstadoBotonCompra() {
@@ -435,7 +422,9 @@ public class ControladorComprarEntradas {
 
             javax.swing.JOptionPane.showMessageDialog(vista, resumenTransacciones.toString());
 
-            FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl);
+            FrmMenuPrincipal menu = new FrmMenuPrincipal();
+            ControladorMenuPrincipal ctrlMenu = new ControladorMenuPrincipal(menu, this.ctrl);
+            ctrlMenu.cargarDatosCliente();
             menu.setVisible(true);
             vista.dispose();
 
@@ -446,7 +435,9 @@ public class ControladorComprarEntradas {
     }
 
     private void onVolver() {
-        FrmMenuPrincipal menu = new FrmMenuPrincipal(this.ctrl);
+        FrmMenuPrincipal menu = new FrmMenuPrincipal();
+        ControladorMenuPrincipal ctrlMenu = new ControladorMenuPrincipal(menu, this.ctrl);
+        ctrlMenu.cargarDatosCliente();
         menu.setVisible(true);
         vista.dispose();
     }
@@ -459,5 +450,9 @@ public class ControladorComprarEntradas {
         }
         evaluarEstadoBotonCompra();
         actualizarTotalCarrito();
+    }
+
+    public FrmComprarEntradas getVista() {
+        return vista;
     }
 }

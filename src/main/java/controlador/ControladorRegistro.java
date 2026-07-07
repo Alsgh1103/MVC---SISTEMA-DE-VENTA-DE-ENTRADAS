@@ -15,7 +15,6 @@ public class ControladorRegistro implements ActionListener {
     public ControladorRegistro(FrmRegistro vistaRegistro, ControladorPrincipal contextoCentral) {
         this.vistaRegistro = vistaRegistro;
         this.contextoCentral = contextoCentral;
-        this.vistaRegistro.controlador = this;
         this.vistaRegistro.btnGuardar.addActionListener(this);
         this.vistaRegistro.btnVolver.addActionListener(this);
     }

@@ -22,7 +22,6 @@ public class ControladorMenuPrincipal {
         this.vistaMenu = vistaMenu;
         this.contextoCentral = contextoCentral;
 
-        // Registrar listeners — el controlador es el único responsable de los eventos
         vistaMenu.btnComprar.addActionListener(e -> comprarEntradas());
         vistaMenu.btnCerrarSesion.addActionListener(e -> cerrarSesion());
         vistaMenu.btnMisCompras.addActionListener(e -> verMisCompras());
@@ -39,8 +38,6 @@ public class ControladorMenuPrincipal {
             }
         });
 
-        // cargarDatosCliente() es invocado por FrmMenuPrincipal
-        // después de que this.controlador queda asignado.
     }
 
    
@@ -69,7 +66,6 @@ public class ControladorMenuPrincipal {
     }
 
     
-     // Guarda el concierto seleccionado por el usuario en el contexto central.
      
      
     public void seleccionarConcierto(Concierto seleccion) {
@@ -79,8 +75,6 @@ public class ControladorMenuPrincipal {
     }
 
     
-     // Muestra las zonas, precios y disponibilidad del concierto actualmente seleccionado.
-     
     public void verZonas() {
         Concierto conciertoSeleccionado = contextoCentral.getConciertoSeleccionado();
         if (conciertoSeleccionado != null) {
@@ -97,7 +91,6 @@ public class ControladorMenuPrincipal {
     }
 
     
-     // Muestra el historial de compras y puntos acumulados del cliente activo.
      
     public void verMisCompras() {
         Persona usuario = contextoCentral.getUsuarioLogueado();
@@ -113,11 +106,11 @@ public class ControladorMenuPrincipal {
     }
 
     
-     // Dirige al usuario al flujo de compra de entradas, abriendo FrmComprarEntradas y cerrando el menú.
      
     public void comprarEntradas() {
         try {
-            FrmComprarEntradas cliente = new FrmComprarEntradas(contextoCentral);
+            FrmComprarEntradas cliente = new FrmComprarEntradas();
+            new ControladorComprarEntradas(contextoCentral, cliente, contextoCentral.getColeccionVentas());
             cliente.setVisible(true);
             vistaMenu.dispose();
         } catch (Exception e) {
@@ -129,7 +122,6 @@ public class ControladorMenuPrincipal {
     }
 
     
-     // Cierra la sesión activa del usuario y regresa al portal de inicio de sesión (FrmLogin).
      
     public void cerrarSesion() {
         contextoCentral.cerrarSesion();

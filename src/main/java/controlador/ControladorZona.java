@@ -29,13 +29,13 @@ public class ControladorZona implements ActionListener {
         
         if (zona != null) {
             this.vista.setTitle("Editar Zona");
-            this.vista.getLblTitulo().setText("Editar Zona");
+            this.vista.lblTitulo.setText("Editar Zona");
             this.vista.txtNombreZona.setText(zona.getNombre());
             this.vista.txtCapacidad.setText(String.valueOf(zona.getCapacidadTotal()));
             this.vista.txtPrecio.setText(String.valueOf(zona.getPrecio()));
         } else {
             this.vista.setTitle("Añadir Nueva Zona");
-            this.vista.getLblTitulo().setText("Añadir Nueva Zona");
+            this.vista.lblTitulo.setText("Añadir Nueva Zona");
         }
     }
 

@@ -3,23 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
-import controlador.ControladorMenuPrincipal;
-import controlador.ControladorPrincipal;
+
 /**
  *
  * @author alex_
  */
 public class FrmMenuPrincipal extends javax.swing.JFrame {
-    public ControladorMenuPrincipal controlador;
-
-    public FrmMenuPrincipal(ControladorPrincipal ctrl) {
+    public FrmMenuPrincipal() {
         initComponents();
         this.setLocationRelativeTo(null);
-        // controlador se asigna ANTES de cargarDatosCliente() para evitar
-        // NullPointerException: addItem() en el combo dispara su ActionListener,
-        // que llama a controlador.seleccionarConcierto() — si controlador fuera null, falla.
-        this.controlador = new ControladorMenuPrincipal(this, ctrl);
-        this.controlador.cargarDatosCliente();
     }
 
 
@@ -79,34 +71,22 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
 
         btnComprar.setBackground(new java.awt.Color(65, 150, 75));
         btnComprar.setForeground(new java.awt.Color(255, 255, 255));
+        btnComprar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/concierto.png"))); // NOI18N
         btnComprar.setText("Comprar Entradas");
         btnComprar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         cbxConcierto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbxConcierto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxConciertoActionPerformed(evt);
-            }
-        });
 
         btnCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cerrar-sesion.png"))); // NOI18N
         btnCerrarSesion.setText("Cerrar Sesion");
-        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCerrarSesionActionPerformed(evt);
-            }
-        });
 
-        btnMisCompras.setText("Mi Historial y Puntos");
-        btnMisCompras.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMisComprasActionPerformed(evt);
-            }
-        });
+        btnMisCompras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/historial-de-transacciones.png"))); // NOI18N
+        btnMisCompras.setText("Mis compras");
 
-        lblBienvenida.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblBienvenida.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblBienvenida.setText("Bienvenido:");
 
+        lblPuntos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/estrella.png"))); // NOI18N
         lblPuntos.setText("Puntos Acumulados:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -124,11 +104,11 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                             .addComponent(btnCerrarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnMisCompras, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addComponent(lblPuntos))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(37, 37, 37)
-                        .addComponent(lblBienvenida)))
+                        .addComponent(lblBienvenida))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(lblPuntos)))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -136,9 +116,9 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(lblBienvenida)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(lblPuntos)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblConcierto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbxConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -148,7 +128,7 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                 .addComponent(btnMisCompras)
                 .addGap(18, 18, 18)
                 .addComponent(btnCerrarSesion)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -174,23 +154,11 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                 .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnMisComprasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMisComprasActionPerformed
-        // Evento manejado desde ControladorMenuPrincipal
-    }//GEN-LAST:event_btnMisComprasActionPerformed
-
-    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        // Evento manejado desde ControladorMenuPrincipal
-    }//GEN-LAST:event_btnCerrarSesionActionPerformed
-
-    private void cbxConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxConciertoActionPerformed
-        // Evento manejado desde ControladorMenuPrincipal
-    }//GEN-LAST:event_cbxConciertoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnCerrarSesion;

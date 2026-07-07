@@ -1,25 +1,14 @@
 package vista;
 
-import controlador.ControladorPrincipal;
-import controlador.ControladorAdmin;
-
 /**
  *
  * @author alex_
  */
 public class FrmAdmin extends javax.swing.JFrame {
-    private ControladorAdmin ctrlAdmin;
-    private ControladorPrincipal ctrlPrincipal;
     
-    public FrmAdmin(ControladorPrincipal ctrl) {
-        this.ctrlPrincipal = ctrl;
-        
+    public FrmAdmin() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
-        this.ctrlAdmin = new ControladorAdmin(this, ctrlPrincipal);
-        
-        this.ctrlAdmin.refrescarTabla();
     }
 
     /**
@@ -66,58 +55,28 @@ public class FrmAdmin extends javax.swing.JFrame {
         btnRefrescar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actualizar.png"))); // NOI18N
         btnRefrescar.setText("Refrescar Tabla");
         btnRefrescar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRefrescar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefrescarActionPerformed(evt);
-            }
-        });
 
         btnCerrarSesion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cerrar-sesion.png"))); // NOI18N
         btnCerrarSesion.setText("Cerrar Sesion");
-        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCerrarSesionActionPerformed(evt);
-            }
-        });
 
         btnRegistrarConcierto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnRegistrarConcierto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/registro.png"))); // NOI18N
         btnRegistrarConcierto.setText("Registrar Concierto");
         btnRegistrarConcierto.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRegistrarConcierto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarConciertoActionPerformed(evt);
-            }
-        });
 
         btnEditarZonas.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnEditarZonas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/boligrafo.png"))); // NOI18N
         btnEditarZonas.setText("Editar Zona");
-        btnEditarZonas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarZonasActionPerformed(evt);
-            }
-        });
 
         btnEliminarSeleccionados.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnEliminarSeleccionados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/borrar.png"))); // NOI18N
         btnEliminarSeleccionados.setText("Eliminar Seleccionados");
-        btnEliminarSeleccionados.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarSeleccionadosActionPerformed(evt);
-            }
-        });
 
         btnAnadirZona.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnAnadirZona.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/anadir.png"))); // NOI18N
         btnAnadirZona.setText("Añadir Zona");
         btnAnadirZona.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnAnadirZona.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAnadirZonaActionPerformed(evt);
-            }
-        });
 
         jPanel2.setBackground(new java.awt.Color(59, 107, 158));
 
@@ -208,11 +167,6 @@ public class FrmAdmin extends javax.swing.JFrame {
         btnTransacciones.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnTransacciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/transaccion.png"))); // NOI18N
         btnTransacciones.setText("Ver Transacciones");
-        btnTransacciones.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTransaccionesActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -261,51 +215,19 @@ public class FrmAdmin extends javax.swing.JFrame {
                         .addComponent(btnRefrescar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnEditarZonas)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnEliminarSeleccionados)
-                            .addComponent(btnTransacciones)))
+                    .addComponent(btnEditarZonas)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnEliminarSeleccionados)
+                        .addComponent(btnTransacciones))
                     .addComponent(btnAnadirZona))
                 .addGap(21, 21, 21))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnRefrescarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarActionPerformed
-       
-    }//GEN-LAST:event_btnRefrescarActionPerformed
-
-    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        ctrlAdmin.cerrarSesion();
-    }//GEN-LAST:event_btnCerrarSesionActionPerformed
-
-    private void btnRegistrarConciertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarConciertoActionPerformed
-    
-    }//GEN-LAST:event_btnRegistrarConciertoActionPerformed
-
-    private void btnEliminarSeleccionadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarSeleccionadosActionPerformed
-
-    }//GEN-LAST:event_btnEliminarSeleccionadosActionPerformed
-
-    private void btnAnadirZonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirZonaActionPerformed
-           
-    }//GEN-LAST:event_btnAnadirZonaActionPerformed
-
-    private void btnEditarZonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarZonasActionPerformed
-      
-    }//GEN-LAST:event_btnEditarZonasActionPerformed
-
-    private void btnTransaccionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransaccionesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnTransaccionesActionPerformed
     
 
     
-    public javax.swing.JComboBox<String> getCbmConciertos() {
-        return cbmConciertos;
-    }
 
 
 
@@ -317,14 +239,14 @@ public class FrmAdmin extends javax.swing.JFrame {
     public javax.swing.JButton btnRefrescar;
     public javax.swing.JButton btnRegistrarConcierto;
     public javax.swing.JButton btnTransacciones;
-    private javax.swing.JComboBox<String> cbmConciertos;
+    public javax.swing.JComboBox<String> cbmConciertos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JTable tblVentas;
     // End of variables declaration//GEN-END:variables
 }

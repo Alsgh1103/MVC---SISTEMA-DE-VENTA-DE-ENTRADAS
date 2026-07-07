@@ -3,16 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
-import controlador.ControladorRegistro;
 
-public class FrmRegistro extends javax.swing.JFrame {
-    
-    public ControladorRegistro controlador;
-    
+public class FrmRegistro extends javax.swing.JFrame {   
     public FrmRegistro() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setTitle("Registro de Usuario");
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -88,11 +83,6 @@ public class FrmRegistro extends javax.swing.JFrame {
         txtDni.setText(" ");
 
         txtNombre.setText(" ");
-        txtNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombreActionPerformed(evt);
-            }
-        });
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/apellidos.png"))); // NOI18N
         jLabel3.setText("Apellidos:");
@@ -101,11 +91,6 @@ public class FrmRegistro extends javax.swing.JFrame {
         jLabel7.setText("Fecha de Nacimiento:");
 
         txtApellido.setText(" ");
-        txtApellido.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtApellidoActionPerformed(evt);
-            }
-        });
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/correo.png"))); // NOI18N
         jLabel5.setText("Correo:");
@@ -215,17 +200,6 @@ public class FrmRegistro extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtApellidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtApellidoActionPerformed
-
-    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNombreActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
