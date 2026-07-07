@@ -10,6 +10,8 @@ import vista.FrmComprarEntradas;
 import vista.FrmMenuPrincipal;
 
 import javax.swing.table.DefaultTableModel;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 
 public class ControladorComprarEntradas {
 
@@ -38,7 +40,9 @@ public class ControladorComprarEntradas {
         javax.swing.SpinnerNumberModel spinnerModel = new javax.swing.SpinnerNumberModel(1, 0, 4, 1);
         vista.spnCantidad.setModel(spinnerModel);
 
+        cargarConciertosEnCombo();
         cargarZonasEnCombo();
+        actualizarBanner();
         cargarTarjetasEnCombo();
         onZonaSeleccionada();
         evaluarEstadoBotonCompra();
@@ -85,6 +89,60 @@ public class ControladorComprarEntradas {
                 colSubtotal.setMinWidth(85);
                 colSubtotal.setPreferredWidth(85);
             }
+        }
+    }
+
+    private void cargarConciertosEnCombo() {
+        if (vista.cbmConciertos != null) {
+            vista.cbmConciertos.removeAllItems();
+            for (Concierto con : ctrl.getTodosLosConciertos()) {
+                vista.cbmConciertos.addItem(con.getNombre());
+            }
+            if (ctrl.getConciertoSeleccionado() != null) {
+                vista.cbmConciertos.setSelectedItem(ctrl.getConciertoSeleccionado().getNombre());
+            }
+        }
+    }
+
+    private void actualizarBanner() {
+        Concierto c = ctrl.getConciertoSeleccionado();
+        boolean cambioVisibilidad = false;
+        if (c != null && vista.lblBanner != null) {
+            String ruta = c.getRutaImagen();
+            if (ruta != null && !ruta.isEmpty()) {
+                java.net.URL imgUrl = getClass().getResource(ruta);
+                if (imgUrl != null) {
+                    ImageIcon iconoOriginal = new ImageIcon(imgUrl);
+                    Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(vista.lblBanner.getWidth(), vista.lblBanner.getHeight(), Image.SCALE_SMOOTH);
+                    vista.lblBanner.setIcon(new ImageIcon(imagenEscalada));
+                    if (!vista.lblBanner.isVisible()) {
+                        vista.lblBanner.setVisible(true);
+                        cambioVisibilidad = true;
+                    }
+                } else {
+                    vista.lblBanner.setIcon(null);
+                    if (vista.lblBanner.isVisible()) {
+                        vista.lblBanner.setVisible(false);
+                        cambioVisibilidad = true;
+                    }
+                }
+            } else {
+                vista.lblBanner.setIcon(null);
+                if (vista.lblBanner.isVisible()) {
+                    vista.lblBanner.setVisible(false);
+                    cambioVisibilidad = true;
+                }
+            }
+        } else if (vista.lblBanner != null) {
+            vista.lblBanner.setIcon(null);
+            if (vista.lblBanner.isVisible()) {
+                vista.lblBanner.setVisible(false);
+                cambioVisibilidad = true;
+            }
+        }
+        
+        if (cambioVisibilidad) {
+            vista.pack();
         }
     }
 
@@ -143,6 +201,23 @@ public class ControladorComprarEntradas {
     }
 
     private void registrarListeners() {
+        if (vista.cbmConciertos != null) {
+            vista.cbmConciertos.addActionListener(e -> {
+                Object selected = vista.cbmConciertos.getSelectedItem();
+                if (selected instanceof String) {
+                    String nombreConcierto = (String) selected;
+                    for (Concierto con : ctrl.getTodosLosConciertos()) {
+                        if (con.getNombre().equals(nombreConcierto)) {
+                            ctrl.setConciertoSeleccionado(con);
+                            cargarZonasEnCombo();
+                            actualizarBanner();
+                            actualizarTotalCarrito();
+                            break;
+                        }
+                    }
+                }
+            });
+        }
         vista.cbxZonas.addActionListener(e -> onZonaSeleccionada());
         vista.cbxTarjeta.addActionListener(e -> onTarjetaSeleccionada());
         vista.btnAgregarCarrito.addActionListener(e -> onAgregarCarrito());
@@ -419,6 +494,8 @@ public class ControladorComprarEntradas {
             }
 
             resumenTransacciones.append("\nMonto Total Pagado: S/ ").append(String.format("%.2f", granTotalMonto));
+
+            ctrl.guardarEstado();
 
             javax.swing.JOptionPane.showMessageDialog(vista, resumenTransacciones.toString());
 

@@ -6,30 +6,14 @@ package modelo;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.io.Serializable;
 
-/**
- * Modelo de Tarjeta de pago.
- *
- * REGLAS DE NEGOCIO encapsuladas aquí:
- *   - Formato del número: 13-19 dígitos numéricos.
- *   - Límite de entradas: máximo 4 por tarjeta.
- *   - Validación de CVV: debe coincidir con el registrado.
- *
- * @author alex_
- */
-public class Tarjeta {
+public class Tarjeta implements Serializable {
 
-    // ---------------------------------------------------------------
-    // EMISORES RECONOCIDOS
-    // ---------------------------------------------------------------
-
-    /**
-     * Emisores de tarjeta soportados por el sistema.
-     * Se usa para determinar el descuento aplicable por concierto.
-     */
     public enum Emisor {
         VISA, MASTERCARD, DINERS, AMERICAN_EXPRESS, DESCONOCIDO
     }
+    private static final long serialVersionUID = 1L;
     private String numero;
     private String nombre;
     private String fecha;

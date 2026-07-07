@@ -3,8 +3,9 @@ package coleccion;
 import java.util.ArrayList;
 import modelo.Concierto;
 import modelo.Zona;
-
-public class ColeccionConciertos {
+import java.io.Serializable;
+public class ColeccionConciertos implements Serializable{
+    private static final long serialVersionUID = 1L;
     private ArrayList<Concierto> conciertos;
 
     public ColeccionConciertos() {

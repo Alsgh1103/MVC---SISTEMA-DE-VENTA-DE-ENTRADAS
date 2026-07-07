@@ -20,26 +20,29 @@ public class ControladorPrincipal {
     private Concierto conciertoSeleccionado;
 
     public ControladorPrincipal() {
-        this.coleccionPersonas = new ColeccionPersonas();
-        this.coleccionConciertos = new ColeccionConciertos();
-        this.coleccionVentas = new ColeccionVentas();
-        Usuario admin = new Usuario("99999999", "Administrador", "Sistema", "admin@gmail.com", "admin123", "ADM001");
-        this.coleccionPersonas.guardarPersona(admin);
-        Usuario adminRapido = new Usuario("00000000", "Admin", "Pruebas", "admin", "admin", "ADM002");
-        this.coleccionPersonas.guardarPersona(adminRapido);
+        persistencia.DatosSistema datosGuardados = persistencia.GestorSerializacion.cargar();
 
-        Cliente clientePruebas = new Cliente("87654321", "Maria", "Pruebas", "maria@pruebas.com", "maria123");
-        this.coleccionPersonas.guardarPersona(clientePruebas);
-        
-        Cliente clienteRapido = new Cliente("11111111", "Cliente", "Pruebas", "cliente", "cliente");
-        this.coleccionPersonas.guardarPersona(clienteRapido);
+        if (datosGuardados != null) {
+            this.coleccionPersonas = datosGuardados.personas;
+            this.coleccionConciertos = datosGuardados.conciertos;
+            this.coleccionVentas = datosGuardados.ventas;
+        } else {
+            this.coleccionPersonas = new ColeccionPersonas();
+            this.coleccionConciertos = new ColeccionConciertos();
+            this.coleccionVentas = new ColeccionVentas();
 
-        Concierto conciertoPrueba = new Concierto("Megadeth en Lima", java.time.LocalDate.now().plusDays(30));
-        conciertoPrueba.registrarZona("VIP",      50,  350);
-        conciertoPrueba.registrarZona("Platinum", 100, 200);
-        conciertoPrueba.registrarZona("General",  200, 100);
-        this.coleccionConciertos.guardarConcierto(conciertoPrueba);
-        this.conciertoSeleccionado = conciertoPrueba;
+            Usuario admin = new Usuario("99999999", "Super", "Administrador", "admin", "admin", "ADM-001");
+            this.coleccionPersonas.guardarPersona(admin);
+            this.guardarEstado();
+        }
+    }
+
+    public void guardarEstado() {
+        persistencia.DatosSistema datosActuales = new persistencia.DatosSistema(
+                this.coleccionPersonas,
+                this.coleccionConciertos,
+                this.coleccionVentas);
+        persistencia.GestorSerializacion.guardar(datosActuales);
     }
 
     public Persona login(String correo, String contrasena) {
@@ -59,36 +62,40 @@ public class ControladorPrincipal {
     }
 
     public void registrarNuevoCliente(String dni, String nombre, String apellido, String correo, String contrasena) {
-        Cliente nuevo = new Cliente(dni, nombre, apellido, correo, contrasena);
-        coleccionPersonas.guardarPersona(nuevo);
+        Cliente nuevoCliente = new Cliente(dni, nombre, apellido, correo, contrasena);
+        coleccionPersonas.guardarPersona(nuevoCliente);
+        guardarEstado();
     }
 
     public void registrarNuevaPersona(String dni, String nombre, String apellido, String correo, String contrasena) {
         registrarNuevoCliente(dni, nombre, apellido, correo, contrasena);
+        guardarEstado();
     }
 
     public void registrarNuevaVenta(Venta v) {
         this.coleccionVentas.registrarVenta(v);
+        guardarEstado();
     }
-    
+
     public Object[][] getDatosZonasParaTabla() {
         ArrayList<Concierto> todos = coleccionConciertos.getTodosLosConciertos();
-        
+
         int totalRows = 0;
         for (Concierto c : todos) {
             int zonasSize = c.getTodasLasZonas().size();
             totalRows += (zonasSize == 0) ? 1 : zonasSize;
         }
 
-        if (totalRows == 0) return new Object[0][0];
+        if (totalRows == 0)
+            return new Object[0][0];
 
-        Object[][] datos = new Object[totalRows][5]; 
+        Object[][] datos = new Object[totalRows][5];
         int index = 0;
 
         for (Concierto c : todos) {
             ArrayList<Zona> zonas = c.getTodasLasZonas();
             if (zonas.isEmpty()) {
-                datos[index][0] = c.getNombre(); 
+                datos[index][0] = c.getNombre();
                 datos[index][1] = c.getFecha().toString();
                 datos[index][2] = "Sin zonas";
                 datos[index][3] = "-";
@@ -96,7 +103,7 @@ public class ControladorPrincipal {
                 index++;
             } else {
                 for (Zona z : zonas) {
-                    datos[index][0] = c.getNombre(); 
+                    datos[index][0] = c.getNombre();
                     datos[index][1] = c.getFecha().toString();
                     datos[index][2] = z.getNombre();
                     datos[index][3] = z.getCapacidadDisponible();
@@ -143,15 +150,15 @@ public class ControladorPrincipal {
     public void setUsuarioLogueado(Persona usuarioLogueado) {
         this.usuarioLogueado = usuarioLogueado;
     }
-    
-
 
     public boolean eliminarConciertoGlobal(Concierto concierto) {
         try {
             this.coleccionConciertos.eliminarConcierto(concierto);
+            guardarEstado();
             return true;
         } catch (IllegalStateException e) {
-            javax.swing.JOptionPane.showMessageDialog(null, e.getMessage(), "Operación denegada", javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(null, e.getMessage(), "Operación denegada",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -159,9 +166,11 @@ public class ControladorPrincipal {
     public boolean eliminarZonaDeConcierto(Concierto concierto, String nombreZona) {
         try {
             concierto.eliminarZona(nombreZona);
+            guardarEstado();
             return true;
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(null, e.getMessage(), "Error al eliminar", javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(null, e.getMessage(), "Error al eliminar",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }

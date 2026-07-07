@@ -25,19 +25,6 @@ public class ControladorMenuPrincipal {
         vistaMenu.btnComprar.addActionListener(e -> comprarEntradas());
         vistaMenu.btnCerrarSesion.addActionListener(e -> cerrarSesion());
         vistaMenu.btnMisCompras.addActionListener(e -> verMisCompras());
-        vistaMenu.cbxConcierto.addActionListener(e -> {
-            Object selected = vistaMenu.cbxConcierto.getSelectedItem();
-            if (selected instanceof String) {
-                String nombreConcierto = (String) selected;
-                for (Concierto con : contextoCentral.getTodosLosConciertos()) {
-                    if (con.getNombre().equals(nombreConcierto)) {
-                        seleccionarConcierto(con);
-                        break;
-                    }
-                }
-            }
-        });
-
     }
 
    
@@ -51,16 +38,7 @@ public class ControladorMenuPrincipal {
                 vistaMenu.lblPuntos.setText("Puntos: " + c.getPuntos());
             } else {
                 vistaMenu.lblPuntos.setText("Puntos: N/A");
-                vistaMenu.lblConcierto.setText("Administración");
-            }
-
-            vistaMenu.cbxConcierto.removeAllItems();
-            for (Concierto con : contextoCentral.getTodosLosConciertos()) {
-                vistaMenu.cbxConcierto.addItem(con.getNombre());
-            }
-
-            if (contextoCentral.getConciertoSeleccionado() != null) {
-                vistaMenu.cbxConcierto.setSelectedItem(contextoCentral.getConciertoSeleccionado().getNombre());
+                vistaMenu.lblOpcion.setText("Administración");
             }
         }
     }

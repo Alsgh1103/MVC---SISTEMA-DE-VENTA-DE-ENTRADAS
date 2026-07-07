@@ -5,8 +5,9 @@
 package modelo;
 
 import java.util.ArrayList;
-
-public class Zona {
+import java.io.Serializable;
+public class Zona implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String nombre;
     private int capacidadTotal;
     private int capacidadDisponible;

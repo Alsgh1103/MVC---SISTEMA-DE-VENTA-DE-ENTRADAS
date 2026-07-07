@@ -3,8 +3,10 @@ package modelo;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Venta {
+public class Venta implements Serializable{
+    private static final long serialVersionUID = 1L;
     private static int contadorVentas = 1;
     private String idTransaccion;
     private String fecha;
@@ -15,9 +17,7 @@ public class Venta {
     private Tarjeta tarjeta;
     private Concierto concierto;
 
-    // El modelo calcula el monto por sí mismo a partir de zona y descuentos.
     public Venta(int cantidad, Cliente c, Zona z, Tarjeta t, Concierto concierto) {
-        // C3 — Regla de negocio: la cantidad debe ser positiva
         if (cantidad <= 0) {
             throw new IllegalArgumentException(
                     "La cantidad de entradas debe ser mayor a 0.");

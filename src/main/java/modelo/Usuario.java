@@ -3,14 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package modelo;
-
-/**
- *
- * @author alex_
- */
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Usuario extends Persona {
+public class Usuario extends Persona implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String codigoUsuario;
     private boolean estado;
 

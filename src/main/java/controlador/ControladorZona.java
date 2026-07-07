@@ -10,12 +10,12 @@ import javax.swing.JOptionPane;
 public class ControladorZona implements ActionListener {
     private FrmZona vista;
     private ControladorPrincipal contextoCentral;
-    private ControladorAdmin ctrlAdmin;
+    private ControladorAdminConciertos ctrlAdmin;
     private String nombreConcierto;
     private java.time.LocalDate fechaConcierto;
     private Zona zonaAEditar;
 
-    public ControladorZona(FrmZona vista, ControladorPrincipal contextoCentral, ControladorAdmin ctrlAdmin, String nombreConcierto, java.time.LocalDate fechaConcierto, Zona zona) {
+    public ControladorZona(FrmZona vista, ControladorPrincipal contextoCentral, ControladorAdminConciertos ctrlAdmin, String nombreConcierto, java.time.LocalDate fechaConcierto, Zona zona) {
         this.vista = vista;
         this.contextoCentral = contextoCentral;
         this.ctrlAdmin = ctrlAdmin;
@@ -79,6 +79,7 @@ public class ControladorZona implements ActionListener {
                     concierto.registrarZona(nombreZona, capacidad, precio);
                     JOptionPane.showMessageDialog(vista, "Zona añadida exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 }
+                contextoCentral.guardarEstado();
                 ctrlAdmin.refrescarTabla();
                 vista.dispose();
             } else {

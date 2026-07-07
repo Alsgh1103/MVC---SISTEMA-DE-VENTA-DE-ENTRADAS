@@ -3,12 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package modelo;
-
+import java.io.Serializable;
 /**
  *
  * @author alex_
  */
-public abstract class Persona {
+public abstract class Persona implements java.io.Serializable{
+    private static final long serialVersionUID = 1L;
     private String dni;
     private String nombres;
     private String apellidos;

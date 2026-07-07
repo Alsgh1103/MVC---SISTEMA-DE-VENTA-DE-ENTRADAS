@@ -5,7 +5,7 @@
 package controlador;
 
 import vista.FrmLogin;
-import vista.FrmAdmin;
+import vista.FrmAdminConciertos;
 import vista.FrmMenuPrincipal;
 import vista.FrmRegistro;
 import modelo.Persona;
@@ -54,9 +54,15 @@ public class ControladorLogin implements ActionListener {
             JOptionPane.showMessageDialog(vistaLogin, "¡Bienvenido, " + p.getNombres() + "!");
 
             boolean esAdmin = p instanceof Usuario;
-            if (esAdmin) {
-                FrmAdmin ventanaAdmin = new FrmAdmin();
-                new ControladorAdmin(ventanaAdmin, contextoCentral);
+            boolean esSuperAdmin = esAdmin && p.getCorreo().equals("admin");
+
+            if (esSuperAdmin) {
+                vista.FrmAdmin ventanaSuperAdmin = new vista.FrmAdmin();
+                new ControladorAdmin(ventanaSuperAdmin, contextoCentral);
+                ventanaSuperAdmin.setVisible(true);
+            } else if (esAdmin) {
+                FrmAdminConciertos ventanaAdmin = new FrmAdminConciertos();
+                new ControladorAdminConciertos(ventanaAdmin, contextoCentral);
                 ventanaAdmin.setVisible(true);
             } else {
                 FrmMenuPrincipal ventanaPrincipal = new FrmMenuPrincipal();

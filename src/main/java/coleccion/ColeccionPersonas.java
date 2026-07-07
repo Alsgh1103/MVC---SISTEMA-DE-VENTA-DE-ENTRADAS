@@ -2,8 +2,10 @@ package coleccion;
 
 import java.util.ArrayList;
 import modelo.Persona;
+import java.io.Serializable;
 
-public class ColeccionPersonas {
+public class ColeccionPersonas implements Serializable{
+    private static final long serialVersionUID = 1L;
     private ArrayList<Persona> personas;
 
     public ColeccionPersonas() {
@@ -34,6 +36,17 @@ public class ColeccionPersonas {
             }
         }
         return null;
+    }
+
+    public boolean eliminarPorCorreo(String correo) {
+        if (correo == null) return false;
+        for (int i = 0; i < personas.size(); i++) {
+            if (personas.get(i).getCorreo().trim().equalsIgnoreCase(correo.trim())) {
+                personas.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public ArrayList<Persona> getTodasLasPersonas() {

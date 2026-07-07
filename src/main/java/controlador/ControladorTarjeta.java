@@ -132,6 +132,7 @@ public class ControladorTarjeta {
             Persona usuario = ctrl.getUsuarioLogueado();
             if (usuario instanceof Cliente) {
                 ((Cliente) usuario).setTarjeta(nuevaTarjeta);
+                ctrl.guardarEstado();
             }
         }
 

@@ -3,12 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package modelo;
+import java.io.Serializable;
 
 /**
  *
  * @author alex_
  */
-public class Cliente extends Persona {
+public class Cliente extends Persona implements java.io.Serializable{
+    private static final long serialVersionUID = 1L;
     private int puntos;
     private Tarjeta tarjeta;
 

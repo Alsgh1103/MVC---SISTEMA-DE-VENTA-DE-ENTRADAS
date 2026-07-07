@@ -28,9 +28,8 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        lblConcierto = new javax.swing.JLabel();
+        lblOpcion = new javax.swing.JLabel();
         btnComprar = new javax.swing.JButton();
-        cbxConcierto = new javax.swing.JComboBox<>();
         btnCerrarSesion = new javax.swing.JButton();
         btnMisCompras = new javax.swing.JButton();
         lblBienvenida = new javax.swing.JLabel();
@@ -52,34 +51,35 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(119, 119, 119)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(111, 111, 111))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(19, 19, 19)
                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18))
+                .addGap(17, 17, 17))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Malgun Gothic", 0, 18))); // NOI18N
 
-        lblConcierto.setText("Seleccione el concierto:");
+        lblOpcion.setText("Seleccione la opción a ejecutar:");
 
         btnComprar.setBackground(new java.awt.Color(65, 150, 75));
+        btnComprar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnComprar.setForeground(new java.awt.Color(255, 255, 255));
         btnComprar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/concierto.png"))); // NOI18N
         btnComprar.setText("Comprar Entradas");
         btnComprar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        cbxConcierto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
+        btnCerrarSesion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cerrar-sesion.png"))); // NOI18N
         btnCerrarSesion.setText("Cerrar Sesion");
 
+        btnMisCompras.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnMisCompras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/historial-de-transacciones.png"))); // NOI18N
         btnMisCompras.setText("Mis compras");
 
@@ -98,8 +98,7 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblConcierto)
-                            .addComponent(cbxConcierto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblOpcion)
                             .addComponent(btnComprar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnCerrarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnMisCompras, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)))
@@ -119,16 +118,14 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(lblPuntos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblConcierto)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbxConcierto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblOpcion)
                 .addGap(18, 18, 18)
                 .addComponent(btnComprar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnMisCompras)
                 .addGap(18, 18, 18)
                 .addComponent(btnCerrarSesion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -154,7 +151,7 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
                 .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
@@ -164,12 +161,11 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     public javax.swing.JButton btnCerrarSesion;
     public javax.swing.JButton btnComprar;
     public javax.swing.JButton btnMisCompras;
-    public javax.swing.JComboBox<String> cbxConcierto;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     public javax.swing.JPanel jPanel2;
     public javax.swing.JLabel lblBienvenida;
-    public javax.swing.JLabel lblConcierto;
+    public javax.swing.JLabel lblOpcion;
     public javax.swing.JLabel lblPuntos;
     private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables

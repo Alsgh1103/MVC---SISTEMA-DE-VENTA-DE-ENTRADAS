@@ -10,9 +10,9 @@ public class ControladorTransaccionesAdmin {
     private FrmTransaccionesAdmin vista;
     private ControladorPrincipal contextoCentral;
     private Concierto conciertoFiltro;
-    private ControladorAdmin ctrlAdmin;
+    private ControladorAdminConciertos ctrlAdmin;
 
-    public ControladorTransaccionesAdmin(FrmTransaccionesAdmin vista, ControladorPrincipal contextoCentral, Concierto conciertoFiltro, ControladorAdmin ctrlAdmin) {
+    public ControladorTransaccionesAdmin(FrmTransaccionesAdmin vista, ControladorPrincipal contextoCentral, Concierto conciertoFiltro, ControladorAdminConciertos ctrlAdmin) {
         this.vista = vista;
         this.contextoCentral = contextoCentral;
         this.conciertoFiltro = conciertoFiltro;

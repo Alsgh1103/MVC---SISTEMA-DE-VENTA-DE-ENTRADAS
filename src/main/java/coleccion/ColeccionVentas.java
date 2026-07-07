@@ -2,8 +2,10 @@ package coleccion;
 
 import java.util.ArrayList;
 import modelo.Venta;
+import java.io.Serializable;
 
-public class ColeccionVentas {
+public class ColeccionVentas implements Serializable{
+    private static final long serialVersionUID = 1L;
     private ArrayList<Venta> ventas;
 
     public ColeccionVentas() {

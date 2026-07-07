@@ -4,11 +4,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
+import java.io.Serializable;
 
-public class Concierto {
+public class Concierto implements Serializable{
+    private static final long serialVersionUID = 1L;
     private String nombre;
     private LocalDate fecha;
     private ArrayList<Zona> zonas;
+    private String rutaImagen;
 
     /** Descuentos aplicables por emisor de tarjeta, configurables por concierto. */
     private Map<Tarjeta.Emisor, Double> descuentosPorEmisor = new EnumMap<>(Tarjeta.Emisor.class);
@@ -59,7 +62,9 @@ public class Concierto {
     }
 
     public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
     public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
     public ArrayList<Zona> getTodasLasZonas() { return zonas; }
 
     // ---------------------------------------------------------------
@@ -98,4 +103,11 @@ public class Concierto {
         return this.nombre + " (" + this.fecha.toString() + ")";
     }
 
+    public String getRutaImagen() {
+        return rutaImagen;
+    }
+
+    public void setRutaImagen(String rutaImagen) {
+        this.rutaImagen = rutaImagen;
+    }
 }
