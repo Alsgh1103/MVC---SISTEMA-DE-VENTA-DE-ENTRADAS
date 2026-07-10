@@ -96,10 +96,10 @@ public class ControladorComprarEntradas {
         if (vista.cbmConciertos != null) {
             vista.cbmConciertos.removeAllItems();
             for (Concierto con : ctrl.getTodosLosConciertos()) {
-                vista.cbmConciertos.addItem(con.getNombre());
+                vista.cbmConciertos.addItem(con.getNombre() + " - " + con.getArtista());
             }
             if (ctrl.getConciertoSeleccionado() != null) {
-                vista.cbmConciertos.setSelectedItem(ctrl.getConciertoSeleccionado().getNombre());
+                vista.cbmConciertos.setSelectedItem(ctrl.getConciertoSeleccionado().getNombre() + " - " + ctrl.getConciertoSeleccionado().getArtista());
             }
         }
     }
@@ -205,9 +205,10 @@ public class ControladorComprarEntradas {
             vista.cbmConciertos.addActionListener(e -> {
                 Object selected = vista.cbmConciertos.getSelectedItem();
                 if (selected instanceof String) {
-                    String nombreConcierto = (String) selected;
+                    String seleccion = (String) selected;
                     for (Concierto con : ctrl.getTodosLosConciertos()) {
-                        if (con.getNombre().equals(nombreConcierto)) {
+                        String formato = con.getNombre() + " - " + con.getArtista();
+                        if (formato.equals(seleccion)) {
                             ctrl.setConciertoSeleccionado(con);
                             cargarZonasEnCombo();
                             actualizarBanner();

@@ -26,11 +26,7 @@ public class ColeccionVentas implements Serializable{
         return this.ventas.size();
     }
 
-    /**
-     * Busca y filtra las ventas realizadas por un cliente específico mediante su DNI.
-     * @param dni DNI del cliente.
-     * @return Listado de ventas asociadas a dicho cliente.
-     */
+
     public ArrayList<Venta> buscarVentasPorCliente(String dni) {
         ArrayList<Venta> resultado = new ArrayList<>();
         if (dni != null) {
@@ -43,11 +39,7 @@ public class ColeccionVentas implements Serializable{
         return resultado;
     }
 
-    /**
-     * Busca y filtra las ventas realizadas para un concierto específico.
-     * @param c Concierto a buscar.
-     * @return Listado de ventas asociadas a dicho concierto.
-     */
+ 
     public ArrayList<Venta> buscarVentasPorConcierto(modelo.Concierto c) {
         ArrayList<Venta> resultado = new ArrayList<>();
         if (c != null) {

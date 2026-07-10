@@ -6,16 +6,14 @@ import modelo.Tarjeta;
 import vista.FrmComprarEntradas;
 import vista.FrmTarjeta;
 
-/**
- * Controlador dedicado a FrmTarjeta.
- */
 public class ControladorTarjeta {
 
     private final ControladorPrincipal ctrl;
     private final FrmTarjeta vista;
     private final ControladorComprarEntradas controladorCliente;
 
-    public ControladorTarjeta(ControladorPrincipal ctrl, FrmTarjeta vista, ControladorComprarEntradas controladorCliente) {
+    public ControladorTarjeta(ControladorPrincipal ctrl, FrmTarjeta vista,
+            ControladorComprarEntradas controladorCliente) {
         this.ctrl = ctrl;
         this.vista = vista;
         this.controladorCliente = controladorCliente;
@@ -27,12 +25,12 @@ public class ControladorTarjeta {
         vista.btnGuardar.addActionListener(e -> onGuardarTarjeta());
         vista.btnVolver1.addActionListener(e -> onVolver());
 
-        // Actualizar lblTipo y auto-formatear en tiempo real mientras el usuario escribe el número
         vista.txtNumeroTarjeta.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             private boolean formatting = false;
 
             private void formatAndDetect() {
-                if (formatting) return;
+                if (formatting)
+                    return;
                 formatting = true;
                 javax.swing.SwingUtilities.invokeLater(() -> {
                     try {
@@ -42,7 +40,8 @@ public class ControladorTarjeta {
                         }
                         StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < text.length(); i++) {
-                            if (i > 0 && i % 4 == 0) sb.append(" ");
+                            if (i > 0 && i % 4 == 0)
+                                sb.append(" ");
                             sb.append(text.charAt(i));
                         }
                         vista.txtNumeroTarjeta.setText(sb.toString());
@@ -53,32 +52,49 @@ public class ControladorTarjeta {
                 });
             }
 
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { formatAndDetect(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { formatAndDetect(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { formatAndDetect(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                formatAndDetect();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                formatAndDetect();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                formatAndDetect();
+            }
         });
     }
 
     private void actualizarLblTipo(String numeroSoloDigitos) {
         Tarjeta.Emisor emisor = detectarEmisorParcial(numeroSoloDigitos);
-        
+
         String rutaImagen = null;
         switch (emisor) {
-            case VISA:             rutaImagen = "/img/visa.png"; break;
-            case MASTERCARD:       rutaImagen = "/img/master.png"; break;
-            case DINERS:           rutaImagen = "/img/dinners.png"; break;
-            case AMERICAN_EXPRESS: rutaImagen = "/img/amex.png"; break;
-            default:               rutaImagen = null; break;
+            case VISA:
+                rutaImagen = "/img/visa.png";
+                break;
+            case MASTERCARD:
+                rutaImagen = "/img/master.png";
+                break;
+            case DINERS:
+                rutaImagen = "/img/dinners.png";
+                break;
+            case AMERICAN_EXPRESS:
+                rutaImagen = "/img/amex.png";
+                break;
+            default:
+                rutaImagen = null;
+                break;
         }
 
         if (rutaImagen != null) {
             try {
                 java.net.URL imgUrl = getClass().getResource(rutaImagen);
                 if (imgUrl != null) {
-                    // Escalar la imagen un poco si es necesario, pero si cabe, normal
                     javax.swing.ImageIcon icono = new javax.swing.ImageIcon(imgUrl);
                     vista.lblTipo.setIcon(icono);
-                    vista.lblTipo.setText(""); 
+                    vista.lblTipo.setText("");
                 } else {
                     vista.lblTipo.setIcon(null);
                     vista.lblTipo.setText(emisor.toString());
@@ -94,11 +110,16 @@ public class ControladorTarjeta {
     }
 
     private Tarjeta.Emisor detectarEmisorParcial(String numero) {
-        if (numero == null || numero.isEmpty()) return Tarjeta.Emisor.DESCONOCIDO;
-        if (numero.startsWith("4")) return Tarjeta.Emisor.VISA;
-        if (numero.matches("^5[1-5].*") || numero.matches("^2(?:2[2-9]|[3-6]|7[0-2]).*")) return Tarjeta.Emisor.MASTERCARD;
-        if (numero.matches("^3[47].*")) return Tarjeta.Emisor.AMERICAN_EXPRESS;
-        if (numero.matches("^3(?:0[0-5]|[68]).*")) return Tarjeta.Emisor.DINERS;
+        if (numero == null || numero.isEmpty())
+            return Tarjeta.Emisor.DESCONOCIDO;
+        if (numero.startsWith("4"))
+            return Tarjeta.Emisor.VISA;
+        if (numero.matches("^5[1-5].*") || numero.matches("^2(?:2[2-9]|[3-6]|7[0-2]).*"))
+            return Tarjeta.Emisor.MASTERCARD;
+        if (numero.matches("^3[47].*"))
+            return Tarjeta.Emisor.AMERICAN_EXPRESS;
+        if (numero.matches("^3(?:0[0-5]|[68]).*"))
+            return Tarjeta.Emisor.DINERS;
         return Tarjeta.Emisor.DESCONOCIDO;
     }
 
@@ -106,13 +127,12 @@ public class ControladorTarjeta {
         String nroTarjeta = vista.txtNumeroTarjeta.getText().trim().replaceAll("[^\\d]", "");
         String titular = vista.txtNombreTarjeta.getText().trim();
 
-        // Extraer fecha y ponerla al ÚLTIMO día del mes para que Tarjeta.crear no la marque como expirada prematuramente
-        int mesInt = vista.dateMonth.getMonth() + 1; // 1-12
+        int mesInt = vista.dateMonth.getMonth() + 1;
         int anioInt = vista.dateYear.getYear();
-        
+
         java.time.YearMonth ym = java.time.YearMonth.of(anioInt, mesInt);
-        String vencimiento = ym.atEndOfMonth().toString(); // YYYY-MM-DD
-        
+        String vencimiento = ym.atEndOfMonth().toString();
+
         String cvvStr = vista.txtCvv.getText().trim();
         boolean guardarFuturas = vista.CheckTarjeta.isSelected();
 
@@ -132,7 +152,7 @@ public class ControladorTarjeta {
             Persona usuario = ctrl.getUsuarioLogueado();
             if (usuario instanceof Cliente) {
                 ((Cliente) usuario).setTarjeta(nuevaTarjeta);
-                ctrl.guardarEstado();
+                ctrl.guardarPersonas();
             }
         }
 

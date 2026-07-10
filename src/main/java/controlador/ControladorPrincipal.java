@@ -45,6 +45,18 @@ public class ControladorPrincipal {
         persistencia.GestorSerializacion.guardar(datosActuales);
     }
 
+    public void guardarPersonas() {
+        persistencia.GestorSerializacion.guardarPersonas(this.coleccionPersonas);
+    }
+
+    public void guardarConciertos() {
+        persistencia.GestorSerializacion.guardarConciertos(this.coleccionConciertos);
+    }
+
+    public void guardarVentas() {
+        persistencia.GestorSerializacion.guardarVentas(this.coleccionVentas);
+    }
+
     public Persona login(String correo, String contrasena) {
         Persona p = coleccionPersonas.buscarPorCorreo(correo);
         if (p != null && p.validarContrasena(contrasena)) {
@@ -64,17 +76,18 @@ public class ControladorPrincipal {
     public void registrarNuevoCliente(String dni, String nombre, String apellido, String correo, String contrasena) {
         Cliente nuevoCliente = new Cliente(dni, nombre, apellido, correo, contrasena);
         coleccionPersonas.guardarPersona(nuevoCliente);
-        guardarEstado();
+        guardarPersonas();
     }
 
     public void registrarNuevaPersona(String dni, String nombre, String apellido, String correo, String contrasena) {
         registrarNuevoCliente(dni, nombre, apellido, correo, contrasena);
-        guardarEstado();
     }
 
     public void registrarNuevaVenta(Venta v) {
         this.coleccionVentas.registrarVenta(v);
-        guardarEstado();
+        guardarVentas();
+        guardarConciertos();
+        guardarPersonas();
     }
 
     public Object[][] getDatosZonasParaTabla() {
@@ -154,7 +167,7 @@ public class ControladorPrincipal {
     public boolean eliminarConciertoGlobal(Concierto concierto) {
         try {
             this.coleccionConciertos.eliminarConcierto(concierto);
-            guardarEstado();
+            guardarConciertos();
             return true;
         } catch (IllegalStateException e) {
             javax.swing.JOptionPane.showMessageDialog(null, e.getMessage(), "Operación denegada",
@@ -166,7 +179,7 @@ public class ControladorPrincipal {
     public boolean eliminarZonaDeConcierto(Concierto concierto, String nombreZona) {
         try {
             concierto.eliminarZona(nombreZona);
-            guardarEstado();
+            guardarConciertos();
             return true;
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(null, e.getMessage(), "Error al eliminar",

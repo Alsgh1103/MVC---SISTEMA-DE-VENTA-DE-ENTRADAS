@@ -12,8 +12,9 @@ public class Concierto implements Serializable{
     private LocalDate fecha;
     private ArrayList<Zona> zonas;
     private String rutaImagen;
+    private String rutaImagenPoster;
+    private String artista;
 
-    /** Descuentos aplicables por emisor de tarjeta, configurables por concierto. */
     private Map<Tarjeta.Emisor, Double> descuentosPorEmisor = new EnumMap<>(Tarjeta.Emisor.class);
 
     public Concierto(String nombre, LocalDate fecha) throws IllegalArgumentException {
@@ -21,10 +22,10 @@ public class Concierto implements Serializable{
         if (fecha == null) throw new IllegalArgumentException("La fecha no puede ser nula.");
         
         this.nombre = nombre;
+        this.artista = "Desconocido"; 
         this.fecha = fecha;
         this.zonas = new ArrayList<>();
 
-        // Descuentos por defecto: VISA 5%, MASTERCARD 10%, DINERS 15%, AMEX 7%
         descuentosPorEmisor.put(Tarjeta.Emisor.VISA,             0.05);
         descuentosPorEmisor.put(Tarjeta.Emisor.MASTERCARD,       0.10);
         descuentosPorEmisor.put(Tarjeta.Emisor.DINERS,           0.15);
@@ -44,7 +45,6 @@ public class Concierto implements Serializable{
         Zona zonaAEliminar = buscarZonaPorNombre(nombreZona);
         if (zonaAEliminar == null) throw new IllegalArgumentException("La zona no existe.");
         
-        // SUGERENCIA APLICADA: Validar por capacidadDisponible
         if (zonaAEliminar.getCapacidadDisponible() < zonaAEliminar.getCapacidadTotal()) {
             throw new IllegalStateException("No se puede eliminar, ya tiene entradas vendidas.");
         }
@@ -52,7 +52,6 @@ public class Concierto implements Serializable{
     }
 
     public void limpiarZonas() throws IllegalStateException {
-        // SUGERENCIA APLICADA: Validar por capacidadDisponible
         for (Zona z : zonas) {
             if (z.getCapacidadDisponible() < z.getCapacidadTotal()) {
                 throw new IllegalStateException("No se pueden editar las zonas. Ya existen entradas vendidas.");
@@ -63,28 +62,16 @@ public class Concierto implements Serializable{
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getArtista() { return artista; }
+    public void setArtista(String artista) { this.artista = artista; }
     public LocalDate getFecha() { return fecha; }
     public void setFecha(LocalDate fecha) { this.fecha = fecha; }
     public ArrayList<Zona> getTodasLasZonas() { return zonas; }
 
-    // ---------------------------------------------------------------
-    // DESCUENTOS POR EMISOR DE TARJETA (configurables por concierto)
-    // ---------------------------------------------------------------
-
-    /**
-     * Retorna el porcentaje de descuento (0.0–1.0) para el emisor dado.
-     * Si el emisor es DESCONOCIDO o no tiene descuento configurado, retorna 0.0.
-     */
     public double getDescuentoParaEmisor(Tarjeta.Emisor emisor) {
         return descuentosPorEmisor.getOrDefault(emisor, 0.0);
     }
 
-    /**
-     * Permite configurar el descuento para un emisor específico en este concierto.
-     * @param emisor     Emisor a configurar.
-     * @param porcentaje Valor entre 0.0 (sin descuento) y 1.0 (100% descuento).
-     * @throws IllegalArgumentException si el porcentaje está fuera del rango válido.
-     */
     public void setDescuentoParaEmisor(Tarjeta.Emisor emisor, double porcentaje) {
         if (porcentaje < 0 || porcentaje > 1)
             throw new IllegalArgumentException("El porcentaje debe estar entre 0.0 y 1.0");
@@ -109,5 +96,13 @@ public class Concierto implements Serializable{
 
     public void setRutaImagen(String rutaImagen) {
         this.rutaImagen = rutaImagen;
+    }
+    
+    public String getRutaImagenPoster(){
+        return rutaImagenPoster;
+    }
+    
+    public void setRutaImagenPoster(String rutaImagenPoster){
+        this.rutaImagenPoster = rutaImagenPoster;
     }
 }

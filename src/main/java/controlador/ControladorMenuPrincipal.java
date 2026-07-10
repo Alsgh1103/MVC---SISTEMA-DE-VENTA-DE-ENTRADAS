@@ -10,24 +10,32 @@ import modelo.Concierto;
 import modelo.Zona;
 import javax.swing.JOptionPane;
 
+import componentes.PanelConciertoTarjeta;
 
-  // Controlador para la vista del Menú Principal (FrmMenuPrincipal).
-  
 public class ControladorMenuPrincipal {
     private FrmMenuPrincipal vistaMenu;
     private ControladorPrincipal contextoCentral;
 
-    
     public ControladorMenuPrincipal(FrmMenuPrincipal vistaMenu, ControladorPrincipal contextoCentral) {
         this.vistaMenu = vistaMenu;
         this.contextoCentral = contextoCentral;
 
-        vistaMenu.btnComprar.addActionListener(e -> comprarEntradas());
         vistaMenu.btnCerrarSesion.addActionListener(e -> cerrarSesion());
         vistaMenu.btnMisCompras.addActionListener(e -> verMisCompras());
+        vistaMenu.panelCartelera.setLayout(new java.awt.GridLayout(0, 3, 15, 15));
+
+        if (vistaMenu.txtNombreConcierto != null) {
+            vistaMenu.txtNombreConcierto.addKeyListener(new java.awt.event.KeyAdapter() {
+                public void keyReleased(java.awt.event.KeyEvent e) {
+                    actualizarCartelera(vistaMenu.txtNombreConcierto.getText());
+                }
+            });
+        }
+        
+        // Inicializar cartelera al abrir el menú
+        actualizarCartelera("");
     }
 
-   
     public void cargarDatosCliente() {
         Persona usuario = contextoCentral.getUsuarioLogueado();
         if (usuario != null) {
@@ -38,29 +46,25 @@ public class ControladorMenuPrincipal {
                 vistaMenu.lblPuntos.setText("Puntos: " + c.getPuntos());
             } else {
                 vistaMenu.lblPuntos.setText("Puntos: N/A");
-                vistaMenu.lblOpcion.setText("Administración");
             }
         }
     }
 
-    
-     
-     
     public void seleccionarConcierto(Concierto seleccion) {
         if (seleccion != null) {
             contextoCentral.setConciertoSeleccionado(seleccion);
         }
     }
 
-    
     public void verZonas() {
         Concierto conciertoSeleccionado = contextoCentral.getConciertoSeleccionado();
         if (conciertoSeleccionado != null) {
             StringBuilder sb = new StringBuilder("Zonas del Concierto: " + conciertoSeleccionado.getNombre() + "\n\n");
             for (Zona z : conciertoSeleccionado.getTodasLasZonas()) {
                 sb.append("- ").append(z.getNombre())
-                  .append(": S/ ").append(z.getPrecio())
-                  .append(" (Disponibles: ").append(z.getCapacidadDisponible()).append("/").append(z.getCapacidadTotal()).append(")\n");
+                        .append(": S/ ").append(z.getPrecio())
+                        .append(" (Disponibles: ").append(z.getCapacidadDisponible()).append("/")
+                        .append(z.getCapacidadTotal()).append(")\n");
             }
             JOptionPane.showMessageDialog(vistaMenu, sb.toString());
         } else {
@@ -68,8 +72,6 @@ public class ControladorMenuPrincipal {
         }
     }
 
-    
-     
     public void verMisCompras() {
         Persona usuario = contextoCentral.getUsuarioLogueado();
         if (usuario instanceof Cliente) {
@@ -83,24 +85,6 @@ public class ControladorMenuPrincipal {
         }
     }
 
-    
-     
-    public void comprarEntradas() {
-        try {
-            FrmComprarEntradas cliente = new FrmComprarEntradas();
-            new ControladorComprarEntradas(contextoCentral, cliente, contextoCentral.getColeccionVentas());
-            cliente.setVisible(true);
-            vistaMenu.dispose();
-        } catch (Exception e) {
-            e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(vistaMenu, 
-                "Ocurrió un error al abrir la ventana:\n" + e.toString(), 
-                "Error Crítico", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    
-     
     public void cerrarSesion() {
         contextoCentral.cerrarSesion();
         FrmLogin login = new FrmLogin();
@@ -108,4 +92,34 @@ public class ControladorMenuPrincipal {
         login.setVisible(true);
         vistaMenu.dispose();
     }
+
+    public void comprarEntradasConcierto(Concierto concierto) {
+        contextoCentral.setConciertoSeleccionado(concierto);
+        try {
+            FrmComprarEntradas cliente = new FrmComprarEntradas();
+            new ControladorComprarEntradas(contextoCentral, cliente, contextoCentral.getColeccionVentas());
+            cliente.setVisible(true);
+            vistaMenu.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(vistaMenu,
+                    "Ocurrió un error al abrir la ventana:\n" + e.toString(),
+                    "Error Crítico", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void actualizarCartelera(String textoBuscador) {
+        vistaMenu.panelCartelera.removeAll();
+
+        for (Concierto c : contextoCentral.getTodosLosConciertos()) {
+            if (textoBuscador.isEmpty() || c.getNombre().toLowerCase().contains(textoBuscador.toLowerCase())) {
+                PanelConciertoTarjeta tarjeta = new PanelConciertoTarjeta(c, this);
+                vistaMenu.panelCartelera.add(tarjeta);
+            }
+        }
+
+        vistaMenu.panelCartelera.revalidate();
+        vistaMenu.panelCartelera.repaint();
+    }
+
 }

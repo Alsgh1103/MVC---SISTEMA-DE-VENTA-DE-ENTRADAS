@@ -49,19 +49,22 @@ public class ControladorTransaccionesAdmin {
             listaVentas = contextoCentral.getColeccionVentas().getTodasLasVentas();
         }
 
-        String[] columnas = {"ID Transacción", "Fecha", "Cliente", "DNI", "Zona", "Cantidad", "Total", "Tarjeta"};
+        String[] columnas = {"ID Transacción", "Fecha", "Concierto", "Artista", "Cliente", "DNI", "Zona", "Cantidad", "Total", "Tarjeta", "Estado"};
         Object[][] datos = new Object[listaVentas.size()][columnas.length];
 
         for (int i = 0; i < listaVentas.size(); i++) {
             Venta v = listaVentas.get(i);
             datos[i][0] = v.getIdTransaccion();
             datos[i][1] = v.getFecha();
-            datos[i][2] = v.getCliente().getNombres();
-            datos[i][3] = v.getCliente().getDni();
-            datos[i][4] = v.getZona().getNombre();
-            datos[i][5] = v.getCantidadEntradas();
-            datos[i][6] = String.format("S/ %.2f", v.getMonto());
-            datos[i][7] = v.getTarjeta() != null ? v.getTarjeta().getEmisor().toString() : "N/A";
+            datos[i][2] = v.getConcierto() != null ? v.getConcierto().getNombre() : "N/A";
+            datos[i][3] = v.getConcierto() != null ? v.getConcierto().getArtista() : "N/A";
+            datos[i][4] = v.getCliente().getNombres();
+            datos[i][5] = v.getCliente().getDni();
+            datos[i][6] = v.getZona().getNombre();
+            datos[i][7] = v.getCantidadEntradas();
+            datos[i][8] = String.format("S/ %.2f", v.getMonto());
+            datos[i][9] = v.getTarjeta() != null ? v.getTarjeta().getEmisor().toString() : "N/A";
+            datos[i][10] = v.getEstado() != null ? v.getEstado() : "COMPLETADA";
         }
 
         DefaultTableModel modelo = new DefaultTableModel(datos, columnas) {
@@ -73,6 +76,11 @@ public class ControladorTransaccionesAdmin {
 
         if (vista.tblTransacciones != null) {
             vista.tblTransacciones.setModel(modelo);
+            
+            if (vista.tblTransacciones.getColumnModel().getColumnCount() > 3) {
+                vista.tblTransacciones.getColumnModel().getColumn(2).setPreferredWidth(170); // Concierto
+                vista.tblTransacciones.getColumnModel().getColumn(3).setPreferredWidth(130); // Artista
+            }
         }
     }
 }

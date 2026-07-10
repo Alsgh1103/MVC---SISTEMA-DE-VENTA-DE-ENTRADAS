@@ -58,6 +58,8 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
             this.vistaAdmin.btnVolver
                     .setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cerrar-sesion.png")));
         }
+        
+        this.vistaAdmin.setMinimumSize(new java.awt.Dimension(850, 600));
     }
 
     public FrmAdminConciertos getVista() {
@@ -133,12 +135,17 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
                 java.net.URL imgUrl = getClass().getResource(ruta);
                 if (imgUrl != null) {
                     javax.swing.ImageIcon iconoOriginal = new javax.swing.ImageIcon(imgUrl);
-                    java.awt.Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(600, 136, java.awt.Image.SCALE_SMOOTH);
                     try {
                         java.lang.reflect.Field field = vistaAdmin.getClass().getDeclaredField("lblBanner");
                         field.setAccessible(true);
                         javax.swing.JLabel lblBanner = (javax.swing.JLabel) field.get(vistaAdmin);
+                        
+                        java.awt.Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(600, 136, java.awt.Image.SCALE_SMOOTH);
+                        
                         lblBanner.setIcon(new javax.swing.ImageIcon(imagenEscalada));
+                        lblBanner.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                        lblBanner.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+                        
                         if (!lblBanner.isVisible()) {
                             lblBanner.setVisible(true);
                             cambioVisibilidad = true;
@@ -155,7 +162,6 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
         } else {
             cambioVisibilidad = borrarBanner();
         }
-        
         if (cambioVisibilidad) {
             vistaAdmin.pack();
         }
@@ -184,13 +190,13 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
         vistaAdmin.cbmConciertos.addItem("Todos los Conciertos");
 
         for (Concierto c : contextoCentral.getColeccionConciertos().getTodosLosConciertos()) {
-            vistaAdmin.cbmConciertos.addItem(c.getNombre() + " (" + c.getFecha().toString() + ")");
+            vistaAdmin.cbmConciertos.addItem(c.getNombre() + " - " + c.getArtista() + " (" + c.getFecha().toString() + ")");
         }
 
         Concierto ultimo = contextoCentral.getConciertoSeleccionado();
         if (ultimo != null) {
             vistaAdmin.cbmConciertos
-                    .setSelectedItem(ultimo.getNombre() + " (" + ultimo.getFecha().toString() + ")");
+                    .setSelectedItem(ultimo.getNombre() + " - " + ultimo.getArtista() + " (" + ultimo.getFecha().toString() + ")");
         }
         vistaAdmin.cbmConciertos.addItemListener(this);
     }
@@ -201,7 +207,7 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
 
         String[] columnas;
         if (mostrarConcierto) {
-            columnas = new String[] { "✓", "Concierto", "Zona", "Capacidad Restante", "Entradas Vendidas", "Precio" };
+            columnas = new String[] { "✓", "Concierto", "Artista", "Zona", "Capacidad Restante", "Entradas Vendidas", "Precio" };
         } else {
             columnas = new String[] { "✓", "Zona", "Capacidad Restante", "Entradas Vendidas", "Precio" };
         }
@@ -214,17 +220,21 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 0; // Solo los checkbox son editables
+                return column == 0;
             }
         };
         vistaAdmin.tblVentas.setModel(modeloTabla);
 
-        // Ajustar ancho de la columna de check
         if (vistaAdmin.tblVentas.getColumnModel().getColumnCount() > 0) {
             javax.swing.table.TableColumn colCheck = vistaAdmin.tblVentas.getColumnModel().getColumn(0);
             colCheck.setMaxWidth(40);
             colCheck.setMinWidth(40);
             colCheck.setPreferredWidth(40);
+            
+            if (mostrarConcierto) {
+                vistaAdmin.tblVentas.getColumnModel().getColumn(1).setPreferredWidth(200); // Concierto
+                vistaAdmin.tblVentas.getColumnModel().getColumn(2).setPreferredWidth(150); // Artista
+            }
         }
     }
 
@@ -252,7 +262,7 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
             }
         }
 
-        int numColumnas = mostrarConcierto ? 6 : 5;
+        int numColumnas = mostrarConcierto ? 7 : 5;
         if (zonasAMostrar.isEmpty())
             return new Object[0][numColumnas];
 
@@ -267,6 +277,7 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
             int colIdx = 1;
             if (mostrarConcierto) {
                 matriz[i][colIdx++] = c.getNombre();
+                matriz[i][colIdx++] = c.getArtista();
             }
 
             matriz[i][colIdx++] = z.getNombre();

@@ -50,7 +50,6 @@ public class ColeccionConciertos implements Serializable{
     }
 
     public void eliminarConcierto(Concierto c) throws IllegalStateException {
-        // SUGERENCIA APLICADA: Validar usando las zonas
         for (Zona z : c.getTodasLasZonas()) {
             if (z.getCapacidadDisponible() < z.getCapacidadTotal()) {
                 throw new IllegalStateException("No se puede eliminar el concierto porque ya tiene transacciones.");

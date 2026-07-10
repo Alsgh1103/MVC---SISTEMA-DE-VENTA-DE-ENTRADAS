@@ -132,7 +132,7 @@ public class ControladorAdminUsuarios implements ActionListener {
             }
 
             if (exito) {
-                contextoCentral.guardarEstado();
+                contextoCentral.guardarPersonas();
                 JOptionPane.showMessageDialog(vista, "Usuarios eliminados exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 poblarTabla();
             } else {

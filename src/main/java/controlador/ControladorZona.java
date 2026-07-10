@@ -79,7 +79,7 @@ public class ControladorZona implements ActionListener {
                     concierto.registrarZona(nombreZona, capacidad, precio);
                     JOptionPane.showMessageDialog(vista, "Zona añadida exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 }
-                contextoCentral.guardarEstado();
+                contextoCentral.guardarConciertos();
                 ctrlAdmin.refrescarTabla();
                 vista.dispose();
             } else {

@@ -59,6 +59,14 @@ public class Zona implements Serializable {
         }
     }
 
+    public void aumentarCapacidad(int cantidadDevuelta) {
+        if (capacidadDisponible + cantidadDevuelta <= capacidadTotal) {
+            capacidadDisponible += cantidadDevuelta;
+        } else {
+            capacidadDisponible = capacidadTotal;
+        }
+    }
+
     public String getNombre() {
         return nombre;
     }

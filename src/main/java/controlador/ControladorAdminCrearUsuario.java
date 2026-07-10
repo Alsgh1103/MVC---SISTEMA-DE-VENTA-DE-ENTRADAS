@@ -66,7 +66,7 @@ public class ControladorAdminCrearUsuario implements ActionListener {
             if ("Administrador".equals(tipoSeleccionado)) {
                 Usuario nuevoAdmin = new Usuario(dni, nombre, apellido, correo, contrasena, "ADM-" + dni);
                 contextoCentral.getColeccionPersonas().guardarPersona(nuevoAdmin);
-                contextoCentral.guardarEstado();
+                contextoCentral.guardarPersonas();
             } else {
                 contextoCentral.registrarNuevoCliente(dni, nombre, apellido, correo, contrasena);
             }

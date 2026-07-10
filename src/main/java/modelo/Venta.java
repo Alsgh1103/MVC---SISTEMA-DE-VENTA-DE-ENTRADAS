@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.io.Serializable;
 
-public class Venta implements Serializable{
+public class Venta implements Serializable {
     private static final long serialVersionUID = 1L;
     private static int contadorVentas = 1;
     private String idTransaccion;
@@ -16,6 +16,7 @@ public class Venta implements Serializable{
     private Zona zona;
     private Tarjeta tarjeta;
     private Concierto concierto;
+    private String estado;
 
     public Venta(int cantidad, Cliente c, Zona z, Tarjeta t, Concierto concierto) {
         if (cantidad <= 0) {
@@ -34,57 +35,59 @@ public class Venta implements Serializable{
         DateTimeFormatter formatoId = DateTimeFormatter.ofPattern("ddMMyy");
         this.idTransaccion = hoy.format(formatoId) + String.format("%03d", contadorVentas);
         contadorVentas++;
+        this.estado = "COMPLETADA";
     }
 
     public double calcularTotal() {
         return zona.getPrecio() * cantidadEntradas;
     }
 
-    /**
-     * Procesa la compra aplicando todas las reglas de negocio del dominio.
-     * Lanza IllegalArgumentException con mensaje descriptivo ante cualquier fallo,
-     * en lugar de retornar false silenciosamente.
-     *
-     * @param cvvIngresadoUsuario CVV introducido por el usuario en la vista.
-     * @throws IllegalArgumentException si no hay stock (P1), se supera el límite
-     *                                  de entradas (T1) o el CVV es incorrecto
-     *                                  (T2).
-     */
     public void procesarCompra(int cvvIngresadoUsuario) {
-        // P1 — Sin disponibilidad en la zona
         if (!zona.verificarDisponibilidad(cantidadEntradas)) {
             throw new IllegalArgumentException(
                     "No hay entradas disponibles suficientes en la zona seleccionada.");
         }
 
-        // T1 y T2 — registrarCompra lanza IllegalArgumentException si falla
         tarjeta.registrarCompra(cantidadEntradas, cvvIngresadoUsuario);
 
-        // Compra aprobada: aplicamos las consecuencias de negocio
         this.monto = calcularTotal();
 
-        // 1. Reducimos el stock de la zona
         zona.reducirCapacidad(this.cantidadEntradas);
 
-        // 2. Acumulamos puntos al cliente (10 puntos por entrada)
         int puntosGanados = this.cantidadEntradas * 10;
         cliente.setPuntos(cliente.getPuntos() + puntosGanados);
     }
 
-    /** Consulta auxiliar: ¿la tarjeta todavía puede absorber esta cantidad? */
+    public void devolver() {
+        if ("DEVUELTA".equals(this.estado)) {
+            throw new IllegalStateException("La entrada ya ha sido devuelta.");
+        }
+
+        int puntosARestar = this.cantidadEntradas * 10;
+        int puntosActuales = cliente.getPuntos();
+
+        if (puntosActuales < puntosARestar) {
+            int puntosFaltantes = puntosARestar - puntosActuales;
+            double porcentajePenalidad = (puntosFaltantes * 1.0) / 100.0;
+            if (porcentajePenalidad > 1.0)
+                porcentajePenalidad = 1.0;
+
+            double comision = this.monto * porcentajePenalidad;
+            this.monto -= comision;
+
+            cliente.setPuntos(0);
+        } else {
+            cliente.setPuntos(puntosActuales - puntosARestar);
+        }
+
+        this.estado = "DEVUELTA";
+        this.zona.aumentarCapacidad(this.cantidadEntradas);
+    }
+
     public boolean validarLimiteEntradas() {
         return tarjeta.puedeComprar(this.cantidadEntradas);
     }
 
-    /**
-     * Aplica el descuento por emisor de tarjeta de forma multiplicativa
-     * sobre el monto ya calculado por procesarCompra().
-     *
-     * Debe llamarse DESPUÉS de {@link #procesarCompra(int)} para no
-     * interferir con las validaciones internas de la compra.
-     *
-     * @param porcentaje Porcentaje de descuento (0.0 = sin descuento, 0.10 = 10%).
-     */
     public void aplicarDescuentoEmisor(double porcentaje) {
         if (porcentaje > 0 && porcentaje < 1) {
             this.monto = this.monto * (1.0 - porcentaje);
@@ -97,8 +100,6 @@ public class Venta implements Serializable{
         }
     }
 
-    // ... (El resto de tus getters y el método generarEntradas() se mantienen
-    // igual) ...
     public ArrayList<Entrada> generarEntradas() {
         ArrayList<Entrada> entradasGeneradas = new ArrayList<>();
         for (int i = 1; i <= this.cantidadEntradas; i++) {
@@ -142,5 +143,13 @@ public class Venta implements Serializable{
 
     public Concierto getConcierto() {
         return concierto;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
