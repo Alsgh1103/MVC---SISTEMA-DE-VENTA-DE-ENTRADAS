@@ -154,6 +154,14 @@ public class ControladorAdminRegistrarConcierto implements ActionListener {
                     File dest = new File(dir, nombreArchivo);
                     Files.copy(new File(rutaImagenTemporal).toPath(), dest.toPath(),
                             StandardCopyOption.REPLACE_EXISTING);
+                            
+                    try {
+                        File dirTarget = new File("target/classes/banners");
+                        if (!dirTarget.exists()) dirTarget.mkdirs();
+                        File destTarget = new File(dirTarget, nombreArchivo);
+                        Files.copy(new File(rutaImagenTemporal).toPath(), destTarget.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (Exception ignored) {}
+                            
                     conciertoEditado.setRutaImagen("/banners/" + nombreArchivo);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(vista, "No se pudo copiar la imagen: " + ex.getMessage(), "Error",
@@ -172,6 +180,14 @@ public class ControladorAdminRegistrarConcierto implements ActionListener {
                     File destPoster = new File(dirPoster, nombreArchivoPoster);
                     Files.copy(new File(rutaImagenPosterTemporal).toPath(), destPoster.toPath(),
                             StandardCopyOption.REPLACE_EXISTING);
+                            
+                    try {
+                        File dirPosterTarget = new File("target/classes/posters");
+                        if (!dirPosterTarget.exists()) dirPosterTarget.mkdirs();
+                        File destPosterTarget = new File(dirPosterTarget, nombreArchivoPoster);
+                        Files.copy(new File(rutaImagenPosterTemporal).toPath(), destPosterTarget.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (Exception ignored) {}
+                            
                     conciertoEditado.setRutaImagenPoster("/posters/" + nombreArchivoPoster);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(vista, "No se pudo copiar el póster: " + ex.getMessage(), "Error",

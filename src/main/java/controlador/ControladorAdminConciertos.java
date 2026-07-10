@@ -135,6 +135,7 @@ public class ControladorAdminConciertos implements ActionListener, ItemListener 
                 java.net.URL imgUrl = getClass().getResource(ruta);
                 if (imgUrl != null) {
                     javax.swing.ImageIcon iconoOriginal = new javax.swing.ImageIcon(imgUrl);
+                    iconoOriginal.getImage().flush();
                     try {
                         java.lang.reflect.Field field = vistaAdmin.getClass().getDeclaredField("lblBanner");
                         field.setAccessible(true);

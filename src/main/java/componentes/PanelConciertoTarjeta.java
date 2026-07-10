@@ -22,7 +22,9 @@ public class PanelConciertoTarjeta extends JPanel {
         if (concierto.getRutaImagenPoster() != null && !concierto.getRutaImagenPoster().isEmpty()) {
             java.net.URL imgUrl = getClass().getResource(concierto.getRutaImagenPoster());
             if (imgUrl != null) {
-                imagenPoster = new ImageIcon(imgUrl).getImage();
+                ImageIcon icon = new ImageIcon(imgUrl);
+                icon.getImage().flush();
+                imagenPoster = icon.getImage();
             }
         }
 
