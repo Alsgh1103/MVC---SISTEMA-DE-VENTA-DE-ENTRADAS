@@ -27,7 +27,7 @@ public class FrmZona extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel2.setBackground(new java.awt.Color(59, 107, 158));
+        jPanel2.setBackground(new java.awt.Color(25, 103, 178));
 
         lblTitulo.setFont(new java.awt.Font("Cambria Math", 1, 24)); // NOI18N
         lblTitulo.setForeground(new java.awt.Color(255, 255, 255));

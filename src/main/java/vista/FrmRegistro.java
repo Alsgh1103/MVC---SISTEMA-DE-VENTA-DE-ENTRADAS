@@ -43,7 +43,7 @@ public class FrmRegistro extends javax.swing.JFrame {
         btnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/volver-flecha.png"))); // NOI18N
         btnVolver.setText("Volver");
 
-        jPanel1.setBackground(new java.awt.Color(59, 107, 158));
+        jPanel1.setBackground(new java.awt.Color(25, 103, 178));
 
         jLabel6.setFont(new java.awt.Font("Cambria Math", 1, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));

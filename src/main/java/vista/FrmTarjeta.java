@@ -127,7 +127,7 @@ public class FrmTarjeta extends javax.swing.JFrame {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jPanel1.setBackground(new java.awt.Color(59, 107, 158));
+        jPanel1.setBackground(new java.awt.Color(25, 103, 178));
 
         jLabel6.setFont(new java.awt.Font("Cambria Math", 1, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));

@@ -88,6 +88,7 @@ public class ControladorAdminUsuarios implements ActionListener {
     private void abrirCrearUsuario() {
         vista.FrmAdminCrearUsuario frm = new vista.FrmAdminCrearUsuario();
         new ControladorAdminCrearUsuario(frm, contextoCentral, this);
+        vista.dispose();
         frm.setVisible(true);
     }
 
